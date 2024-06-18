@@ -4,7 +4,7 @@
 напряжения $V_{BIAS}$, для цепи, представленной на схеме ниже.
 
 <p align="center">
-  <img src="./images/cirim1.png" width=400>
+  <img src="../images/cirim1.png" width=400>
 </p>
 
 2.	Написать компьютерную программу, позволяющую решать задачу 1 для 
@@ -15,7 +15,7 @@
 цепи, представленной на схеме ниже, предварительно пометив узлы.
 
 <p align="center">
-  <img src="./images/cirim2.png" width=400>
+  <img src="../images/cirim2.png" width=400>
 </p>
 
 4.	Написать компьютерную программу, позволяющую решать задачу 3 для 
@@ -27,7 +27,7 @@
 сопротивлений и источников напряжения задаются произвольным образом.
 
 <p align="center">
-  <img src="./images/cirim3.png" width=400>
+  <img src="../images/cirim3.png" width=400>
 </p>
 
 
