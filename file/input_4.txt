@@ -1,0 +1,5 @@
+R:R1 n1 n2 R=10.0
+R:R2 n2 gnd R=10.0
+R:R3 n2 n3 R=5.0
+R:R4 n1 n3 R=5.0
+Vsrc:Vbias n1 gnd U=12
