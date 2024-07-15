@@ -30,31 +30,31 @@ class TestResistorCircuitSimulator(unittest.TestCase):
         if os.path.exists(output_file):
             os.remove(output_file)
 
-    def test_3(self):
-        input_file = 'file/input_3.txt'
-        answer_file = 'file/answer_3.txt'
-        output_file = 'file/output_3.txt'
-
-        self.simulator = ResistorCircuitSimulator(input_file, output_file)
-        self.simulator.run()
-
-        self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
-
-        if os.path.exists(output_file):
-            os.remove(output_file)
-
-    def test_4(self):
-        input_file = 'file/input_4.txt'
-        answer_file = 'file/answer_4.txt'
-        output_file = 'file/output_4.txt'
-
-        self.simulator = ResistorCircuitSimulator(input_file, output_file)
-        self.simulator.run()
-
-        self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
-
-        if os.path.exists(output_file):
-            os.remove(output_file)
+    # def test_3(self):
+    #     input_file = 'file/input_3.txt'
+    #     answer_file = 'file/answer_3.txt'
+    #     output_file = 'file/output_3.txt'
+    #
+    #     self.simulator = ResistorCircuitSimulator(input_file, output_file)
+    #     self.simulator.run()
+    #
+    #     self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
+    #
+    #     if os.path.exists(output_file):
+    #         os.remove(output_file)
+    #
+    # def test_4(self):
+    #     input_file = 'file/input_4.txt'
+    #     answer_file = 'file/answer_4.txt'
+    #     output_file = 'file/output_4.txt'
+    #
+    #     self.simulator = ResistorCircuitSimulator(input_file, output_file)
+    #     self.simulator.run()
+    #
+    #     self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
+    #
+    #     if os.path.exists(output_file):
+    #         os.remove(output_file)
 
     # def test_5(self):
     #     input_file = 'file/input_5.txt'

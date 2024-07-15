@@ -1,8 +1,17 @@
-R:R1 n1 n2 R=10.0
-R:R2 n2 gnd R=10.0
-R:R3 n2 n3 R=5.0
-R:R4 n1 n3 R=5.0
-R:R5 n3 n4 R=7.0
-R:R6 n4 n5 R=8.0
-R:R7 n5 gnd R=10.0
-Vsrc:Vbias n1 gnd U=12
+R:R1 n1 n2 R=1.0
+R:R2 n2 n5 R=2.0
+R:R3 n5 n10 R=1.0
+R:R4 n6 n10 R=0.5
+R:R5 n10 n9 R=0.5
+R:R6 n7 n9 R=2.0
+R:R7 n7 n8 R=1.0
+R:R8 n3 n4 R=0.5
+R:R9 n3 n4 R=0.5
+R:R10 n3 n4 R=2.0
+N:n2 n3
+N:n5 n6
+N:n1 n4
+N:n1 n8
+N:n8 n9
+N:n6 n7
+Vsrc:Vbias n1 n2 U=12
