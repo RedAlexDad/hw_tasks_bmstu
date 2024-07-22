@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 
 class ResistorCircuitSimulator:
     def __init__(self, input_filename, output_filename):
@@ -157,5 +158,12 @@ class ResistorCircuitSimulator:
         self.calculate_currents()
 
 if __name__ == "__main__":
-    simulator = ResistorCircuitSimulator('file/input_3.txt', 'file/answer_3.txt')
+    # Ввод аргументов с командной строки
+    parser = argparse.ArgumentParser(description='Resistor Circuit Simulator')
+    parser.add_argument('input_file', type=str, help='Input file name')
+    parser.add_argument('output_file', type=str, help='Output file name')
+    args = parser.parse_args()
+
+    # Создание экземпляра класса
+    simulator = ResistorCircuitSimulator(args.input_file, args.output_file)
     simulator.run()
