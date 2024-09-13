@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/0/0c687bfaf42d4c0aac9aadea03337adb/artifacts
+deleted_time: 1725992574070
+end_time: 1725992109749
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 0c687bfaf42d4c0aac9aadea03337adb
+run_name: shivering-lynx-380
+run_uuid: 0c687bfaf42d4c0aac9aadea03337adb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1725992106290
+status: 3
+tags: []
+user_id: redalexdad
