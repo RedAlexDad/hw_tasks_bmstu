@@ -41,3 +41,21 @@ $x_{out} = F(x_{in})$
 3. Попробуйте построить следующие модели:
    - Полиномиальные модели с памятью (*Memory polynomial models*, Глава 5 в книге Ghannouchi и др.).
    - Нейронные сети типа RVFTDNN, RVRNN и др. (Глава 7 в книге Ghannouchi и др.).
+
+
+
+### Зависимости
+
+- `Python`==3.11.7
+- `catboost`==1.2.7
+- `ipython`==8.12.3
+- `ipython`==8.20.0
+- `lightgbm`==4.5.0
+- `matplotlib`==3.8.0
+- `numpy`==2.1.1
+- `pandas`==2.2.2
+- `scikit_learn`==1.2.2
+- `scipy`==1.14.1
+- `seaborn`==0.13.2
+- `statsmodels`==0.14.0
+- `torch`==2.3.1+cu121
