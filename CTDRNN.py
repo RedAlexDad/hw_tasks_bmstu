@@ -1,55 +1,25 @@
-import timeit
 import time
 import sys
 import os
-import re
 import numpy as np
 import pandas as pd
-import seaborn as sb
-from IPython.display import display, HTML
-from datetime import datetime
-
 import matplotlib.pyplot as plt
-
-from scipy import stats as st
-# Тренды и сезонность
-from statsmodels.tsa.seasonal import seasonal_decompose
-# Проверка на стационарность
-from statsmodels.tsa.stattools import adfuller, kpss
-# Проверка на дисперсию с помощью теста Андерсона-Дарлинга
-from scipy.stats import anderson
+from IPython.display import display, HTML
 
 # Разбиение на обучающую, валидационную и тестовую выборку
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, cross_val_predict, TimeSeriesSplit
 
 # Масштабируемость модели
-from sklearn.preprocessing import StandardScaler, OrdinalEncoder, OneHotEncoder
-
-# Многозадачная регрессия
-from sklearn.multioutput import MultiOutputRegressor
-# Для машинного обучения
-from lightgbm import LGBMRegressor
-from sklearn.ensemble import RandomForestRegressor, BaggingRegressor, StackingRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.tree import DecisionTreeRegressor
-from catboost import CatBoostRegressor
-# Метод ближайшего соседа KNN
-from sklearn.neighbors import KNeighborsRegressor
-# Метод опорного вектора, SVR - для регрессии
-from sklearn.svm import SVR
+from sklearn.preprocessing import StandardScaler
 
 # Метрики
 from sklearn.metrics import mean_squared_error
-
-from sklearn.pipeline import make_pipeline
 
 # Нейросети
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, TensorDataset
 import torch.optim as optim
-# Для сборщика мусора
-import gc
 
 class CTDRNN:
     def __init__(self, input_size, hidden_sizes, output_size, num_layers, num_epochs=100, learning_rate=0.001, p=10, q=5, batch_size=64):
@@ -104,7 +74,9 @@ class CTDRNN:
             df['input_imag'],
             df['output_real'],
             df['output_imag']
-        )
+        )   
+        # Переформатируем X_seq, чтобы соответствовать размеру входных данных модели
+        X_seq = X_seq.reshape(-1, self.input_size)
 
         X_scaled = self.scaler_X.fit_transform(X_seq)
         Y_scaled = self.scaler_Y.fit_transform(Y_seq)
@@ -117,6 +89,7 @@ class CTDRNN:
         return X_seq, Y_seq
 
     def train(self, print_batch=True):
+        print('Start train model')
         start_time = time.time()
         for epoch in range(self.num_epochs):
             epoch_loss = 0
@@ -138,9 +111,9 @@ class CTDRNN:
                 if print_batch:
                     # Вывод прогресса обучения
                     if batch_idx % 10 == 0:
-                        print(f'Train Epoch: {epoch} [{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)} ({100. * batch_idx / len(self.train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
+                        print(f'Train Epoch: [{epoch}/{self.num_epochs}] [{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)} ({100. * batch_idx / len(self.train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
                 else:       
-                    print(f'Train Epoch: {epoch} \tLoss: {loss.item():.6f}')
+                    print(f'Train Epoch: [{epoch}/{self.num_epochs}] \tLoss: {loss.item():.6f}')
                     
             # Сохраняем среднее значение функции потерь для текущей эпохи
             avg_loss = epoch_loss / len(self.train_loader.dataset)
