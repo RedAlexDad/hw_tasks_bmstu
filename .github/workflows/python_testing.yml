@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m unittest test_ctdrnn.py
+          python -m unittest test.py
 
       - name: Build executable
         if: always()  # Выполнится всегда, независимо от тестов

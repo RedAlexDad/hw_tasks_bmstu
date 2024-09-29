@@ -1,9 +1,11 @@
 import time
+import csv
 import sys
 import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 from IPython.display import display, HTML
 
 # Разбиение на обучающую, валидационную и тестовую выборку
@@ -88,42 +90,59 @@ class CTDRNN:
         self.train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
         return X_seq, Y_seq
 
-    def train(self, print_batch=True):
+    def train(self, print_batch=True, csv_file='training_history.csv'):
         print('Start train model')
         start_time = time.time()
-        for epoch in range(self.num_epochs):
-            epoch_loss = 0
-            for batch_idx, (X_batch, Y_batch) in enumerate(self.train_loader):
-                # Перенос батчей на GPU
-                X_batch, Y_batch = X_batch.to(self.device), Y_batch.to(self.device)  
-                
-                # Прямой проход
-                outputs = self.model(X_batch)
-                loss = self.criterion(outputs, Y_batch)
-                
-                # Обратное распространение и оптимизация
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
-                
-                epoch_loss += loss.item() * X_batch.size(0)  # Умножаем на размер батча для подсчета средней потери
 
-                if print_batch:
-                    # Вывод прогресса обучения
-                    if batch_idx % 10 == 0:
-                        print(f'Train Epoch: [{epoch}/{self.num_epochs}] [{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)} ({100. * batch_idx / len(self.train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
-                else:       
-                    print(f'Train Epoch: [{epoch}/{self.num_epochs}] \tLoss: {loss.item():.6f}')
+        # Открываем файл для записи истории обучения
+        with open(csv_file, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            # Записываем заголовки столбцов
+            writer.writerow(['Epoch', 'Batch ID', 'Batch', 'Progress (%)', 'Loss'])
+
+            for epoch in range(self.num_epochs):
+                epoch_loss = 0
+                for batch_idx, (X_batch, Y_batch) in enumerate(self.train_loader):
+                    # Перенос батчей на GPU
+                    X_batch, Y_batch = X_batch.to(self.device), Y_batch.to(self.device)  
                     
-            # Сохраняем среднее значение функции потерь для текущей эпохи
-            avg_loss = epoch_loss / len(self.train_loader.dataset)
-            self.loss_values.append(avg_loss)
+                    # Прямой проход
+                    outputs = self.model(X_batch)
+                    loss = self.criterion(outputs, Y_batch)
+                    
+                    # Обратное распространение и оптимизация
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    self.optimizer.step()
+                    
+                    epoch_loss += loss.item() * X_batch.size(0)  # Умножаем на размер батча для подсчета средней потери
 
-            # Вывод потери для всей эпохи
-            print(f'Train Epoch: {epoch} [DONE]\tLoss: {avg_loss:.6f}')
+                    if print_batch:
+                        # Вывод прогресса обучения
+                        if batch_idx % 10 == 0:
+                            print(f'Train Epoch: [{epoch}/{self.num_epochs}] [{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)} ({100. * batch_idx / len(self.train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
+                    else:       
+                        print(f'Train Epoch: [{epoch}/{self.num_epochs}] \tLoss: {loss.item():.6f}')
+                    
+                    # Подсчет прогресса в процентах
+                    progress = 100. * batch_idx / len(self.train_loader)
+
+                    # Записываем каждую итерацию батча в CSV-файл
+                    writer.writerow([epoch, batch_idx, f'[{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)}]', f'{progress:.0f}%', loss.item()])
+                
+                # Сохраняем среднее значение функции потерь для текущей эпохи
+                avg_loss = epoch_loss / len(self.train_loader.dataset)
+                self.loss_values.append(avg_loss)
+
+                # Записываем результат для завершенной эпохи в CSV
+                writer.writerow([epoch, 'DONE', '100%', avg_loss])
+
+                # Вывод потери для всей эпохи
+                print(f'Train Epoch: {epoch} [DONE]\tLoss: {avg_loss:.6f}')
 
         end_time = time.time()
         self.elapsed = end_time - start_time
+
 
     def predict(self, X_seq):
         self.model.eval()
@@ -220,7 +239,19 @@ class CTDRNN:
         filepath = os.path.join(save_dir, filename)
 
         # Сохраняем ВСЮ модель
-        torch.save(self.model.state_dict(), filepath)
+        torch.save({
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'input_size': self.input_size,
+            'hidden_sizes': self.hidden_sizes,
+            'output_size': self.output_size,
+            'num_layers': self.num_layers,
+            'p': self.p,
+            'q': self.q,
+            'scaler_X': self.scaler_X,
+            'scaler_Y': self.scaler_Y,
+            'epoch': self.num_epochs
+        }, filepath)
 
     def load_model(self, filename):
         checkpoint = torch.load(filename)
