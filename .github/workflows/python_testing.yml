@@ -14,6 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -27,13 +28,15 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m unittest test_ctdrnn.py 
+          python -m unittest test_ctdrnn.py
 
       - name: Build executable
+        if: always()  # Выполнится всегда, независимо от тестов
         run: |
           pyinstaller --onefile main.py  # Замените "main.py" на ваш главный файл
-      
+
       - name: Upload artifact
+        if: always()  # Выполнится всегда, независимо от тестов
         uses: actions/upload-artifact@v3
         with:
           name: executable
