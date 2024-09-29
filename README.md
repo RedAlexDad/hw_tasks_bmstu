@@ -49,7 +49,6 @@ $x_{out} = F(x_{in})$
 - `Python`==3.11.7
 - `catboost`==1.2.7
 - `ipython`==8.12.3
-- `ipython`==8.20.0
 - `lightgbm`==4.5.0
 - `matplotlib`==3.8.0
 - `numpy`==2.1.1
