@@ -56,13 +56,11 @@ if __name__ == '__main__':
         hidden_sizes=[128, 256, 256, 128, 64],
         output_size=2, 
         num_layers=2,
-        num_epochs=1000,
+        num_epochs=10,
         learning_rate=0.001,
         p=p,
         q=q,
-        # batch_size=256
-        # batch_size=1024
-        batch_size=2048
+        batch_size=1024*1
     )
 
     # Вывод параметров в виде HTML-таблицы
