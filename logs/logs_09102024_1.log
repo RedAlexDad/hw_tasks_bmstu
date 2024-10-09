@@ -1,0 +1,1398 @@
+18.2s 1 Collecting torchdiffeq
+18.3s 2 Downloading torchdiffeq-0.2.4-py3-none-any.whl.metadata (440 bytes)
+18.3s 3 Requirement already satisfied: torch>=1.5.0 in /opt/conda/lib/python3.10/site-packages (from torchdiffeq) (2.4.0)
+18.3s 4 Requirement already satisfied: scipy>=1.4.0 in /opt/conda/lib/python3.10/site-packages (from torchdiffeq) (1.14.0)
+18.3s 5 Requirement already satisfied: numpy<2.3,>=1.23.5 in /opt/conda/lib/python3.10/site-packages (from scipy>=1.4.0->torchdiffeq) (1.26.4)
+18.4s 6 Requirement already satisfied: filelock in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (3.15.1)
+18.4s 7 Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (4.12.2)
+18.4s 8 Requirement already satisfied: sympy in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (1.13.2)
+18.4s 9 Requirement already satisfied: networkx in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (3.3)
+18.4s 10 Requirement already satisfied: jinja2 in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (3.1.4)
+18.4s 11 Requirement already satisfied: fsspec in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (2024.6.1)
+18.5s 12 Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.10/site-packages (from jinja2->torch>=1.5.0->torchdiffeq) (2.1.5)
+18.6s 13 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.10/site-packages (from sympy->torch>=1.5.0->torchdiffeq) (1.3.0)
+18.6s 14 Downloading torchdiffeq-0.2.4-py3-none-any.whl (32 kB)
+28.8s 15 Installing collected packages: torchdiffeq
+29.0s 16 Successfully installed torchdiffeq-0.2.4
+31.3s 17 Collecting TorchDiffEqPack
+31.3s 18 Downloading TorchDiffEqPack-1.0.1-py3-none-any.whl.metadata (718 bytes)
+31.3s 19 Requirement already satisfied: torch in /opt/conda/lib/python3.10/site-packages (from TorchDiffEqPack) (2.4.0)
+31.3s 20 Requirement already satisfied: filelock in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (3.15.1)
+31.3s 21 Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (4.12.2)
+31.3s 22 Requirement already satisfied: sympy in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (1.13.2)
+31.3s 23 Requirement already satisfied: networkx in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (3.3)
+31.3s 24 Requirement already satisfied: jinja2 in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (3.1.4)
+31.3s 25 Requirement already satisfied: fsspec in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (2024.6.1)
+31.5s 26 Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.10/site-packages (from jinja2->torch->TorchDiffEqPack) (2.1.5)
+31.5s 27 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.10/site-packages (from sympy->torch->TorchDiffEqPack) (1.3.0)
+31.5s 28 Downloading TorchDiffEqPack-1.0.1-py3-none-any.whl (33 kB)
+41.9s 29 Installing collected packages: TorchDiffEqPack
+42.1s 30 Successfully installed TorchDiffEqPack-1.0.1
+42.5s 31 /kaggle/input/amp-c-train/Amp_C_train.txt
+43.1s 32 CUDA is available!
+43.1s 33 Device name: Tesla P100-PCIE-16GB
+43.1s 34 CUDA capability: (6, 0)
+43.1s 35 Driver version: 12.3
+43.1s 36 Device count: 1
+43.1s 37 Current device: 0
+47.0s 38 Model architecture: NeuralODEModel(
+47.0s 39 (input_layer): Linear(in_features=2, out_features=1024, bias=True)
+47.0s 40 (hidden_layers): ModuleList(
+47.0s 41 (0): Linear(in_features=1024, out_features=4096, bias=True)
+47.0s 42 (1): Linear(in_features=4096, out_features=4096, bias=True)
+47.0s 43 (2): Linear(in_features=4096, out_features=8192, bias=True)
+47.0s 44 (3): Linear(in_features=8192, out_features=4096, bias=True)
+47.0s 45 (4): Linear(in_features=4096, out_features=1024, bias=True)
+47.0s 46 )
+47.0s 47 (residual_connections): ModuleList(
+47.0s 48 (0): Linear(in_features=1024, out_features=4096, bias=True)
+47.0s 49 (1): Identity()
+47.0s 50 (2): Linear(in_features=4096, out_features=8192, bias=True)
+47.0s 51 (3): Linear(in_features=8192, out_features=4096, bias=True)
+47.0s 52 (4): Linear(in_features=4096, out_features=1024, bias=True)
+47.0s 53 )
+47.0s 54 (ode_func): ODEFunc(
+47.0s 55 (fc1): Linear(in_features=1024, out_features=1024, bias=True)
+47.0s 56 (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+47.0s 57 (relu): ReLU()
+47.0s 58 (norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+47.0s 59 )
+47.0s 60 (output_layer): Linear(in_features=1024, out_features=2, bias=True)
+47.0s 61 (dropout): Dropout(p=0.5, inplace=False)
+47.0s 62 )
+47.0s 63 --------------------------------------------------
+47.0s 64 Parameter name: input_layer.weight
+47.0s 65 Parameter shape: torch.Size([1024, 2])
+47.0s 66 Parameter count: 2048
+47.0s 67 ------------------------------
+47.0s 68 Parameter name: input_layer.bias
+47.0s 69 Parameter shape: torch.Size([1024])
+47.0s 70 Parameter count: 1024
+47.0s 71 ------------------------------
+47.0s 72 Parameter name: hidden_layers.0.weight
+47.0s 73 Parameter shape: torch.Size([4096, 1024])
+47.0s 74 Parameter count: 4194304
+47.0s 75 ------------------------------
+47.0s 76 Parameter name: hidden_layers.0.bias
+47.0s 77 Parameter shape: torch.Size([4096])
+47.0s 78 Parameter count: 4096
+47.0s 79 ------------------------------
+47.0s 80 Parameter name: hidden_layers.1.weight
+47.0s 81 Parameter shape: torch.Size([4096, 4096])
+47.0s 82 Parameter count: 16777216
+47.0s 83 ------------------------------
+47.0s 84 Parameter name: hidden_layers.1.bias
+47.0s 85 Parameter shape: torch.Size([4096])
+47.0s 86 Parameter count: 4096
+47.0s 87 ------------------------------
+47.0s 88 Parameter name: hidden_layers.2.weight
+47.0s 89 Parameter shape: torch.Size([8192, 4096])
+47.0s 90 Parameter count: 33554432
+47.0s 91 ------------------------------
+47.0s 92 Parameter name: hidden_layers.2.bias
+47.0s 93 Parameter shape: torch.Size([8192])
+47.0s 94 Parameter count: 8192
+47.0s 95 ------------------------------
+47.0s 96 Parameter name: hidden_layers.3.weight
+47.0s 97 Parameter shape: torch.Size([4096, 8192])
+47.0s 98 Parameter count: 33554432
+47.0s 99 ------------------------------
+47.0s 100 Parameter name: hidden_layers.3.bias
+47.0s 101 Parameter shape: torch.Size([4096])
+47.0s 102 Parameter count: 4096
+47.0s 103 ------------------------------
+47.0s 104 Parameter name: hidden_layers.4.weight
+47.0s 105 Parameter shape: torch.Size([1024, 4096])
+47.0s 106 Parameter count: 4194304
+47.0s 107 ------------------------------
+47.0s 108 Parameter name: hidden_layers.4.bias
+47.0s 109 Parameter shape: torch.Size([1024])
+47.0s 110 Parameter count: 1024
+47.0s 111 ------------------------------
+47.0s 112 Parameter name: residual_connections.0.weight
+47.0s 113 Parameter shape: torch.Size([4096, 1024])
+47.0s 114 Parameter count: 4194304
+47.0s 115 ------------------------------
+47.0s 116 Parameter name: residual_connections.0.bias
+47.0s 117 Parameter shape: torch.Size([4096])
+47.0s 118 Parameter count: 4096
+47.0s 119 ------------------------------
+47.0s 120 Parameter name: residual_connections.2.weight
+47.0s 121 Parameter shape: torch.Size([8192, 4096])
+47.0s 122 Parameter count: 33554432
+47.0s 123 ------------------------------
+47.0s 124 Parameter name: residual_connections.2.bias
+47.0s 125 Parameter shape: torch.Size([8192])
+47.0s 126 Parameter count: 8192
+47.0s 127 ------------------------------
+47.0s 128 Parameter name: residual_connections.3.weight
+47.0s 129 Parameter shape: torch.Size([4096, 8192])
+47.0s 130 Parameter count: 33554432
+47.0s 131 ------------------------------
+47.0s 132 Parameter name: residual_connections.3.bias
+47.0s 133 Parameter shape: torch.Size([4096])
+47.0s 134 Parameter count: 4096
+47.0s 135 ------------------------------
+47.0s 136 Parameter name: residual_connections.4.weight
+47.0s 137 Parameter shape: torch.Size([1024, 4096])
+47.0s 138 Parameter count: 4194304
+47.0s 139 ------------------------------
+47.0s 140 Parameter name: residual_connections.4.bias
+47.0s 141 Parameter shape: torch.Size([1024])
+47.0s 142 Parameter count: 1024
+47.0s 143 ------------------------------
+47.0s 144 Parameter name: ode_func.fc1.weight
+47.0s 145 Parameter shape: torch.Size([1024, 1024])
+47.0s 146 Parameter count: 1048576
+47.0s 147 ------------------------------
+47.0s 148 Parameter name: ode_func.fc1.bias
+47.0s 149 Parameter shape: torch.Size([1024])
+47.0s 150 Parameter count: 1024
+47.0s 151 ------------------------------
+47.0s 152 Parameter name: ode_func.fc2.weight
+47.0s 153 Parameter shape: torch.Size([1024, 1024])
+47.0s 154 Parameter count: 1048576
+47.0s 155 ------------------------------
+47.0s 156 Parameter name: ode_func.fc2.bias
+47.0s 157 Parameter shape: torch.Size([1024])
+47.0s 158 Parameter count: 1024
+47.0s 159 ------------------------------
+47.0s 160 Parameter name: ode_func.norm.weight
+47.0s 161 Parameter shape: torch.Size([1024])
+47.0s 162 Parameter count: 1024
+47.0s 163 ------------------------------
+47.0s 164 Parameter name: ode_func.norm.bias
+47.0s 165 Parameter shape: torch.Size([1024])
+47.0s 166 Parameter count: 1024
+47.0s 167 ------------------------------
+47.0s 168 Parameter name: output_layer.weight
+47.0s 169 Parameter shape: torch.Size([2, 1024])
+47.0s 170 Parameter count: 2048
+47.0s 171 ------------------------------
+47.0s 172 Parameter name: output_layer.bias
+47.0s 173 Parameter shape: torch.Size([2])
+47.0s 174 Parameter count: 2
+47.0s 175 ------------------------------
+47.0s 176 Total trainable parameters: 169917442
+47.0s 177 ==================================================
+82.8s 178 Epoch 1/10000 completed with RMSE: 0.747203
+118.0s 179 Epoch 2/10000 completed with RMSE: 0.305733
+153.3s 180 Epoch 3/10000 completed with RMSE: 0.226468
+188.3s 181 Epoch 4/10000 completed with RMSE: 0.184390
+223.5s 182 Epoch 5/10000 completed with RMSE: 0.168492
+258.5s 183 Epoch 6/10000 completed with RMSE: 0.159146
+293.9s 184 Epoch 7/10000 completed with RMSE: 0.154332
+328.9s 185 Epoch 8/10000 completed with RMSE: 0.150499
+364.1s 186 Epoch 9/10000 completed with RMSE: 0.146857
+399.1s 187 Epoch 10/10000 completed with RMSE: 0.146034
+434.4s 188 Epoch 11/10000 completed with RMSE: 0.142539
+469.6s 189 Epoch 12/10000 completed with RMSE: 0.141083
+504.7s 190 Epoch 13/10000 completed with RMSE: 0.140151
+539.9s 191 Epoch 14/10000 completed with RMSE: 0.139207
+575.0s 192 Epoch 15/10000 completed with RMSE: 0.137540
+610.2s 193 Epoch 16/10000 completed with RMSE: 0.137569
+645.3s 194 Epoch 17/10000 completed with RMSE: 0.136104
+680.7s 195 Epoch 18/10000 completed with RMSE: 0.135499
+715.8s 196 Epoch 19/10000 completed with RMSE: 0.134906
+751.1s 197 Epoch 20/10000 completed with RMSE: 0.134401
+786.2s 198 Epoch 21/10000 completed with RMSE: 0.133839
+821.5s 199 Epoch 22/10000 completed with RMSE: 0.133504
+856.7s 200 Epoch 23/10000 completed with RMSE: 0.133145
+891.8s 201 Epoch 24/10000 completed with RMSE: 0.133152
+927.1s 202 Epoch 25/10000 completed with RMSE: 0.132703
+962.2s 203 Epoch 26/10000 completed with RMSE: 0.132368
+997.4s 204 Epoch 27/10000 completed with RMSE: 0.131715
+1032.5s 205 Epoch 28/10000 completed with RMSE: 0.131480
+1067.7s 206 Epoch 29/10000 completed with RMSE: 0.131578
+1102.8s 207 Epoch 30/10000 completed with RMSE: 0.131010
+1138.1s 208 Epoch 31/10000 completed with RMSE: 0.130985
+1173.4s 209 Epoch 32/10000 completed with RMSE: 0.130188
+1208.5s 210 Epoch 33/10000 completed with RMSE: 0.130244
+1243.8s 211 Epoch 34/10000 completed with RMSE: 0.131197
+1278.9s 212 Epoch 35/10000 completed with RMSE: 0.130557
+1314.2s 213 Epoch 36/10000 completed with RMSE: 0.130274
+1349.2s 214 Epoch 37/10000 completed with RMSE: 0.129361
+1384.5s 215 Epoch 38/10000 completed with RMSE: 0.129729
+1419.6s 216 Epoch 39/10000 completed with RMSE: 0.129230
+1454.9s 217 Epoch 40/10000 completed with RMSE: 0.128903
+1490.2s 218 Epoch 41/10000 completed with RMSE: 0.129373
+1525.3s 219 Epoch 42/10000 completed with RMSE: 0.128899
+1560.7s 220 Epoch 43/10000 completed with RMSE: 0.128614
+1595.8s 221 Epoch 44/10000 completed with RMSE: 0.128392
+1631.0s 222 Epoch 45/10000 completed with RMSE: 0.128443
+1666.0s 223 Epoch 46/10000 completed with RMSE: 0.128465
+1701.3s 224 Epoch 47/10000 completed with RMSE: 0.128318
+1736.4s 225 Epoch 48/10000 completed with RMSE: 0.128052
+1771.7s 226 Epoch 49/10000 completed with RMSE: 0.128032
+1806.7s 227 Epoch 50/10000 completed with RMSE: 0.128347
+1842.0s 228 Epoch 51/10000 completed with RMSE: 0.127783
+1877.2s 229 Epoch 52/10000 completed with RMSE: 0.127957
+1912.4s 230 Epoch 53/10000 completed with RMSE: 0.127412
+1947.7s 231 Epoch 54/10000 completed with RMSE: 0.127115
+1982.8s 232 Epoch 55/10000 completed with RMSE: 0.127403
+2018.1s 233 Epoch 56/10000 completed with RMSE: 0.127179
+2053.2s 234 Epoch 57/10000 completed with RMSE: 0.128522
+2088.5s 235 Epoch 58/10000 completed with RMSE: 0.127286
+2123.6s 236 Epoch 59/10000 completed with RMSE: 0.127496
+2158.8s 237 Epoch 60/10000 completed with RMSE: 0.127587
+2193.8s 238 Epoch 61/10000 completed with RMSE: 0.127064
+2229.2s 239 Epoch 62/10000 completed with RMSE: 0.126923
+2264.3s 240 Epoch 63/10000 completed with RMSE: 0.126760
+2299.4s 241 Epoch 64/10000 completed with RMSE: 0.127216
+2334.6s 242 Epoch 65/10000 completed with RMSE: 0.126903
+2369.6s 243 Epoch 66/10000 completed with RMSE: 0.127112
+2404.9s 244 Epoch 67/10000 completed with RMSE: 0.126361
+2440.0s 245 Epoch 68/10000 completed with RMSE: 0.126649
+2475.2s 246 Epoch 69/10000 completed with RMSE: 0.127235
+2510.3s 247 Epoch 70/10000 completed with RMSE: 0.126641
+2545.5s 248 Epoch 71/10000 completed with RMSE: 0.126433
+2580.6s 249 Epoch 72/10000 completed with RMSE: 0.126286
+2615.9s 250 Epoch 73/10000 completed with RMSE: 0.126127
+2651.0s 251 Epoch 74/10000 completed with RMSE: 0.126116
+2686.2s 252 Epoch 75/10000 completed with RMSE: 0.126154
+2721.5s 253 Epoch 76/10000 completed with RMSE: 0.126186
+2756.7s 254 Epoch 77/10000 completed with RMSE: 0.126520
+2791.9s 255 Epoch 78/10000 completed with RMSE: 0.126584
+2827.1s 256 Epoch 79/10000 completed with RMSE: 0.126185
+2862.2s 257 Epoch 80/10000 completed with RMSE: 0.125987
+2897.3s 258 Epoch 81/10000 completed with RMSE: 0.126398
+2932.5s 259 Epoch 82/10000 completed with RMSE: 0.125859
+2967.6s 260 Epoch 83/10000 completed with RMSE: 0.125639
+3002.9s 261 Epoch 84/10000 completed with RMSE: 0.125666
+3037.9s 262 Epoch 85/10000 completed with RMSE: 0.125603
+3073.2s 263 Epoch 86/10000 completed with RMSE: 0.125980
+3108.3s 264 Epoch 87/10000 completed with RMSE: 0.125795
+3143.5s 265 Epoch 88/10000 completed with RMSE: 0.125743
+3178.7s 266 Epoch 89/10000 completed with RMSE: 0.126072
+3213.9s 267 Epoch 90/10000 completed with RMSE: 0.125295
+3249.1s 268 Epoch 91/10000 completed with RMSE: 0.125402
+3284.3s 269 Epoch 92/10000 completed with RMSE: 0.125575
+3319.5s 270 Epoch 93/10000 completed with RMSE: 0.125583
+3354.5s 271 Epoch 94/10000 completed with RMSE: 0.126234
+3389.8s 272 Epoch 95/10000 completed with RMSE: 0.125662
+3424.9s 273 Epoch 96/10000 completed with RMSE: 0.125474
+3460.2s 274 Epoch 97/10000 completed with RMSE: 0.125538
+3495.3s 275 Epoch 98/10000 completed with RMSE: 0.125281
+3530.5s 276 Epoch 99/10000 completed with RMSE: 0.125079
+3565.4s 277 Epoch 100/10000 completed with RMSE: 0.125594
+3600.9s 278 Epoch 101/10000 completed with RMSE: 0.125194
+3636.0s 279 Epoch 102/10000 completed with RMSE: 0.125559
+3671.1s 280 Epoch 103/10000 completed with RMSE: 0.125584
+3706.3s 281 Epoch 104/10000 completed with RMSE: 0.124892
+3741.6s 282 Epoch 105/10000 completed with RMSE: 0.125462
+3776.7s 283 Epoch 106/10000 completed with RMSE: 0.125413
+3812.1s 284 Epoch 107/10000 completed with RMSE: 0.124973
+3847.2s 285 Epoch 108/10000 completed with RMSE: 0.124702
+3882.4s 286 Epoch 109/10000 completed with RMSE: 0.124967
+3917.7s 287 Epoch 110/10000 completed with RMSE: 0.125635
+3952.9s 288 Epoch 111/10000 completed with RMSE: 0.125714
+3988.2s 289 Epoch 112/10000 completed with RMSE: 0.125084
+4023.3s 290 Epoch 113/10000 completed with RMSE: 0.125030
+4058.6s 291 Epoch 114/10000 completed with RMSE: 0.124982
+4093.7s 292 Epoch 115/10000 completed with RMSE: 0.124599
+4128.8s 293 Epoch 116/10000 completed with RMSE: 0.124909
+4163.9s 294 Epoch 117/10000 completed with RMSE: 0.125080
+4199.2s 295 Epoch 118/10000 completed with RMSE: 0.125037
+4234.3s 296 Epoch 119/10000 completed with RMSE: 0.125316
+4269.6s 297 Epoch 120/10000 completed with RMSE: 0.124582
+4304.8s 298 Epoch 121/10000 completed with RMSE: 0.124540
+4340.0s 299 Epoch 122/10000 completed with RMSE: 0.124762
+4375.1s 300 Epoch 123/10000 completed with RMSE: 0.124896
+4410.2s 301 Epoch 124/10000 completed with RMSE: 0.124852
+4445.5s 302 Epoch 125/10000 completed with RMSE: 0.124680
+4480.6s 303 Epoch 126/10000 completed with RMSE: 0.124642
+4515.7s 304 Epoch 127/10000 completed with RMSE: 0.124819
+4550.8s 305 Epoch 128/10000 completed with RMSE: 0.124328
+4586.2s 306 Epoch 129/10000 completed with RMSE: 0.125139
+4621.2s 307 Epoch 130/10000 completed with RMSE: 0.124647
+4656.4s 308 Epoch 131/10000 completed with RMSE: 0.125006
+4691.6s 309 Epoch 132/10000 completed with RMSE: 0.124597
+4726.9s 310 Epoch 133/10000 completed with RMSE: 0.124404
+4762.1s 311 Epoch 134/10000 completed with RMSE: 0.125037
+4797.3s 312 Epoch 135/10000 completed with RMSE: 0.124801
+4832.3s 313 Epoch 136/10000 completed with RMSE: 0.124978
+4867.6s 314 Epoch 137/10000 completed with RMSE: 0.124308
+4902.7s 315 Epoch 138/10000 completed with RMSE: 0.124506
+4938.1s 316 Epoch 139/10000 completed with RMSE: 0.124683
+4973.3s 317 Epoch 140/10000 completed with RMSE: 0.124542
+5008.6s 318 Epoch 141/10000 completed with RMSE: 0.124567
+5043.8s 319 Epoch 142/10000 completed with RMSE: 0.124881
+5078.9s 320 Epoch 143/10000 completed with RMSE: 0.124480
+5114.1s 321 Epoch 144/10000 completed with RMSE: 0.124336
+5149.3s 322 Epoch 145/10000 completed with RMSE: 0.124540
+5184.5s 323 Epoch 146/10000 completed with RMSE: 0.124326
+5219.7s 324 Epoch 147/10000 completed with RMSE: 0.124259
+5255.2s 325 Epoch 148/10000 completed with RMSE: 0.123841
+5290.6s 326 Epoch 149/10000 completed with RMSE: 0.124177
+5326.3s 327 Epoch 150/10000 completed with RMSE: 0.124175
+5361.8s 328 Epoch 151/10000 completed with RMSE: 0.124389
+5397.5s 329 Epoch 152/10000 completed with RMSE: 0.124757
+5432.8s 330 Epoch 153/10000 completed with RMSE: 0.124191
+5468.5s 331 Epoch 154/10000 completed with RMSE: 0.124333
+5504.0s 332 Epoch 155/10000 completed with RMSE: 0.124296
+5539.8s 333 Epoch 156/10000 completed with RMSE: 0.124178
+5575.1s 334 Epoch 157/10000 completed with RMSE: 0.123944
+5610.8s 335 Epoch 158/10000 completed with RMSE: 0.124108
+5646.3s 336 Epoch 159/10000 completed with RMSE: 0.124267
+5682.1s 337 Epoch 160/10000 completed with RMSE: 0.124262
+5717.6s 338 Epoch 161/10000 completed with RMSE: 0.124407
+5753.2s 339 Epoch 162/10000 completed with RMSE: 0.124523
+5788.6s 340 Epoch 163/10000 completed with RMSE: 0.124281
+5824.3s 341 Epoch 164/10000 completed with RMSE: 0.124164
+5859.9s 342 Epoch 165/10000 completed with RMSE: 0.123993
+5895.4s 343 Epoch 166/10000 completed with RMSE: 0.124176
+5931.2s 344 Epoch 167/10000 completed with RMSE: 0.124637
+5966.8s 345 Epoch 168/10000 completed with RMSE: 0.124879
+6002.4s 346 Epoch 169/10000 completed with RMSE: 0.124588
+6037.9s 347 Epoch 170/10000 completed with RMSE: 0.124363
+6073.7s 348 Epoch 171/10000 completed with RMSE: 0.124032
+6108.9s 349 Epoch 172/10000 completed with RMSE: 0.124136
+6144.8s 350 Epoch 173/10000 completed with RMSE: 0.123888
+6180.3s 351 Epoch 174/10000 completed with RMSE: 0.124021
+6215.9s 352 Epoch 175/10000 completed with RMSE: 0.123853
+6251.4s 353 Epoch 176/10000 completed with RMSE: 0.124021
+6287.2s 354 Epoch 177/10000 completed with RMSE: 0.123978
+6322.5s 355 Epoch 178/10000 completed with RMSE: 0.123851
+6358.3s 356 Epoch 179/10000 completed with RMSE: 0.123692
+6394.0s 357 Epoch 180/10000 completed with RMSE: 0.124159
+6429.6s 358 Epoch 181/10000 completed with RMSE: 0.124043
+6465.2s 359 Epoch 182/10000 completed with RMSE: 0.124188
+6501.0s 360 Epoch 183/10000 completed with RMSE: 0.123894
+6536.6s 361 Epoch 184/10000 completed with RMSE: 0.123825
+6572.3s 362 Epoch 185/10000 completed with RMSE: 0.123912
+6607.9s 363 Epoch 186/10000 completed with RMSE: 0.123995
+6643.4s 364 Epoch 187/10000 completed with RMSE: 0.124180
+6678.9s 365 Epoch 188/10000 completed with RMSE: 0.123921
+6714.7s 366 Epoch 189/10000 completed with RMSE: 0.124113
+6750.3s 367 Epoch 190/10000 completed with RMSE: 0.124182
+6785.9s 368 Epoch 191/10000 completed with RMSE: 0.124377
+6821.5s 369 Epoch 192/10000 completed with RMSE: 0.124464
+6857.0s 370 Epoch 193/10000 completed with RMSE: 0.123885
+6892.8s 371 Epoch 194/10000 completed with RMSE: 0.124076
+6928.4s 372 Epoch 195/10000 completed with RMSE: 0.123933
+6964.0s 373 Epoch 196/10000 completed with RMSE: 0.124137
+6999.4s 374 Epoch 197/10000 completed with RMSE: 0.124296
+7034.7s 375 Epoch 198/10000 completed with RMSE: 0.123506
+7070.1s 376 Epoch 199/10000 completed with RMSE: 0.123670
+7105.6s 377 Epoch 200/10000 completed with RMSE: 0.123389
+7140.7s 378 Epoch 201/10000 completed with RMSE: 0.123714
+7176.3s 379 Epoch 202/10000 completed with RMSE: 0.123700
+7211.5s 380 Epoch 203/10000 completed with RMSE: 0.124112
+7246.8s 381 Epoch 204/10000 completed with RMSE: 0.123621
+7282.1s 382 Epoch 205/10000 completed with RMSE: 0.123871
+7317.4s 383 Epoch 206/10000 completed with RMSE: 0.123972
+7352.7s 384 Epoch 207/10000 completed with RMSE: 0.123598
+7388.1s 385 Epoch 208/10000 completed with RMSE: 0.123714
+7423.4s 386 Epoch 209/10000 completed with RMSE: 0.123991
+7458.7s 387 Epoch 210/10000 completed with RMSE: 0.123807
+7493.9s 388 Epoch 211/10000 completed with RMSE: 0.123934
+7529.4s 389 Epoch 212/10000 completed with RMSE: 0.124207
+7564.4s 390 Epoch 213/10000 completed with RMSE: 0.123657
+7599.9s 391 Epoch 214/10000 completed with RMSE: 0.123527
+7634.9s 392 Epoch 215/10000 completed with RMSE: 0.123442
+7670.3s 393 Epoch 216/10000 completed with RMSE: 0.123649
+7705.6s 394 Epoch 217/10000 completed with RMSE: 0.123657
+7741.0s 395 Epoch 218/10000 completed with RMSE: 0.123497
+7776.0s 396 Epoch 219/10000 completed with RMSE: 0.123947
+7811.5s 397 Epoch 220/10000 completed with RMSE: 0.123426
+7846.7s 398 Epoch 221/10000 completed with RMSE: 0.123799
+7881.9s 399 Epoch 222/10000 completed with RMSE: 0.123452
+7917.1s 400 Epoch 223/10000 completed with RMSE: 0.123382
+7952.6s 401 Epoch 224/10000 completed with RMSE: 0.123700
+7987.8s 402 Epoch 225/10000 completed with RMSE: 0.123435
+8023.2s 403 Epoch 226/10000 completed with RMSE: 0.123962
+8058.5s 404 Epoch 227/10000 completed with RMSE: 0.123892
+8094.0s 405 Epoch 228/10000 completed with RMSE: 0.123531
+8129.4s 406 Epoch 229/10000 completed with RMSE: 0.123626
+8164.8s 407 Epoch 230/10000 completed with RMSE: 0.124037
+8200.0s 408 Epoch 231/10000 completed with RMSE: 0.123722
+8235.1s 409 Epoch 232/10000 completed with RMSE: 0.123631
+8270.4s 410 Epoch 233/10000 completed with RMSE: 0.123406
+8305.6s 411 Epoch 234/10000 completed with RMSE: 0.123855
+8340.8s 412 Epoch 235/10000 completed with RMSE: 0.123276
+8376.0s 413 Epoch 236/10000 completed with RMSE: 0.123522
+8411.1s 414 Epoch 237/10000 completed with RMSE: 0.123432
+8446.3s 415 Epoch 238/10000 completed with RMSE: 0.123659
+8481.5s 416 Epoch 239/10000 completed with RMSE: 0.123747
+8516.7s 417 Epoch 240/10000 completed with RMSE: 0.123585
+8551.9s 418 Epoch 241/10000 completed with RMSE: 0.124099
+8587.2s 419 Epoch 242/10000 completed with RMSE: 0.123351
+8622.7s 420 Epoch 243/10000 completed with RMSE: 0.123445
+8657.6s 421 Epoch 244/10000 completed with RMSE: 0.123532
+8693.1s 422 Epoch 245/10000 completed with RMSE: 0.123654
+8728.3s 423 Epoch 246/10000 completed with RMSE: 0.123652
+8763.5s 424 Epoch 247/10000 completed with RMSE: 0.123410
+8798.7s 425 Epoch 248/10000 completed with RMSE: 0.123202
+8833.9s 426 Epoch 249/10000 completed with RMSE: 0.123596
+8869.1s 427 Epoch 250/10000 completed with RMSE: 0.123474
+8904.3s 428 Epoch 251/10000 completed with RMSE: 0.123722
+8939.4s 429 Epoch 252/10000 completed with RMSE: 0.124219
+8974.7s 430 Epoch 253/10000 completed with RMSE: 0.123372
+9009.9s 431 Epoch 254/10000 completed with RMSE: 0.123783
+9045.1s 432 Epoch 255/10000 completed with RMSE: 0.123475
+9080.3s 433 Epoch 256/10000 completed with RMSE: 0.123308
+9115.5s 434 Epoch 257/10000 completed with RMSE: 0.123597
+9150.7s 435 Epoch 258/10000 completed with RMSE: 0.123766
+9186.0s 436 Epoch 259/10000 completed with RMSE: 0.123300
+9221.2s 437 Epoch 260/10000 completed with RMSE: 0.123304
+9256.4s 438 Epoch 261/10000 completed with RMSE: 0.123324
+9291.6s 439 Epoch 262/10000 completed with RMSE: 0.123379
+9326.8s 440 Epoch 263/10000 completed with RMSE: 0.123323
+9362.0s 441 Epoch 264/10000 completed with RMSE: 0.123409
+9397.3s 442 Epoch 265/10000 completed with RMSE: 0.123334
+9432.5s 443 Epoch 266/10000 completed with RMSE: 0.123537
+9467.7s 444 Epoch 267/10000 completed with RMSE: 0.123673
+9502.8s 445 Epoch 268/10000 completed with RMSE: 0.123334
+9538.1s 446 Epoch 269/10000 completed with RMSE: 0.123236
+9573.3s 447 Epoch 270/10000 completed with RMSE: 0.123119
+9608.6s 448 Epoch 271/10000 completed with RMSE: 0.123435
+9643.8s 449 Epoch 272/10000 completed with RMSE: 0.123338
+9678.9s 450 Epoch 273/10000 completed with RMSE: 0.123569
+9714.1s 451 Epoch 274/10000 completed with RMSE: 0.123547
+9749.3s 452 Epoch 275/10000 completed with RMSE: 0.123669
+9784.5s 453 Epoch 276/10000 completed with RMSE: 0.123440
+9819.7s 454 Epoch 277/10000 completed with RMSE: 0.123315
+9855.0s 455 Epoch 278/10000 completed with RMSE: 0.123205
+9890.3s 456 Epoch 279/10000 completed with RMSE: 0.123658
+9925.5s 457 Epoch 280/10000 completed with RMSE: 0.123405
+9960.8s 458 Epoch 281/10000 completed with RMSE: 0.123603
+9996.0s 459 Epoch 282/10000 completed with RMSE: 0.123362
+10031.2s 460 Epoch 283/10000 completed with RMSE: 0.123530
+10066.4s 461 Epoch 284/10000 completed with RMSE: 0.123163
+10101.7s 462 Epoch 285/10000 completed with RMSE: 0.122940
+10136.9s 463 Epoch 286/10000 completed with RMSE: 0.123511
+10172.2s 464 Epoch 287/10000 completed with RMSE: 0.123020
+10207.4s 465 Epoch 288/10000 completed with RMSE: 0.123170
+10242.7s 466 Epoch 289/10000 completed with RMSE: 0.123467
+10277.8s 467 Epoch 290/10000 completed with RMSE: 0.122876
+10313.0s 468 Epoch 291/10000 completed with RMSE: 0.123152
+10348.3s 469 Epoch 292/10000 completed with RMSE: 0.123508
+10383.5s 470 Epoch 293/10000 completed with RMSE: 0.123228
+10418.7s 471 Epoch 294/10000 completed with RMSE: 0.123302
+10453.9s 472 Epoch 295/10000 completed with RMSE: 0.123517
+10489.2s 473 Epoch 296/10000 completed with RMSE: 0.123059
+10524.4s 474 Epoch 297/10000 completed with RMSE: 0.123465
+10559.6s 475 Epoch 298/10000 completed with RMSE: 0.123751
+10594.9s 476 Epoch 299/10000 completed with RMSE: 0.123201
+10630.1s 477 Epoch 300/10000 completed with RMSE: 0.123184
+10665.4s 478 Epoch 301/10000 completed with RMSE: 0.123190
+10700.6s 479 Epoch 302/10000 completed with RMSE: 0.123543
+10736.0s 480 Epoch 303/10000 completed with RMSE: 0.123231
+10771.3s 481 Epoch 304/10000 completed with RMSE: 0.122949
+10806.6s 482 Epoch 305/10000 completed with RMSE: 0.123106
+10841.9s 483 Epoch 306/10000 completed with RMSE: 0.123386
+10877.1s 484 Epoch 307/10000 completed with RMSE: 0.123305
+10912.3s 485 Epoch 308/10000 completed with RMSE: 0.123270
+10947.6s 486 Epoch 309/10000 completed with RMSE: 0.123344
+10982.8s 487 Epoch 310/10000 completed with RMSE: 0.123434
+11018.1s 488 Epoch 311/10000 completed with RMSE: 0.123279
+11053.3s 489 Epoch 312/10000 completed with RMSE: 0.123557
+11088.6s 490 Epoch 313/10000 completed with RMSE: 0.123328
+11123.9s 491 Epoch 314/10000 completed with RMSE: 0.123015
+11159.2s 492 Epoch 315/10000 completed with RMSE: 0.123919
+11194.4s 493 Epoch 316/10000 completed with RMSE: 0.123018
+11229.7s 494 Epoch 317/10000 completed with RMSE: 0.123191
+11264.9s 495 Epoch 318/10000 completed with RMSE: 0.123292
+11300.0s 496 Epoch 319/10000 completed with RMSE: 0.123165
+11335.2s 497 Epoch 320/10000 completed with RMSE: 0.123148
+11370.4s 498 Epoch 321/10000 completed with RMSE: 0.123209
+11405.6s 499 Epoch 322/10000 completed with RMSE: 0.122961
+11440.9s 500 Epoch 323/10000 completed with RMSE: 0.123228
+11476.1s 501 Epoch 324/10000 completed with RMSE: 0.123337
+11511.4s 502 Epoch 325/10000 completed with RMSE: 0.123299
+11546.6s 503 Epoch 326/10000 completed with RMSE: 0.123243
+11581.9s 504 Epoch 327/10000 completed with RMSE: 0.122974
+11617.1s 505 Epoch 328/10000 completed with RMSE: 0.123137
+11652.4s 506 Epoch 329/10000 completed with RMSE: 0.123692
+11687.6s 507 Epoch 330/10000 completed with RMSE: 0.123189
+11722.8s 508 Epoch 331/10000 completed with RMSE: 0.123151
+11758.1s 509 Epoch 332/10000 completed with RMSE: 0.123119
+11793.4s 510 Epoch 333/10000 completed with RMSE: 0.122975
+11828.6s 511 Epoch 334/10000 completed with RMSE: 0.123075
+11863.9s 512 Epoch 335/10000 completed with RMSE: 0.123262
+11899.2s 513 Epoch 336/10000 completed with RMSE: 0.123486
+11934.5s 514 Epoch 337/10000 completed with RMSE: 0.123323
+11969.7s 515 Epoch 338/10000 completed with RMSE: 0.123271
+12005.0s 516 Epoch 339/10000 completed with RMSE: 0.123130
+12040.2s 517 Epoch 340/10000 completed with RMSE: 0.123294
+12075.5s 518 Epoch 341/10000 completed with RMSE: 0.123324
+12110.8s 519 Epoch 342/10000 completed with RMSE: 0.123020
+12145.9s 520 Epoch 343/10000 completed with RMSE: 0.123488
+12181.4s 521 Epoch 344/10000 completed with RMSE: 0.122953
+12216.4s 522 Epoch 345/10000 completed with RMSE: 0.122979
+12251.7s 523 Epoch 346/10000 completed with RMSE: 0.123145
+12287.0s 524 Epoch 347/10000 completed with RMSE: 0.122767
+12322.3s 525 Epoch 348/10000 completed with RMSE: 0.122827
+12357.6s 526 Epoch 349/10000 completed with RMSE: 0.123363
+12392.9s 527 Epoch 350/10000 completed with RMSE: 0.123285
+12428.3s 528 Epoch 351/10000 completed with RMSE: 0.122970
+12463.6s 529 Epoch 352/10000 completed with RMSE: 0.123580
+12498.8s 530 Epoch 353/10000 completed with RMSE: 0.123194
+12534.0s 531 Epoch 354/10000 completed with RMSE: 0.122858
+12569.3s 532 Epoch 355/10000 completed with RMSE: 0.123094
+12604.6s 533 Epoch 356/10000 completed with RMSE: 0.122896
+12639.6s 534 Epoch 357/10000 completed with RMSE: 0.123189
+12675.0s 535 Epoch 358/10000 completed with RMSE: 0.123187
+12710.1s 536 Epoch 359/10000 completed with RMSE: 0.123411
+12745.6s 537 Epoch 360/10000 completed with RMSE: 0.123148
+12780.6s 538 Epoch 361/10000 completed with RMSE: 0.123108
+12816.1s 539 Epoch 362/10000 completed with RMSE: 0.122834
+12851.3s 540 Epoch 363/10000 completed with RMSE: 0.122704
+12886.9s 541 Epoch 364/10000 completed with RMSE: 0.123139
+12922.0s 542 Epoch 365/10000 completed with RMSE: 0.123295
+12957.7s 543 Epoch 366/10000 completed with RMSE: 0.123188
+12992.8s 544 Epoch 367/10000 completed with RMSE: 0.123036
+13028.3s 545 Epoch 368/10000 completed with RMSE: 0.122887
+13063.4s 546 Epoch 369/10000 completed with RMSE: 0.123325
+13098.9s 547 Epoch 370/10000 completed with RMSE: 0.123206
+13134.0s 548 Epoch 371/10000 completed with RMSE: 0.122884
+13169.5s 549 Epoch 372/10000 completed with RMSE: 0.123006
+13204.7s 550 Epoch 373/10000 completed with RMSE: 0.123006
+13240.0s 551 Epoch 374/10000 completed with RMSE: 0.123365
+13275.3s 552 Epoch 375/10000 completed with RMSE: 0.123047
+13310.5s 553 Epoch 376/10000 completed with RMSE: 0.123053
+13345.8s 554 Epoch 377/10000 completed with RMSE: 0.123124
+13381.0s 555 Epoch 378/10000 completed with RMSE: 0.122867
+13416.2s 556 Epoch 379/10000 completed with RMSE: 0.122909
+13451.7s 557 Epoch 380/10000 completed with RMSE: 0.122900
+13486.9s 558 Epoch 381/10000 completed with RMSE: 0.123413
+13522.1s 559 Epoch 382/10000 completed with RMSE: 0.122797
+13557.2s 560 Epoch 383/10000 completed with RMSE: 0.123016
+13592.5s 561 Epoch 384/10000 completed with RMSE: 0.123012
+13627.8s 562 Epoch 385/10000 completed with RMSE: 0.123155
+13663.2s 563 Epoch 386/10000 completed with RMSE: 0.122997
+13698.1s 564 Epoch 387/10000 completed with RMSE: 0.122956
+13733.4s 565 Epoch 388/10000 completed with RMSE: 0.122828
+13768.6s 566 Epoch 389/10000 completed with RMSE: 0.122903
+13803.8s 567 Epoch 390/10000 completed with RMSE: 0.122866
+13839.1s 568 Epoch 391/10000 completed with RMSE: 0.123735
+13874.4s 569 Epoch 392/10000 completed with RMSE: 0.123063
+13909.7s 570 Epoch 393/10000 completed with RMSE: 0.123362
+13945.0s 571 Epoch 394/10000 completed with RMSE: 0.123277
+13980.1s 572 Epoch 395/10000 completed with RMSE: 0.123140
+14015.4s 573 Epoch 396/10000 completed with RMSE: 0.123100
+14050.7s 574 Epoch 397/10000 completed with RMSE: 0.122705
+14086.0s 575 Epoch 398/10000 completed with RMSE: 0.122832
+14121.4s 576 Epoch 399/10000 completed with RMSE: 0.123001
+14156.6s 577 Epoch 400/10000 completed with RMSE: 0.122894
+14191.9s 578 Epoch 401/10000 completed with RMSE: 0.122899
+14227.0s 579 Epoch 402/10000 completed with RMSE: 0.122923
+14262.3s 580 Epoch 403/10000 completed with RMSE: 0.123021
+14297.6s 581 Epoch 404/10000 completed with RMSE: 0.123115
+14332.8s 582 Epoch 405/10000 completed with RMSE: 0.122830
+14368.1s 583 Epoch 406/10000 completed with RMSE: 0.123015
+14403.4s 584 Epoch 407/10000 completed with RMSE: 0.123124
+14438.4s 585 Epoch 408/10000 completed with RMSE: 0.122719
+14474.0s 586 Epoch 409/10000 completed with RMSE: 0.123101
+14509.0s 587 Epoch 410/10000 completed with RMSE: 0.122866
+14544.5s 588 Epoch 411/10000 completed with RMSE: 0.123158
+14579.6s 589 Epoch 412/10000 completed with RMSE: 0.122892
+14614.9s 590 Epoch 413/10000 completed with RMSE: 0.122967
+14650.3s 591 Epoch 414/10000 completed with RMSE: 0.122945
+14685.6s 592 Epoch 415/10000 completed with RMSE: 0.122830
+14720.8s 593 Epoch 416/10000 completed with RMSE: 0.122792
+14756.3s 594 Epoch 417/10000 completed with RMSE: 0.123071
+14791.4s 595 Epoch 418/10000 completed with RMSE: 0.122874
+14826.8s 596 Epoch 419/10000 completed with RMSE: 0.122815
+14861.8s 597 Epoch 420/10000 completed with RMSE: 0.122883
+14897.1s 598 Epoch 421/10000 completed with RMSE: 0.122937
+14932.4s 599 Epoch 422/10000 completed with RMSE: 0.123124
+14967.5s 600 Epoch 423/10000 completed with RMSE: 0.122915
+15002.8s 601 Epoch 424/10000 completed with RMSE: 0.122928
+15038.1s 602 Epoch 425/10000 completed with RMSE: 0.122744
+15073.4s 603 Epoch 426/10000 completed with RMSE: 0.122988
+15108.5s 604 Epoch 427/10000 completed with RMSE: 0.123232
+15143.9s 605 Epoch 428/10000 completed with RMSE: 0.123050
+15179.2s 606 Epoch 429/10000 completed with RMSE: 0.122801
+15214.6s 607 Epoch 430/10000 completed with RMSE: 0.122628
+15249.7s 608 Epoch 431/10000 completed with RMSE: 0.122909
+15285.1s 609 Epoch 432/10000 completed with RMSE: 0.122918
+15320.5s 610 Epoch 433/10000 completed with RMSE: 0.123136
+15355.9s 611 Epoch 434/10000 completed with RMSE: 0.122982
+15391.2s 612 Epoch 435/10000 completed with RMSE: 0.123017
+15426.9s 613 Epoch 436/10000 completed with RMSE: 0.122783
+15462.0s 614 Epoch 437/10000 completed with RMSE: 0.123133
+15497.4s 615 Epoch 438/10000 completed with RMSE: 0.123233
+15532.7s 616 Epoch 439/10000 completed with RMSE: 0.123041
+15568.0s 617 Epoch 440/10000 completed with RMSE: 0.122925
+15603.2s 618 Epoch 441/10000 completed with RMSE: 0.122703
+15638.5s 619 Epoch 442/10000 completed with RMSE: 0.122834
+15673.6s 620 Epoch 443/10000 completed with RMSE: 0.122799
+15709.0s 621 Epoch 444/10000 completed with RMSE: 0.122988
+15744.4s 622 Epoch 445/10000 completed with RMSE: 0.122870
+15779.7s 623 Epoch 446/10000 completed with RMSE: 0.123107
+15814.9s 624 Epoch 447/10000 completed with RMSE: 0.122842
+15850.3s 625 Epoch 448/10000 completed with RMSE: 0.122622
+15885.6s 626 Epoch 449/10000 completed with RMSE: 0.123124
+15920.7s 627 Epoch 450/10000 completed with RMSE: 0.122743
+15956.1s 628 Epoch 451/10000 completed with RMSE: 0.123223
+15991.5s 629 Epoch 452/10000 completed with RMSE: 0.122849
+16026.8s 630 Epoch 453/10000 completed with RMSE: 0.122883
+16061.9s 631 Epoch 454/10000 completed with RMSE: 0.123022
+16097.4s 632 Epoch 455/10000 completed with RMSE: 0.122715
+16132.8s 633 Epoch 456/10000 completed with RMSE: 0.122807
+16168.3s 634 Epoch 457/10000 completed with RMSE: 0.122437
+16203.5s 635 Epoch 458/10000 completed with RMSE: 0.123221
+16239.2s 636 Epoch 459/10000 completed with RMSE: 0.122679
+16274.4s 637 Epoch 460/10000 completed with RMSE: 0.122859
+16309.8s 638 Epoch 461/10000 completed with RMSE: 0.122954
+16344.9s 639 Epoch 462/10000 completed with RMSE: 0.122672
+16380.3s 640 Epoch 463/10000 completed with RMSE: 0.122516
+16415.7s 641 Epoch 464/10000 completed with RMSE: 0.122845
+16450.8s 642 Epoch 465/10000 completed with RMSE: 0.122556
+16486.1s 643 Epoch 466/10000 completed with RMSE: 0.122804
+16521.4s 644 Epoch 467/10000 completed with RMSE: 0.122781
+16556.5s 645 Epoch 468/10000 completed with RMSE: 0.122911
+16591.8s 646 Epoch 469/10000 completed with RMSE: 0.122895
+16627.1s 647 Epoch 470/10000 completed with RMSE: 0.123268
+16662.2s 648 Epoch 471/10000 completed with RMSE: 0.122767
+16697.6s 649 Epoch 472/10000 completed with RMSE: 0.123000
+16732.9s 650 Epoch 473/10000 completed with RMSE: 0.122907
+16768.3s 651 Epoch 474/10000 completed with RMSE: 0.122746
+16803.4s 652 Epoch 475/10000 completed with RMSE: 0.122848
+16838.8s 653 Epoch 476/10000 completed with RMSE: 0.122616
+16873.9s 654 Epoch 477/10000 completed with RMSE: 0.122671
+16909.5s 655 Epoch 478/10000 completed with RMSE: 0.122875
+16944.6s 656 Epoch 479/10000 completed with RMSE: 0.122702
+16980.0s 657 Epoch 480/10000 completed with RMSE: 0.122664
+17015.0s 658 Epoch 481/10000 completed with RMSE: 0.122756
+17050.4s 659 Epoch 482/10000 completed with RMSE: 0.122748
+17085.4s 660 Epoch 483/10000 completed with RMSE: 0.122692
+17120.8s 661 Epoch 484/10000 completed with RMSE: 0.122655
+17156.1s 662 Epoch 485/10000 completed with RMSE: 0.122700
+17191.5s 663 Epoch 486/10000 completed with RMSE: 0.123090
+17227.1s 664 Epoch 487/10000 completed with RMSE: 0.123308
+17262.5s 665 Epoch 488/10000 completed with RMSE: 0.122509
+17298.2s 666 Epoch 489/10000 completed with RMSE: 0.122630
+17333.7s 667 Epoch 490/10000 completed with RMSE: 0.122726
+17369.0s 668 Epoch 491/10000 completed with RMSE: 0.123142
+17404.1s 669 Epoch 492/10000 completed with RMSE: 0.123514
+17439.5s 670 Epoch 493/10000 completed with RMSE: 0.122791
+17474.7s 671 Epoch 494/10000 completed with RMSE: 0.122768
+17510.4s 672 Epoch 495/10000 completed with RMSE: 0.122824
+17545.5s 673 Epoch 496/10000 completed with RMSE: 0.122707
+17581.0s 674 Epoch 497/10000 completed with RMSE: 0.122648
+17616.2s 675 Epoch 498/10000 completed with RMSE: 0.122850
+17651.6s 676 Epoch 499/10000 completed with RMSE: 0.122411
+17686.7s 677 Epoch 500/10000 completed with RMSE: 0.123303
+17722.0s 678 Epoch 501/10000 completed with RMSE: 0.122747
+17757.4s 679 Epoch 502/10000 completed with RMSE: 0.122875
+17792.5s 680 Epoch 503/10000 completed with RMSE: 0.123049
+17827.8s 681 Epoch 504/10000 completed with RMSE: 0.123091
+17862.9s 682 Epoch 505/10000 completed with RMSE: 0.122715
+17898.4s 683 Epoch 506/10000 completed with RMSE: 0.122723
+17933.8s 684 Epoch 507/10000 completed with RMSE: 0.122736
+17969.0s 685 Epoch 508/10000 completed with RMSE: 0.122638
+18004.5s 686 Epoch 509/10000 completed with RMSE: 0.122509
+18039.9s 687 Epoch 510/10000 completed with RMSE: 0.122771
+18075.2s 688 Epoch 511/10000 completed with RMSE: 0.122774
+18110.6s 689 Epoch 512/10000 completed with RMSE: 0.122735
+18145.8s 690 Epoch 513/10000 completed with RMSE: 0.122510
+18181.1s 691 Epoch 514/10000 completed with RMSE: 0.122709
+18216.3s 692 Epoch 515/10000 completed with RMSE: 0.122748
+18251.7s 693 Epoch 516/10000 completed with RMSE: 0.122999
+18287.1s 694 Epoch 517/10000 completed with RMSE: 0.122977
+18322.3s 695 Epoch 518/10000 completed with RMSE: 0.123010
+18357.7s 696 Epoch 519/10000 completed with RMSE: 0.122791
+18392.8s 697 Epoch 520/10000 completed with RMSE: 0.122647
+18428.3s 698 Epoch 521/10000 completed with RMSE: 0.122809
+18463.7s 699 Epoch 522/10000 completed with RMSE: 0.122902
+18499.1s 700 Epoch 523/10000 completed with RMSE: 0.123235
+18534.3s 701 Epoch 524/10000 completed with RMSE: 0.122810
+18569.7s 702 Epoch 525/10000 completed with RMSE: 0.122736
+18604.9s 703 Epoch 526/10000 completed with RMSE: 0.122689
+18640.3s 704 Epoch 527/10000 completed with RMSE: 0.122947
+18675.7s 705 Epoch 528/10000 completed with RMSE: 0.122817
+18711.2s 706 Epoch 529/10000 completed with RMSE: 0.122409
+18746.4s 707 Epoch 530/10000 completed with RMSE: 0.122749
+18781.6s 708 Epoch 531/10000 completed with RMSE: 0.122911
+18817.1s 709 Epoch 532/10000 completed with RMSE: 0.122533
+18852.4s 710 Epoch 533/10000 completed with RMSE: 0.122856
+18887.8s 711 Epoch 534/10000 completed with RMSE: 0.123114
+18923.0s 712 Epoch 535/10000 completed with RMSE: 0.122602
+18958.5s 713 Epoch 536/10000 completed with RMSE: 0.122701
+18993.7s 714 Epoch 537/10000 completed with RMSE: 0.122863
+19029.1s 715 Epoch 538/10000 completed with RMSE: 0.122670
+19064.5s 716 Epoch 539/10000 completed with RMSE: 0.122990
+19099.9s 717 Epoch 540/10000 completed with RMSE: 0.122610
+19135.0s 718 Epoch 541/10000 completed with RMSE: 0.122562
+19170.4s 719 Epoch 542/10000 completed with RMSE: 0.122944
+19205.7s 720 Epoch 543/10000 completed with RMSE: 0.122645
+19241.2s 721 Epoch 544/10000 completed with RMSE: 0.122807
+19276.3s 722 Epoch 545/10000 completed with RMSE: 0.122649
+19311.7s 723 Epoch 546/10000 completed with RMSE: 0.122854
+19346.8s 724 Epoch 547/10000 completed with RMSE: 0.123079
+19382.2s 725 Epoch 548/10000 completed with RMSE: 0.122442
+19417.4s 726 Epoch 549/10000 completed with RMSE: 0.123028
+19452.7s 727 Epoch 550/10000 completed with RMSE: 0.123225
+19488.1s 728 Epoch 551/10000 completed with RMSE: 0.122454
+19523.4s 729 Epoch 552/10000 completed with RMSE: 0.122606
+19558.8s 730 Epoch 553/10000 completed with RMSE: 0.122450
+19594.0s 731 Epoch 554/10000 completed with RMSE: 0.122560
+19629.4s 732 Epoch 555/10000 completed with RMSE: 0.122725
+19664.5s 733 Epoch 556/10000 completed with RMSE: 0.122468
+19699.9s 734 Epoch 557/10000 completed with RMSE: 0.122391
+19735.1s 735 Epoch 558/10000 completed with RMSE: 0.122596
+19770.4s 736 Epoch 559/10000 completed with RMSE: 0.122590
+19805.6s 737 Epoch 560/10000 completed with RMSE: 0.122553
+19841.0s 738 Epoch 561/10000 completed with RMSE: 0.122699
+19876.1s 739 Epoch 562/10000 completed with RMSE: 0.122626
+19911.5s 740 Epoch 563/10000 completed with RMSE: 0.122579
+19946.9s 741 Epoch 564/10000 completed with RMSE: 0.122481
+19982.0s 742 Epoch 565/10000 completed with RMSE: 0.122825
+20017.4s 743 Epoch 566/10000 completed with RMSE: 0.122489
+20052.5s 744 Epoch 567/10000 completed with RMSE: 0.123393
+20087.9s 745 Epoch 568/10000 completed with RMSE: 0.122805
+20123.1s 746 Epoch 569/10000 completed with RMSE: 0.122737
+20158.5s 747 Epoch 570/10000 completed with RMSE: 0.122396
+20193.6s 748 Epoch 571/10000 completed with RMSE: 0.122590
+20229.0s 749 Epoch 572/10000 completed with RMSE: 0.122623
+20264.2s 750 Epoch 573/10000 completed with RMSE: 0.122566
+20299.6s 751 Epoch 574/10000 completed with RMSE: 0.122660
+20334.8s 752 Epoch 575/10000 completed with RMSE: 0.122722
+20369.9s 753 Epoch 576/10000 completed with RMSE: 0.122707
+20405.3s 754 Epoch 577/10000 completed with RMSE: 0.122771
+20440.8s 755 Epoch 578/10000 completed with RMSE: 0.122790
+20476.2s 756 Epoch 579/10000 completed with RMSE: 0.122438
+20511.4s 757 Epoch 580/10000 completed with RMSE: 0.122360
+20546.6s 758 Epoch 581/10000 completed with RMSE: 0.122985
+20581.7s 759 Epoch 582/10000 completed with RMSE: 0.122906
+20617.2s 760 Epoch 583/10000 completed with RMSE: 0.122574
+20652.4s 761 Epoch 584/10000 completed with RMSE: 0.122730
+20687.7s 762 Epoch 585/10000 completed with RMSE: 0.122988
+20722.9s 763 Epoch 586/10000 completed with RMSE: 0.123184
+20758.3s 764 Epoch 587/10000 completed with RMSE: 0.122703
+20793.5s 765 Epoch 588/10000 completed with RMSE: 0.122460
+20828.9s 766 Epoch 589/10000 completed with RMSE: 0.122523
+20864.4s 767 Epoch 590/10000 completed with RMSE: 0.122456
+20899.6s 768 Epoch 591/10000 completed with RMSE: 0.122661
+20935.0s 769 Epoch 592/10000 completed with RMSE: 0.122358
+20970.2s 770 Epoch 593/10000 completed with RMSE: 0.122552
+21005.3s 771 Epoch 594/10000 completed with RMSE: 0.122515
+21040.9s 772 Epoch 595/10000 completed with RMSE: 0.122454
+21076.1s 773 Epoch 596/10000 completed with RMSE: 0.122722
+21111.5s 774 Epoch 597/10000 completed with RMSE: 0.122535
+21146.7s 775 Epoch 598/10000 completed with RMSE: 0.122622
+21182.1s 776 Epoch 599/10000 completed with RMSE: 0.122809
+21217.3s 777 Epoch 600/10000 completed with RMSE: 0.122447
+21252.7s 778 Epoch 601/10000 completed with RMSE: 0.122627
+21287.9s 779 Epoch 602/10000 completed with RMSE: 0.122508
+21323.4s 780 Epoch 603/10000 completed with RMSE: 0.122643
+21358.6s 781 Epoch 604/10000 completed with RMSE: 0.122862
+21394.1s 782 Epoch 605/10000 completed with RMSE: 0.122839
+21429.3s 783 Epoch 606/10000 completed with RMSE: 0.122674
+21464.6s 784 Epoch 607/10000 completed with RMSE: 0.123078
+21500.0s 785 Epoch 608/10000 completed with RMSE: 0.122864
+21535.2s 786 Epoch 609/10000 completed with RMSE: 0.122465
+21570.7s 787 Epoch 610/10000 completed with RMSE: 0.122490
+21605.9s 788 Epoch 611/10000 completed with RMSE: 0.122711
+21641.4s 789 Epoch 612/10000 completed with RMSE: 0.122441
+21676.6s 790 Epoch 613/10000 completed with RMSE: 0.122526
+21711.9s 791 Epoch 614/10000 completed with RMSE: 0.122892
+21747.2s 792 Epoch 615/10000 completed with RMSE: 0.122557
+21782.7s 793 Epoch 616/10000 completed with RMSE: 0.122583
+21817.9s 794 Epoch 617/10000 completed with RMSE: 0.122641
+21853.1s 795 Epoch 618/10000 completed with RMSE: 0.122606
+21888.6s 796 Epoch 619/10000 completed with RMSE: 0.122492
+21923.8s 797 Epoch 620/10000 completed with RMSE: 0.122449
+21959.3s 798 Epoch 621/10000 completed with RMSE: 0.122640
+21994.5s 799 Epoch 622/10000 completed with RMSE: 0.122656
+22029.9s 800 Epoch 623/10000 completed with RMSE: 0.123339
+22065.1s 801 Epoch 624/10000 completed with RMSE: 0.123536
+22100.5s 802 Epoch 625/10000 completed with RMSE: 0.122591
+22135.6s 803 Epoch 626/10000 completed with RMSE: 0.122195
+22170.8s 804 Epoch 627/10000 completed with RMSE: 0.122526
+22206.4s 805 Epoch 628/10000 completed with RMSE: 0.122627
+22241.7s 806 Epoch 629/10000 completed with RMSE: 0.122755
+22277.1s 807 Epoch 630/10000 completed with RMSE: 0.122392
+22312.8s 808 Epoch 631/10000 completed with RMSE: 0.122485
+22348.4s 809 Epoch 632/10000 completed with RMSE: 0.122631
+22383.7s 810 Epoch 633/10000 completed with RMSE: 0.122784
+22419.3s 811 Epoch 634/10000 completed with RMSE: 0.122478
+22454.6s 812 Epoch 635/10000 completed with RMSE: 0.122409
+22490.1s 813 Epoch 636/10000 completed with RMSE: 0.122617
+22525.3s 814 Epoch 637/10000 completed with RMSE: 0.122356
+22560.5s 815 Epoch 638/10000 completed with RMSE: 0.122440
+22595.8s 816 Epoch 639/10000 completed with RMSE: 0.122567
+22631.3s 817 Epoch 640/10000 completed with RMSE: 0.122875
+22666.7s 818 Epoch 641/10000 completed with RMSE: 0.122497
+22702.3s 819 Epoch 642/10000 completed with RMSE: 0.122546
+22737.6s 820 Epoch 643/10000 completed with RMSE: 0.122513
+22773.1s 821 Epoch 644/10000 completed with RMSE: 0.122513
+22808.3s 822 Epoch 645/10000 completed with RMSE: 0.122603
+22843.5s 823 Epoch 646/10000 completed with RMSE: 0.122785
+22879.0s 824 Epoch 647/10000 completed with RMSE: 0.122558
+22914.2s 825 Epoch 648/10000 completed with RMSE: 0.122410
+22949.6s 826 Epoch 649/10000 completed with RMSE: 0.122816
+22985.1s 827 Epoch 650/10000 completed with RMSE: 0.122586
+23020.4s 828 Epoch 651/10000 completed with RMSE: 0.122405
+23056.0s 829 Epoch 652/10000 completed with RMSE: 0.122575
+23091.2s 830 Epoch 653/10000 completed with RMSE: 0.122885
+23126.7s 831 Epoch 654/10000 completed with RMSE: 0.122694
+23161.9s 832 Epoch 655/10000 completed with RMSE: 0.122332
+23197.4s 833 Epoch 656/10000 completed with RMSE: 0.122522
+23232.5s 834 Epoch 657/10000 completed with RMSE: 0.122393
+23268.1s 835 Epoch 658/10000 completed with RMSE: 0.122487
+23303.4s 836 Epoch 659/10000 completed with RMSE: 0.122294
+23339.0s 837 Epoch 660/10000 completed with RMSE: 0.122301
+23374.4s 838 Epoch 661/10000 completed with RMSE: 0.122697
+23409.6s 839 Epoch 662/10000 completed with RMSE: 0.122578
+23445.1s 840 Epoch 663/10000 completed with RMSE: 0.122777
+23480.3s 841 Epoch 664/10000 completed with RMSE: 0.122647
+23515.8s 842 Epoch 665/10000 completed with RMSE: 0.122517
+23551.1s 843 Epoch 666/10000 completed with RMSE: 0.122550
+23586.5s 844 Epoch 667/10000 completed with RMSE: 0.122519
+23621.8s 845 Epoch 668/10000 completed with RMSE: 0.122514
+23657.4s 846 Epoch 669/10000 completed with RMSE: 0.122405
+23692.7s 847 Epoch 670/10000 completed with RMSE: 0.122502
+23727.9s 848 Epoch 671/10000 completed with RMSE: 0.122744
+23763.5s 849 Epoch 672/10000 completed with RMSE: 0.122434
+23798.6s 850 Epoch 673/10000 completed with RMSE: 0.122446
+23834.2s 851 Epoch 674/10000 completed with RMSE: 0.122629
+23869.3s 852 Epoch 675/10000 completed with RMSE: 0.122537
+23904.5s 853 Epoch 676/10000 completed with RMSE: 0.122510
+23939.7s 854 Epoch 677/10000 completed with RMSE: 0.122114
+23975.2s 855 Epoch 678/10000 completed with RMSE: 0.122349
+24010.4s 856 Epoch 679/10000 completed with RMSE: 0.122774
+24045.5s 857 Epoch 680/10000 completed with RMSE: 0.122859
+24081.0s 858 Epoch 681/10000 completed with RMSE: 0.122415
+24116.4s 859 Epoch 682/10000 completed with RMSE: 0.122422
+24151.9s 860 Epoch 683/10000 completed with RMSE: 0.122476
+24187.2s 861 Epoch 684/10000 completed with RMSE: 0.122506
+24222.5s 862 Epoch 685/10000 completed with RMSE: 0.122812
+24257.7s 863 Epoch 686/10000 completed with RMSE: 0.123020
+24293.1s 864 Epoch 687/10000 completed with RMSE: 0.122511
+24328.2s 865 Epoch 688/10000 completed with RMSE: 0.122344
+24363.4s 866 Epoch 689/10000 completed with RMSE: 0.122318
+24398.8s 867 Epoch 690/10000 completed with RMSE: 0.122370
+24434.0s 868 Epoch 691/10000 completed with RMSE: 0.122497
+24469.4s 869 Epoch 692/10000 completed with RMSE: 0.122667
+24504.6s 870 Epoch 693/10000 completed with RMSE: 0.122734
+24539.9s 871 Epoch 694/10000 completed with RMSE: 0.122452
+24575.0s 872 Epoch 695/10000 completed with RMSE: 0.122616
+24610.6s 873 Epoch 696/10000 completed with RMSE: 0.122455
+24645.9s 874 Epoch 697/10000 completed with RMSE: 0.122672
+24681.1s 875 Epoch 698/10000 completed with RMSE: 0.122634
+24716.5s 876 Epoch 699/10000 completed with RMSE: 0.122318
+24751.8s 877 Epoch 700/10000 completed with RMSE: 0.122278
+24787.3s 878 Epoch 701/10000 completed with RMSE: 0.122505
+24822.6s 879 Epoch 702/10000 completed with RMSE: 0.122797
+24857.8s 880 Epoch 703/10000 completed with RMSE: 0.122656
+24893.0s 881 Epoch 704/10000 completed with RMSE: 0.122458
+24928.4s 882 Epoch 705/10000 completed with RMSE: 0.122218
+24963.5s 883 Epoch 706/10000 completed with RMSE: 0.122244
+24998.7s 884 Epoch 707/10000 completed with RMSE: 0.122424
+25034.3s 885 Epoch 708/10000 completed with RMSE: 0.122544
+25069.6s 886 Epoch 709/10000 completed with RMSE: 0.122378
+25105.3s 887 Epoch 710/10000 completed with RMSE: 0.122424
+25140.3s 888 Epoch 711/10000 completed with RMSE: 0.122478
+25175.8s 889 Epoch 712/10000 completed with RMSE: 0.122681
+25211.1s 890 Epoch 713/10000 completed with RMSE: 0.122679
+25246.3s 891 Epoch 714/10000 completed with RMSE: 0.122890
+25281.9s 892 Epoch 715/10000 completed with RMSE: 0.122214
+25317.3s 893 Epoch 716/10000 completed with RMSE: 0.122610
+25352.7s 894 Epoch 717/10000 completed with RMSE: 0.122578
+25388.0s 895 Epoch 718/10000 completed with RMSE: 0.122539
+25423.5s 896 Epoch 719/10000 completed with RMSE: 0.122637
+25458.7s 897 Epoch 720/10000 completed with RMSE: 0.122430
+25494.0s 898 Epoch 721/10000 completed with RMSE: 0.122234
+25529.2s 899 Epoch 722/10000 completed with RMSE: 0.122648
+25564.7s 900 Epoch 723/10000 completed with RMSE: 0.122325
+25599.9s 901 Epoch 724/10000 completed with RMSE: 0.122690
+25635.1s 902 Epoch 725/10000 completed with RMSE: 0.122445
+25670.6s 903 Epoch 726/10000 completed with RMSE: 0.122367
+25705.9s 904 Epoch 727/10000 completed with RMSE: 0.122402
+25741.2s 905 Epoch 728/10000 completed with RMSE: 0.122397
+25776.5s 906 Epoch 729/10000 completed with RMSE: 0.122521
+25812.0s 907 Epoch 730/10000 completed with RMSE: 0.122269
+25847.3s 908 Epoch 731/10000 completed with RMSE: 0.122355
+25882.5s 909 Epoch 732/10000 completed with RMSE: 0.122388
+25918.0s 910 Epoch 733/10000 completed with RMSE: 0.122452
+25953.3s 911 Epoch 734/10000 completed with RMSE: 0.122813
+25988.5s 912 Epoch 735/10000 completed with RMSE: 0.122700
+26023.8s 913 Epoch 736/10000 completed with RMSE: 0.122347
+26059.0s 914 Epoch 737/10000 completed with RMSE: 0.122533
+26094.5s 915 Epoch 738/10000 completed with RMSE: 0.122650
+26129.7s 916 Epoch 739/10000 completed with RMSE: 0.123013
+26164.9s 917 Epoch 740/10000 completed with RMSE: 0.122539
+26200.4s 918 Epoch 741/10000 completed with RMSE: 0.122275
+26235.6s 919 Epoch 742/10000 completed with RMSE: 0.122253
+26270.9s 920 Epoch 743/10000 completed with RMSE: 0.122310
+26306.4s 921 Epoch 744/10000 completed with RMSE: 0.122255
+26341.6s 922 Epoch 745/10000 completed with RMSE: 0.122192
+26376.9s 923 Epoch 746/10000 completed with RMSE: 0.122438
+26412.2s 924 Epoch 747/10000 completed with RMSE: 0.122714
+26447.4s 925 Epoch 748/10000 completed with RMSE: 0.122402
+26483.0s 926 Epoch 749/10000 completed with RMSE: 0.122556
+26518.3s 927 Epoch 750/10000 completed with RMSE: 0.122321
+26553.6s 928 Epoch 751/10000 completed with RMSE: 0.122235
+26588.9s 929 Epoch 752/10000 completed with RMSE: 0.122424
+26624.4s 930 Epoch 753/10000 completed with RMSE: 0.122625
+26659.7s 931 Epoch 754/10000 completed with RMSE: 0.122275
+26695.0s 932 Epoch 755/10000 completed with RMSE: 0.122356
+26730.3s 933 Epoch 756/10000 completed with RMSE: 0.122295
+26765.6s 934 Epoch 757/10000 completed with RMSE: 0.122596
+26801.0s 935 Epoch 758/10000 completed with RMSE: 0.122426
+26836.3s 936 Epoch 759/10000 completed with RMSE: 0.122465
+26871.6s 937 Epoch 760/10000 completed with RMSE: 0.122449
+26906.8s 938 Epoch 761/10000 completed with RMSE: 0.122888
+26942.4s 939 Epoch 762/10000 completed with RMSE: 0.122664
+26977.6s 940 Epoch 763/10000 completed with RMSE: 0.122356
+27012.9s 941 Epoch 764/10000 completed with RMSE: 0.122332
+27048.5s 942 Epoch 765/10000 completed with RMSE: 0.122219
+27083.7s 943 Epoch 766/10000 completed with RMSE: 0.122464
+27119.0s 944 Epoch 767/10000 completed with RMSE: 0.122323
+27154.2s 945 Epoch 768/10000 completed with RMSE: 0.122296
+27189.4s 946 Epoch 769/10000 completed with RMSE: 0.122315
+27224.7s 947 Epoch 770/10000 completed with RMSE: 0.122552
+27260.0s 948 Epoch 771/10000 completed with RMSE: 0.122532
+27295.5s 949 Epoch 772/10000 completed with RMSE: 0.122458
+27330.7s 950 Epoch 773/10000 completed with RMSE: 0.122154
+27366.2s 951 Epoch 774/10000 completed with RMSE: 0.122305
+27401.2s 952 Epoch 775/10000 completed with RMSE: 0.122447
+27436.8s 953 Epoch 776/10000 completed with RMSE: 0.122471
+27472.0s 954 Epoch 777/10000 completed with RMSE: 0.122312
+27507.3s 955 Epoch 778/10000 completed with RMSE: 0.122460
+27542.6s 956 Epoch 779/10000 completed with RMSE: 0.122286
+27577.8s 957 Epoch 780/10000 completed with RMSE: 0.122566
+27613.4s 958 Epoch 781/10000 completed with RMSE: 0.122427
+27648.6s 959 Epoch 782/10000 completed with RMSE: 0.122343
+27683.9s 960 Epoch 783/10000 completed with RMSE: 0.122299
+27719.2s 961 Epoch 784/10000 completed with RMSE: 0.122486
+27754.4s 962 Epoch 785/10000 completed with RMSE: 0.122665
+27790.0s 963 Epoch 786/10000 completed with RMSE: 0.122416
+27825.3s 964 Epoch 787/10000 completed with RMSE: 0.122482
+27860.6s 965 Epoch 788/10000 completed with RMSE: 0.122627
+27895.9s 966 Epoch 789/10000 completed with RMSE: 0.122526
+27931.5s 967 Epoch 790/10000 completed with RMSE: 0.122297
+27966.7s 968 Epoch 791/10000 completed with RMSE: 0.122308
+28002.0s 969 Epoch 792/10000 completed with RMSE: 0.122371
+28037.3s 970 Epoch 793/10000 completed with RMSE: 0.122105
+28072.5s 971 Epoch 794/10000 completed with RMSE: 0.122391
+28108.1s 972 Epoch 795/10000 completed with RMSE: 0.122216
+28143.3s 973 Epoch 796/10000 completed with RMSE: 0.122204
+28178.6s 974 Epoch 797/10000 completed with RMSE: 0.122308
+28213.9s 975 Epoch 798/10000 completed with RMSE: 0.122397
+28249.2s 976 Epoch 799/10000 completed with RMSE: 0.122497
+28284.4s 977 Epoch 800/10000 completed with RMSE: 0.122416
+28319.7s 978 Epoch 801/10000 completed with RMSE: 0.122449
+28355.3s 979 Epoch 802/10000 completed with RMSE: 0.122614
+28390.6s 980 Epoch 803/10000 completed with RMSE: 0.122431
+28426.0s 981 Epoch 804/10000 completed with RMSE: 0.122501
+28461.3s 982 Epoch 805/10000 completed with RMSE: 0.122363
+28496.6s 983 Epoch 806/10000 completed with RMSE: 0.122469
+28531.9s 984 Epoch 807/10000 completed with RMSE: 0.122377
+28567.2s 985 Epoch 808/10000 completed with RMSE: 0.122262
+28602.6s 986 Epoch 809/10000 completed with RMSE: 0.122658
+28637.9s 987 Epoch 810/10000 completed with RMSE: 0.122387
+28673.2s 988 Epoch 811/10000 completed with RMSE: 0.122539
+28708.4s 989 Epoch 812/10000 completed with RMSE: 0.122510
+28743.7s 990 Epoch 813/10000 completed with RMSE: 0.122268
+28778.9s 991 Epoch 814/10000 completed with RMSE: 0.122135
+28814.2s 992 Epoch 815/10000 completed with RMSE: 0.122171
+28849.7s 993 Epoch 816/10000 completed with RMSE: 0.122135
+28885.0s 994 Epoch 817/10000 completed with RMSE: 0.122334
+28920.3s 995 Epoch 818/10000 completed with RMSE: 0.122397
+28955.5s 996 Epoch 819/10000 completed with RMSE: 0.122356
+28990.9s 997 Epoch 820/10000 completed with RMSE: 0.122209
+29026.2s 998 Epoch 821/10000 completed with RMSE: 0.122363
+29061.8s 999 Epoch 822/10000 completed with RMSE: 0.122245
+29097.1s 1000 Epoch 823/10000 completed with RMSE: 0.122217
+29132.4s 1001 Epoch 824/10000 completed with RMSE: 0.122340
+29167.7s 1002 Epoch 825/10000 completed with RMSE: 0.122290
+29203.0s 1003 Epoch 826/10000 completed with RMSE: 0.122352
+29238.3s 1004 Epoch 827/10000 completed with RMSE: 0.122351
+29273.7s 1005 Epoch 828/10000 completed with RMSE: 0.122285
+29309.3s 1006 Epoch 829/10000 completed with RMSE: 0.122277
+29344.5s 1007 Epoch 830/10000 completed with RMSE: 0.122321
+29379.9s 1008 Epoch 831/10000 completed with RMSE: 0.122519
+29415.2s 1009 Epoch 832/10000 completed with RMSE: 0.122687
+29450.4s 1010 Epoch 833/10000 completed with RMSE: 0.123036
+29485.7s 1011 Epoch 834/10000 completed with RMSE: 0.122755
+29521.0s 1012 Epoch 835/10000 completed with RMSE: 0.122440
+29556.6s 1013 Epoch 836/10000 completed with RMSE: 0.122075
+29591.9s 1014 Epoch 837/10000 completed with RMSE: 0.122499
+29627.2s 1015 Epoch 838/10000 completed with RMSE: 0.122420
+29662.5s 1016 Epoch 839/10000 completed with RMSE: 0.122224
+29697.8s 1017 Epoch 840/10000 completed with RMSE: 0.122414
+29733.1s 1018 Epoch 841/10000 completed with RMSE: 0.122228
+29768.3s 1019 Epoch 842/10000 completed with RMSE: 0.122181
+29803.9s 1020 Epoch 843/10000 completed with RMSE: 0.122504
+29839.1s 1021 Epoch 844/10000 completed with RMSE: 0.122371
+29874.5s 1022 Epoch 845/10000 completed with RMSE: 0.122540
+29909.8s 1023 Epoch 846/10000 completed with RMSE: 0.122365
+29945.0s 1024 Epoch 847/10000 completed with RMSE: 0.122236
+29980.3s 1025 Epoch 848/10000 completed with RMSE: 0.122374
+30015.6s 1026 Epoch 849/10000 completed with RMSE: 0.122407
+30051.3s 1027 Epoch 850/10000 completed with RMSE: 0.122331
+30086.6s 1028 Epoch 851/10000 completed with RMSE: 0.122348
+30121.9s 1029 Epoch 852/10000 completed with RMSE: 0.122341
+30157.3s 1030 Epoch 853/10000 completed with RMSE: 0.122420
+30192.5s 1031 Epoch 854/10000 completed with RMSE: 0.122209
+30227.8s 1032 Epoch 855/10000 completed with RMSE: 0.122469
+30263.1s 1033 Epoch 856/10000 completed with RMSE: 0.122233
+30298.4s 1034 Epoch 857/10000 completed with RMSE: 0.122365
+30333.9s 1035 Epoch 858/10000 completed with RMSE: 0.122394
+30369.2s 1036 Epoch 859/10000 completed with RMSE: 0.122555
+30404.5s 1037 Epoch 860/10000 completed with RMSE: 0.122087
+30439.8s 1038 Epoch 861/10000 completed with RMSE: 0.122366
+30475.1s 1039 Epoch 862/10000 completed with RMSE: 0.122304
+30510.4s 1040 Epoch 863/10000 completed with RMSE: 0.122468
+30545.7s 1041 Epoch 864/10000 completed with RMSE: 0.122363
+30581.3s 1042 Epoch 865/10000 completed with RMSE: 0.122314
+30616.6s 1043 Epoch 866/10000 completed with RMSE: 0.122173
+30651.9s 1044 Epoch 867/10000 completed with RMSE: 0.122509
+30687.2s 1045 Epoch 868/10000 completed with RMSE: 0.122139
+30722.5s 1046 Epoch 869/10000 completed with RMSE: 0.122213
+30757.7s 1047 Epoch 870/10000 completed with RMSE: 0.122114
+30793.1s 1048 Epoch 871/10000 completed with RMSE: 0.122118
+30828.4s 1049 Epoch 872/10000 completed with RMSE: 0.122431
+30863.8s 1050 Epoch 873/10000 completed with RMSE: 0.122523
+30899.1s 1051 Epoch 874/10000 completed with RMSE: 0.122686
+30934.4s 1052 Epoch 875/10000 completed with RMSE: 0.122449
+30969.7s 1053 Epoch 876/10000 completed with RMSE: 0.122505
+31005.0s 1054 Epoch 877/10000 completed with RMSE: 0.122390
+31040.3s 1055 Epoch 878/10000 completed with RMSE: 0.122797
+31075.9s 1056 Epoch 879/10000 completed with RMSE: 0.122213
+31110.9s 1057 Epoch 880/10000 completed with RMSE: 0.122324
+31146.5s 1058 Epoch 881/10000 completed with RMSE: 0.122352
+31181.8s 1059 Epoch 882/10000 completed with RMSE: 0.122354
+31216.9s 1060 Epoch 883/10000 completed with RMSE: 0.122351
+31252.5s 1061 Epoch 884/10000 completed with RMSE: 0.122662
+31287.8s 1062 Epoch 885/10000 completed with RMSE: 0.122497
+31323.1s 1063 Epoch 886/10000 completed with RMSE: 0.122129
+31358.4s 1064 Epoch 887/10000 completed with RMSE: 0.122315
+31393.7s 1065 Epoch 888/10000 completed with RMSE: 0.122280
+31429.0s 1066 Epoch 889/10000 completed with RMSE: 0.122313
+31464.3s 1067 Epoch 890/10000 completed with RMSE: 0.122494
+31499.6s 1068 Epoch 891/10000 completed with RMSE: 0.122544
+31534.9s 1069 Epoch 892/10000 completed with RMSE: 0.122070
+31570.3s 1070 Epoch 893/10000 completed with RMSE: 0.122303
+31605.6s 1071 Epoch 894/10000 completed with RMSE: 0.122269
+31640.9s 1072 Epoch 895/10000 completed with RMSE: 0.122540
+31676.2s 1073 Epoch 896/10000 completed with RMSE: 0.122197
+31711.5s 1074 Epoch 897/10000 completed with RMSE: 0.122154
+31747.1s 1075 Epoch 898/10000 completed with RMSE: 0.122281
+31782.1s 1076 Epoch 899/10000 completed with RMSE: 0.122087
+31817.4s 1077 Epoch 900/10000 completed with RMSE: 0.122394
+31852.7s 1078 Epoch 901/10000 completed with RMSE: 0.122369
+31888.0s 1079 Epoch 902/10000 completed with RMSE: 0.122529
+31923.6s 1080 Epoch 903/10000 completed with RMSE: 0.122476
+31958.7s 1081 Epoch 904/10000 completed with RMSE: 0.122463
+31994.2s 1082 Epoch 905/10000 completed with RMSE: 0.122315
+32029.3s 1083 Epoch 906/10000 completed with RMSE: 0.122287
+32064.6s 1084 Epoch 907/10000 completed with RMSE: 0.122428
+32100.3s 1085 Epoch 908/10000 completed with RMSE: 0.122076
+32135.3s 1086 Epoch 909/10000 completed with RMSE: 0.122449
+32170.9s 1087 Epoch 910/10000 completed with RMSE: 0.122421
+32205.9s 1088 Epoch 911/10000 completed with RMSE: 0.122129
+32241.5s 1089 Epoch 912/10000 completed with RMSE: 0.122300
+32276.9s 1090 Epoch 913/10000 completed with RMSE: 0.122403
+32311.9s 1091 Epoch 914/10000 completed with RMSE: 0.122283
+32347.5s 1092 Epoch 915/10000 completed with RMSE: 0.122211
+32382.9s 1093 Epoch 916/10000 completed with RMSE: 0.122345
+32418.2s 1094 Epoch 917/10000 completed with RMSE: 0.122415
+32453.5s 1095 Epoch 918/10000 completed with RMSE: 0.122292
+32488.8s 1096 Epoch 919/10000 completed with RMSE: 0.122140
+32524.1s 1097 Epoch 920/10000 completed with RMSE: 0.122392
+32559.4s 1098 Epoch 921/10000 completed with RMSE: 0.122273
+32594.8s 1099 Epoch 922/10000 completed with RMSE: 0.122169
+32630.1s 1100 Epoch 923/10000 completed with RMSE: 0.122336
+32665.4s 1101 Epoch 924/10000 completed with RMSE: 0.122680
+32700.8s 1102 Epoch 925/10000 completed with RMSE: 0.122187
+32736.2s 1103 Epoch 926/10000 completed with RMSE: 0.122175
+32771.5s 1104 Epoch 927/10000 completed with RMSE: 0.122246
+32806.8s 1105 Epoch 928/10000 completed with RMSE: 0.122301
+32842.1s 1106 Epoch 929/10000 completed with RMSE: 0.122165
+32877.4s 1107 Epoch 930/10000 completed with RMSE: 0.122251
+32912.8s 1108 Epoch 931/10000 completed with RMSE: 0.122377
+32948.2s 1109 Epoch 932/10000 completed with RMSE: 0.122292
+32983.5s 1110 Epoch 933/10000 completed with RMSE: 0.122321
+33018.8s 1111 Epoch 934/10000 completed with RMSE: 0.122364
+33054.1s 1112 Epoch 935/10000 completed with RMSE: 0.122653
+33089.4s 1113 Epoch 936/10000 completed with RMSE: 0.122241
+33124.8s 1114 Epoch 937/10000 completed with RMSE: 0.122241
+33160.1s 1115 Epoch 938/10000 completed with RMSE: 0.122334
+33195.4s 1116 Epoch 939/10000 completed with RMSE: 0.122327
+33230.7s 1117 Epoch 940/10000 completed with RMSE: 0.122157
+33266.0s 1118 Epoch 941/10000 completed with RMSE: 0.122331
+33301.4s 1119 Epoch 942/10000 completed with RMSE: 0.122152
+33336.7s 1120 Epoch 943/10000 completed with RMSE: 0.122054
+33372.0s 1121 Epoch 944/10000 completed with RMSE: 0.122199
+33407.4s 1122 Epoch 945/10000 completed with RMSE: 0.122157
+33442.8s 1123 Epoch 946/10000 completed with RMSE: 0.122166
+33478.1s 1124 Epoch 947/10000 completed with RMSE: 0.122018
+33513.4s 1125 Epoch 948/10000 completed with RMSE: 0.122178
+33548.8s 1126 Epoch 949/10000 completed with RMSE: 0.122176
+33584.1s 1127 Epoch 950/10000 completed with RMSE: 0.122263
+33619.4s 1128 Epoch 951/10000 completed with RMSE: 0.122275
+33654.7s 1129 Epoch 952/10000 completed with RMSE: 0.122295
+33690.0s 1130 Epoch 953/10000 completed with RMSE: 0.122108
+33725.3s 1131 Epoch 954/10000 completed with RMSE: 0.122176
+33760.7s 1132 Epoch 955/10000 completed with RMSE: 0.122307
+33796.0s 1133 Epoch 956/10000 completed with RMSE: 0.122138
+33831.4s 1134 Epoch 957/10000 completed with RMSE: 0.122395
+33866.8s 1135 Epoch 958/10000 completed with RMSE: 0.122242
+33902.2s 1136 Epoch 959/10000 completed with RMSE: 0.122052
+33937.7s 1137 Epoch 960/10000 completed with RMSE: 0.122608
+33973.1s 1138 Epoch 961/10000 completed with RMSE: 0.122050
+34008.1s 1139 Epoch 962/10000 completed with RMSE: 0.122156
+34043.8s 1140 Epoch 963/10000 completed with RMSE: 0.122105
+34078.9s 1141 Epoch 964/10000 completed with RMSE: 0.122274
+34114.5s 1142 Epoch 965/10000 completed with RMSE: 0.122222
+34149.6s 1143 Epoch 966/10000 completed with RMSE: 0.122254
+34185.0s 1144 Epoch 967/10000 completed with RMSE: 0.122421
+34220.6s 1145 Epoch 968/10000 completed with RMSE: 0.122688
+34255.7s 1146 Epoch 969/10000 completed with RMSE: 0.122307
+34291.4s 1147 Epoch 970/10000 completed with RMSE: 0.122581
+34326.5s 1148 Epoch 971/10000 completed with RMSE: 0.122339
+34361.9s 1149 Epoch 972/10000 completed with RMSE: 0.122071
+34397.3s 1150 Epoch 973/10000 completed with RMSE: 0.122087
+34432.6s 1151 Epoch 974/10000 completed with RMSE: 0.122568
+34468.0s 1152 Epoch 975/10000 completed with RMSE: 0.122102
+34503.3s 1153 Epoch 976/10000 completed with RMSE: 0.122203
+34538.8s 1154 Epoch 977/10000 completed with RMSE: 0.122338
+34574.3s 1155 Epoch 978/10000 completed with RMSE: 0.122365
+34609.8s 1156 Epoch 979/10000 completed with RMSE: 0.122153
+34645.3s 1157 Epoch 980/10000 completed with RMSE: 0.122217
+34680.7s 1158 Epoch 981/10000 completed with RMSE: 0.122197
+34716.1s 1159 Epoch 982/10000 completed with RMSE: 0.122193
+34751.1s 1160 Epoch 983/10000 completed with RMSE: 0.122145
+34786.5s 1161 Epoch 984/10000 completed with RMSE: 0.122158
+34821.8s 1162 Epoch 985/10000 completed with RMSE: 0.122335
+34857.2s 1163 Epoch 986/10000 completed with RMSE: 0.122335
+34892.5s 1164 Epoch 987/10000 completed with RMSE: 0.122252
+34927.9s 1165 Epoch 988/10000 completed with RMSE: 0.122250
+34963.2s 1166 Epoch 989/10000 completed with RMSE: 0.122626
+34998.6s 1167 Epoch 990/10000 completed with RMSE: 0.122256
+35034.4s 1168 Epoch 991/10000 completed with RMSE: 0.122262
+35069.4s 1169 Epoch 992/10000 completed with RMSE: 0.121952
+35104.8s 1170 Epoch 993/10000 completed with RMSE: 0.122269
+35140.2s 1171 Epoch 994/10000 completed with RMSE: 0.122385
+35175.6s 1172 Epoch 995/10000 completed with RMSE: 0.122009
+35210.6s 1173 Epoch 996/10000 completed with RMSE: 0.122429
+35246.3s 1174 Epoch 997/10000 completed with RMSE: 0.122388
+35281.4s 1175 Epoch 998/10000 completed with RMSE: 0.122184
+35316.7s 1176 Epoch 999/10000 completed with RMSE: 0.122243
+35352.1s 1177 Epoch 1000/10000 completed with RMSE: 0.122211
+35387.5s 1178 Epoch 1001/10000 completed with RMSE: 0.122077
+35423.0s 1179 Epoch 1002/10000 completed with RMSE: 0.122150
+35458.3s 1180 Epoch 1003/10000 completed with RMSE: 0.122140
+35493.7s 1181 Epoch 1004/10000 completed with RMSE: 0.122590
+35529.0s 1182 Epoch 1005/10000 completed with RMSE: 0.122618
+35564.4s 1183 Epoch 1006/10000 completed with RMSE: 0.122588
+35599.8s 1184 Epoch 1007/10000 completed with RMSE: 0.122442
+35634.9s 1185 Epoch 1008/10000 completed with RMSE: 0.122217
+35670.5s 1186 Epoch 1009/10000 completed with RMSE: 0.122142
+35705.6s 1187 Epoch 1010/10000 completed with RMSE: 0.122750
+35741.0s 1188 Epoch 1011/10000 completed with RMSE: 0.122413
+35776.4s 1189 Epoch 1012/10000 completed with RMSE: 0.122233
+35811.8s 1190 Epoch 1013/10000 completed with RMSE: 0.122198
+35847.2s 1191 Epoch 1014/10000 completed with RMSE: 0.122072
+35882.6s 1192 Epoch 1015/10000 completed with RMSE: 0.122298
+35918.0s 1193 Epoch 1016/10000 completed with RMSE: 0.122438
+35953.4s 1194 Epoch 1017/10000 completed with RMSE: 0.122285
+35988.5s 1195 Epoch 1018/10000 completed with RMSE: 0.122123
+36024.2s 1196 Epoch 1019/10000 completed with RMSE: 0.122093
+36059.3s 1197 Epoch 1020/10000 completed with RMSE: 0.122405
+36094.6s 1198 Epoch 1021/10000 completed with RMSE: 0.122079
+36130.0s 1199 Epoch 1022/10000 completed with RMSE: 0.122175
+36165.4s 1200 Epoch 1023/10000 completed with RMSE: 0.122199
+36200.8s 1201 Epoch 1024/10000 completed with RMSE: 0.122167
+36236.2s 1202 Epoch 1025/10000 completed with RMSE: 0.122282
+36271.6s 1203 Epoch 1026/10000 completed with RMSE: 0.122232
+36306.7s 1204 Epoch 1027/10000 completed with RMSE: 0.122025
+36342.1s 1205 Epoch 1028/10000 completed with RMSE: 0.122281
+36377.5s 1206 Epoch 1029/10000 completed with RMSE: 0.122144
+36413.0s 1207 Epoch 1030/10000 completed with RMSE: 0.122327
+36448.4s 1208 Epoch 1031/10000 completed with RMSE: 0.122515
+36483.8s 1209 Epoch 1032/10000 completed with RMSE: 0.122095
+36519.2s 1210 Epoch 1033/10000 completed with RMSE: 0.122054
+36554.7s 1211 Epoch 1034/10000 completed with RMSE: 0.122310
+36590.1s 1212 Epoch 1035/10000 completed with RMSE: 0.122326
+36625.5s 1213 Epoch 1036/10000 completed with RMSE: 0.122219
+36660.6s 1214 Epoch 1037/10000 completed with RMSE: 0.122118
+36696.0s 1215 Epoch 1038/10000 completed with RMSE: 0.122254
+36731.4s 1216 Epoch 1039/10000 completed with RMSE: 0.122185
+36766.8s 1217 Epoch 1040/10000 completed with RMSE: 0.122193
+36802.2s 1218 Epoch 1041/10000 completed with RMSE: 0.122319
+36837.6s 1219 Epoch 1042/10000 completed with RMSE: 0.122733
+36873.0s 1220 Epoch 1043/10000 completed with RMSE: 0.122308
+36908.5s 1221 Epoch 1044/10000 completed with RMSE: 0.122150
+36943.6s 1222 Epoch 1045/10000 completed with RMSE: 0.122645
+36979.3s 1223 Epoch 1046/10000 completed with RMSE: 0.122115
+37014.4s 1224 Epoch 1047/10000 completed with RMSE: 0.121998
+37049.8s 1225 Epoch 1048/10000 completed with RMSE: 0.122377
+37085.2s 1226 Epoch 1049/10000 completed with RMSE: 0.122034
+37120.7s 1227 Epoch 1050/10000 completed with RMSE: 0.122682
+37156.1s 1228 Epoch 1051/10000 completed with RMSE: 0.122297
+37191.5s 1229 Epoch 1052/10000 completed with RMSE: 0.122350
+37226.9s 1230 Epoch 1053/10000 completed with RMSE: 0.122137
+37262.0s 1231 Epoch 1054/10000 completed with RMSE: 0.122127
+37297.4s 1232 Epoch 1055/10000 completed with RMSE: 0.122178
+37332.8s 1233 Epoch 1056/10000 completed with RMSE: 0.122167
+37368.3s 1234 Epoch 1057/10000 completed with RMSE: 0.122146
+37403.7s 1235 Epoch 1058/10000 completed with RMSE: 0.122033
+37438.8s 1236 Epoch 1059/10000 completed with RMSE: 0.122348
+37474.2s 1237 Epoch 1060/10000 completed with RMSE: 0.122078
+37509.7s 1238 Epoch 1061/10000 completed with RMSE: 0.122389
+37545.1s 1239 Epoch 1062/10000 completed with RMSE: 0.122128
+37580.5s 1240 Epoch 1063/10000 completed with RMSE: 0.122379
+37615.7s 1241 Epoch 1064/10000 completed with RMSE: 0.122539
+37651.2s 1242 Epoch 1065/10000 completed with RMSE: 0.122172
+37686.6s 1243 Epoch 1066/10000 completed with RMSE: 0.122152
+37722.0s 1244 Epoch 1067/10000 completed with RMSE: 0.122217
+37757.4s 1245 Epoch 1068/10000 completed with RMSE: 0.122167
+37792.6s 1246 Epoch 1069/10000 completed with RMSE: 0.122148
+37828.0s 1247 Epoch 1070/10000 completed with RMSE: 0.122304
+37863.5s 1248 Epoch 1071/10000 completed with RMSE: 0.122453
+37898.9s 1249 Epoch 1072/10000 completed with RMSE: 0.122133
+37934.4s 1250 Epoch 1073/10000 completed with RMSE: 0.122309
+37969.5s 1251 Epoch 1074/10000 completed with RMSE: 0.122071
+38004.9s 1252 Epoch 1075/10000 completed with RMSE: 0.122319
+38040.3s 1253 Epoch 1076/10000 completed with RMSE: 0.122206
+38075.7s 1254 Epoch 1077/10000 completed with RMSE: 0.122303
+38111.2s 1255 Epoch 1078/10000 completed with RMSE: 0.122203
+38146.4s 1256 Epoch 1079/10000 completed with RMSE: 0.121960
+38181.8s 1257 Epoch 1080/10000 completed with RMSE: 0.122243
+38217.2s 1258 Epoch 1081/10000 completed with RMSE: 0.122104
+38252.6s 1259 Epoch 1082/10000 completed with RMSE: 0.122265
+38288.1s 1260 Epoch 1083/10000 completed with RMSE: 0.122192
+38323.5s 1261 Epoch 1084/10000 completed with RMSE: 0.122323
+38358.7s 1262 Epoch 1085/10000 completed with RMSE: 0.122453
+38394.1s 1263 Epoch 1086/10000 completed with RMSE: 0.122247
+38429.6s 1264 Epoch 1087/10000 completed with RMSE: 0.122253
+38465.1s 1265 Epoch 1088/10000 completed with RMSE: 0.122265
+38500.5s 1266 Epoch 1089/10000 completed with RMSE: 0.122231
+38535.7s 1267 Epoch 1090/10000 completed with RMSE: 0.122080
+38571.1s 1268 Epoch 1091/10000 completed with RMSE: 0.122072
+38606.6s 1269 Epoch 1092/10000 completed with RMSE: 0.121918
+38642.1s 1270 Epoch 1093/10000 completed with RMSE: 0.122167
+38677.2s 1271 Epoch 1094/10000 completed with RMSE: 0.122289
+38712.6s 1272 Epoch 1095/10000 completed with RMSE: 0.122155
+38748.1s 1273 Epoch 1096/10000 completed with RMSE: 0.122020
+38783.5s 1274 Epoch 1097/10000 completed with RMSE: 0.122308
+38819.1s 1275 Epoch 1098/10000 completed with RMSE: 0.122715
+38854.3s 1276 Epoch 1099/10000 completed with RMSE: 0.122414
+38889.9s 1277 Epoch 1100/10000 completed with RMSE: 0.122579
+38925.4s 1278 Epoch 1101/10000 completed with RMSE: 0.122550
+38960.8s 1279 Epoch 1102/10000 completed with RMSE: 0.122043
+38996.3s 1280 Epoch 1103/10000 completed with RMSE: 0.122076
+39031.6s 1281 Epoch 1104/10000 completed with RMSE: 0.122073
+39067.2s 1282 Epoch 1105/10000 completed with RMSE: 0.122081
+39102.8s 1283 Epoch 1106/10000 completed with RMSE: 0.122111
+39138.4s 1284 Epoch 1107/10000 completed with RMSE: 0.121981
+39174.0s 1285 Epoch 1108/10000 completed with RMSE: 0.122231
+39209.3s 1286 Epoch 1109/10000 completed with RMSE: 0.122244
+39244.8s 1287 Epoch 1110/10000 completed with RMSE: 0.122173
+39280.5s 1288 Epoch 1111/10000 completed with RMSE: 0.122139
+39316.0s 1289 Epoch 1112/10000 completed with RMSE: 0.122202
+39351.6s 1290 Epoch 1113/10000 completed with RMSE: 0.122328
+39386.7s 1291 Epoch 1114/10000 completed with RMSE: 0.122227
+39422.2s 1292 Epoch 1115/10000 completed with RMSE: 0.122236
+39457.6s 1293 Epoch 1116/10000 completed with RMSE: 0.122181
+39493.1s 1294 Epoch 1117/10000 completed with RMSE: 0.122047
+39528.5s 1295 Epoch 1118/10000 completed with RMSE: 0.122038
+39563.7s 1296 Epoch 1119/10000 completed with RMSE: 0.122186
+39599.1s 1297 Epoch 1120/10000 completed with RMSE: 0.122166
+39634.6s 1298 Epoch 1121/10000 completed with RMSE: 0.122298
+39670.1s 1299 Epoch 1122/10000 completed with RMSE: 0.122514
+39705.5s 1300 Epoch 1123/10000 completed with RMSE: 0.122218
+39740.7s 1301 Epoch 1124/10000 completed with RMSE: 0.122230
+39776.1s 1302 Epoch 1125/10000 completed with RMSE: 0.122079
+39811.7s 1303 Epoch 1126/10000 completed with RMSE: 0.122084
+39846.8s 1304 Epoch 1127/10000 completed with RMSE: 0.122304
+39882.6s 1305 Epoch 1128/10000 completed with RMSE: 0.122077
+39917.8s 1306 Epoch 1129/10000 completed with RMSE: 0.122192
+39953.3s 1307 Epoch 1130/10000 completed with RMSE: 0.122144
+39988.8s 1308 Epoch 1131/10000 completed with RMSE: 0.121991
+40024.0s 1309 Epoch 1132/10000 completed with RMSE: 0.122066
+40059.6s 1310 Epoch 1133/10000 completed with RMSE: 0.122451
+40095.3s 1311 Epoch 1134/10000 completed with RMSE: 0.122395
+40131.0s 1312 Epoch 1135/10000 completed with RMSE: 0.122141
+40166.8s 1313 Epoch 1136/10000 completed with RMSE: 0.122185
+40202.1s 1314 Epoch 1137/10000 completed with RMSE: 0.122265
+40237.8s 1315 Epoch 1138/10000 completed with RMSE: 0.122015
+40273.5s 1316 Epoch 1139/10000 completed with RMSE: 0.121971
+40309.3s 1317 Epoch 1140/10000 completed with RMSE: 0.122074
+40344.9s 1318 Epoch 1141/10000 completed with RMSE: 0.122063
+40380.1s 1319 Epoch 1142/10000 completed with RMSE: 0.122018
+40415.6s 1320 Epoch 1143/10000 completed with RMSE: 0.122300
+40451.1s 1321 Epoch 1144/10000 completed with RMSE: 0.122293
+40486.2s 1322 Epoch 1145/10000 completed with RMSE: 0.122371
+40522.0s 1323 Epoch 1146/10000 completed with RMSE: 0.122314
+40557.2s 1324 Epoch 1147/10000 completed with RMSE: 0.122209
+40592.7s 1325 Epoch 1148/10000 completed with RMSE: 0.122343
+40628.4s 1326 Epoch 1149/10000 completed with RMSE: 0.122398
+40663.8s 1327 Epoch 1150/10000 completed with RMSE: 0.122118
+40699.8s 1328 Epoch 1151/10000 completed with RMSE: 0.122072
+40735.1s 1329 Epoch 1152/10000 completed with RMSE: 0.122066
+40770.8s 1330 Epoch 1153/10000 completed with RMSE: 0.122112
+40806.6s 1331 Epoch 1154/10000 completed with RMSE: 0.122356
+40842.0s 1332 Epoch 1155/10000 completed with RMSE: 0.122372
+40877.8s 1333 Epoch 1156/10000 completed with RMSE: 0.122339
+40913.5s 1334 Epoch 1157/10000 completed with RMSE: 0.122352
+40949.2s 1335 Epoch 1158/10000 completed with RMSE: 0.122165
+40984.6s 1336 Epoch 1159/10000 completed with RMSE: 0.122142
+41020.3s 1337 Epoch 1160/10000 completed with RMSE: 0.122294
+41055.9s 1338 Epoch 1161/10000 completed with RMSE: 0.122315
+41091.2s 1339 Epoch 1162/10000 completed with RMSE: 0.122201
+41126.9s 1340 Epoch 1163/10000 completed with RMSE: 0.122178
+41162.6s 1341 Epoch 1164/10000 completed with RMSE: 0.122431
+41198.3s 1342 Epoch 1165/10000 completed with RMSE: 0.122359
+41234.0s 1343 Epoch 1166/10000 completed with RMSE: 0.122224
+41269.4s 1344 Epoch 1167/10000 completed with RMSE: 0.122052
+41305.1s 1345 Epoch 1168/10000 completed with RMSE: 0.122187
+41340.8s 1346 Epoch 1169/10000 completed with RMSE: 0.122281
+41376.2s 1347 Epoch 1170/10000 completed with RMSE: 0.122142
+41411.9s 1348 Epoch 1171/10000 completed with RMSE: 0.122171
+41447.3s 1349 Epoch 1172/10000 completed with RMSE: 0.122106
+41483.0s 1350 Epoch 1173/10000 completed with RMSE: 0.122313
+41518.7s 1351 Epoch 1174/10000 completed with RMSE: 0.122126
+41554.5s 1352 Epoch 1175/10000 completed with RMSE: 0.122061
+41590.2s 1353 Epoch 1176/10000 completed with RMSE: 0.121870
+41625.6s 1354 Epoch 1177/10000 completed with RMSE: 0.122080
+41661.3s 1355 Epoch 1178/10000 completed with RMSE: 0.122051
+41697.1s 1356 Epoch 1179/10000 completed with RMSE: 0.122030
+41732.4s 1357 Epoch 1180/10000 completed with RMSE: 0.122427
+41768.1s 1358 Epoch 1181/10000 completed with RMSE: 0.122106
+41803.7s 1359 Epoch 1182/10000 completed with RMSE: 0.122305
+41839.2s 1360 Epoch 1183/10000 completed with RMSE: 0.122266
+41875.3s 1361 Epoch 1184/10000 completed with RMSE: 0.122007
+41910.7s 1362 Epoch 1185/10000 completed with RMSE: 0.122149
+41946.4s 1363 Epoch 1186/10000 completed with RMSE: 0.122132
+41981.8s 1364 Epoch 1187/10000 completed with RMSE: 0.122189
+42017.6s 1365 Epoch 1188/10000 completed with RMSE: 0.122140
+42053.3s 1366 Epoch 1189/10000 completed with RMSE: 0.122161
+42088.7s 1367 Epoch 1190/10000 completed with RMSE: 0.122029
+42124.5s 1368 Epoch 1191/10000 completed with RMSE: 0.122323
+42160.3s 1369 Epoch 1192/10000 completed with RMSE: 0.122112
+42195.8s 1370 Epoch 1193/10000 completed with RMSE: 0.122081
+42231.3s 1371 Epoch 1194/10000 completed with RMSE: 0.122166
+42266.5s 1372 Epoch 1195/10000 completed with RMSE: 0.121958
+42302.0s 1373 Epoch 1196/10000 completed with RMSE: 0.121926
+42337.2s 1374 Epoch 1197/10000 completed with RMSE: 0.121950
+42372.6s 1375 Epoch 1198/10000 completed with RMSE: 0.122252
+42408.1s 1376 Epoch 1199/10000 completed with RMSE: 0.122072
+42443.3s 1377 Epoch 1200/10000 completed with RMSE: 0.122065
+42478.8s 1378 Epoch 1201/10000 completed with RMSE: 0.121846
+42514.3s 1379 Epoch 1202/10000 completed with RMSE: 0.122056
+42549.5s 1380 Epoch 1203/10000 completed with RMSE: 0.122122
+42585.0s 1381 Epoch 1204/10000 completed with RMSE: 0.122197
+42620.5s 1382 Epoch 1205/10000 completed with RMSE: 0.122293
+42655.7s 1383 Epoch 1206/10000 completed with RMSE: 0.122127
+42691.3s 1384 Epoch 1207/10000 completed with RMSE: 0.122659
+42726.9s 1385 Epoch 1208/10000 completed with RMSE: 0.122270
+42762.4s 1386 Epoch 1209/10000 completed with RMSE: 0.122033
+42797.6s 1387 Epoch 1210/10000 completed with RMSE: 0.122215
+42833.1s 1388 Epoch 1211/10000 completed with RMSE: 0.122130
+42868.6s 1389 Epoch 1212/10000 completed with RMSE: 0.122407
+42903.8s 1390 Epoch 1213/10000 completed with RMSE: 0.122036
+42939.3s 1391 Epoch 1214/10000 completed with RMSE: 0.121903
+42974.9s 1392 Epoch 1215/10000 completed with RMSE: 0.122178
+43010.1s 1393 Epoch 1216/10000 completed with RMSE: 0.122427
+43045.7s 1394 Epoch 1217/10000 completed with RMSE: 0.122186
+43080.8s 1395 Epoch 1218/10000 completed with RMSE: 0.122137
+43116.3s 1396 Epoch 1219/10000 completed with RMSE: 0.122435
+43151.8s 1397 Epoch 1220/10000 completed with RMSE: 0.122253
+43187.0s 1398 Epoch 1221/10000 completed with RMSE: 0.121972
