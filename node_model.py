@@ -23,24 +23,28 @@ from torchdiffeq import odeint  # Импортируем ODE-решатель
 from TorchDiffEqPack.odesolver import odesolve  # Заменяем пакет решателей ODE
 
 # Класс для обучения и оценки модели Neural ODE
+# Класс для обучения и оценки модели Neural ODE
 class NeuralODETrainer:
-    def __init__(self, df, batch_size=64, learning_rate=0.001, epochs=10, hidden_size=128, method='dopri5'):
+    def __init__(self, df, batch_size=64, learning_rate=0.001, epochs=10, hidden_layers=[64, 128, 256, 128], method='dopri5'):
         # Преобразуем данные
         self.df = self.prepare_data(df)
-        # self.df = df
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.epochs = epochs
-        self.hidden_size = hidden_size
+        self.hidden_layers = hidden_layers
         self.method = method
         self.history = {"epoch": [], "rmse": []}  # История обучения
 
-        # Подготовка датасета и DataLoader
-        self.dataset = self.TimeSeriesDataset(self.df)
+        # Подготовка данных
+        self.dataset = TensorDataset(
+            torch.tensor(self.df.index.values, dtype=torch.float32),
+            torch.tensor(self.df[['input_real', 'input_imag']].values, dtype=torch.float32),
+            torch.tensor(self.df[['output_real', 'output_imag']].values, dtype=torch.float32),
+        )
         self.train_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=0, pin_memory=True)
         
         # Инициализация модели
-        self.model = self.NeuralODEModel(hidden_size=self.hidden_size).to(self.get_device())
+        self.model = self.NeuralODEModel(hidden_layers=self.hidden_layers).to(self.get_device())
         self.criterion = nn.MSELoss()  # Используем MSE как функцию потерь
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
 
@@ -56,52 +60,57 @@ class NeuralODETrainer:
         df = df.drop(['Input', 'Output'], axis=1)
         df = df.set_index('Time')  # Устанавливаем временной ряд как индекс
         return df
-        
-    # Класс для датасета временных рядов
-    class TimeSeriesDataset(Dataset):
-        def __init__(self, df):
-            self.inputs = df[['input_real', 'input_imag']].values
-            self.outputs = df[['output_real', 'output_imag']].values
-            self.time = df.index.values.astype('float32')
-
-        def __len__(self):
-            return len(self.inputs)
-
-        def __getitem__(self, idx):
-            x = torch.tensor(self.inputs[idx], dtype=torch.float32)
-            y = torch.tensor(self.outputs[idx], dtype=torch.float32)
-            t = torch.tensor(self.time[idx], dtype=torch.float32)
-            return t, x, y
 
     # Класс ODE функции
+    # class ODEFunc(nn.Module):
+    #     def __init__(self, hidden_size):
+    #         super().__init__()
+    #         self.linear = nn.Linear(hidden_size, hidden_size)
+    #         self.relu = nn.ReLU()
+
+    #     def forward(self, t, x):
+    #         return self.relu(self.linear(x))
+
     class ODEFunc(nn.Module):
         def __init__(self, hidden_size):
             super().__init__()
-            self.linear = nn.Linear(hidden_size, hidden_size)
+            self.fc1 = nn.Linear(hidden_size, hidden_size)
+            self.fc2 = nn.Linear(hidden_size, hidden_size)
             self.relu = nn.ReLU()
-
+            self.norm = nn.LayerNorm(hidden_size)  # Добавляем нормализацию
+    
         def forward(self, t, x):
-            return self.relu(self.linear(x))
+            x = self.relu(self.fc1(x))
+            x = self.norm(x)  # Применяем нормализацию
+            return self.relu(self.fc2(x))
 
     # Класс модели Neural ODE
     class NeuralODEModel(nn.Module):
-        def __init__(self, input_size=2, hidden_size=128, output_size=2, num_hidden_layers=2):
+        def __init__(self, input_size=2, hidden_layers=[128], output_size=2):
             super().__init__()
-            self.input_layer = nn.Linear(input_size, hidden_size)
-            self.hidden_layers = nn.ModuleList([
-                nn.Linear(hidden_size, hidden_size) for _ in range(num_hidden_layers)
-            ])
-            self.ode_func = NeuralODETrainer.ODEFunc(hidden_size)
-            self.output_layer = nn.Linear(hidden_size, output_size)
+            self.input_layer = nn.Linear(input_size, hidden_layers[0])
+            
+            self.hidden_layers = nn.ModuleList([])
+            self.residual_connections = nn.ModuleList([]) # Добавляем список для преобразований residual
+            for i in range(len(hidden_layers) - 1):
+                self.hidden_layers.append(nn.Linear(hidden_layers[i], hidden_layers[i + 1]))
+                # Линейное преобразование для residual, если размерности не совпадают
+                if hidden_layers[i] != hidden_layers[i + 1]: 
+                    self.residual_connections.append(nn.Linear(hidden_layers[i], hidden_layers[i + 1]))
+                else:
+                    self.residual_connections.append(nn.Identity()) # Идентичное преобразование, если размерности совпадают
+    
+            self.ode_func = NeuralODETrainer.ODEFunc(hidden_layers[-1])
+            self.output_layer = nn.Linear(hidden_layers[-1], output_size)
             self.dropout = nn.Dropout(p=0.5)
 
         def forward(self, x, t):
             x = self.input_layer(x)
-            for layer in self.hidden_layers:
+            for layer, residual_layer in zip(self.hidden_layers, self.residual_connections): # Итерируемся по слоям и преобразованиям
                 residual = x
-                x = torch.relu(layer(x))  # Использование ReLU активации
+                x = torch.relu(layer(x)) 
                 x = self.dropout(x)
-                x += residual  # Остаточное соединение
+                x += residual_layer(residual)  # Применяем преобразование к residual перед сложением
                 
             options = {
                 'method': 'dopri5',  # метод решения (адаптивный шаг)
@@ -111,12 +120,16 @@ class NeuralODETrainer:
                 'atol': 1e-10,  # абсолютная точность
                 'print_neval': False,  # не выводить количество итераций
                 'neval_max': 1e7,  # максимальное число итераций
-                't_eval': None,  # оценивать только конечное значение
+                't_eval': t[-1:],  # Берем только последний элемент t
                 'regenerate_graph': False  # не перегенерировать граф для обратного прохода
             }
             
             x = odesolve(self.ode_func, x, options=options)
+            x = x.squeeze(0)  # Удаляем первую размерность
             x = self.output_layer(x)
+
+            assert x.shape[1] == 2, f"Error: 2 output values are expected, received {x.shape[1]}"
+
             return x
 
     # Метод для получения устройства (CPU или GPU)
@@ -135,6 +148,7 @@ class NeuralODETrainer:
     
             for batch_idx, (t, inputs, targets) in enumerate(progress_bar):
                 inputs, targets = inputs.to(device), targets.to(device)
+                t = t.to(device)
                 self.optimizer.zero_grad()
     
                 outputs = self.model(inputs, t)
@@ -162,34 +176,58 @@ class NeuralODETrainer:
     # Метод для оценки модели
     def evaluate(self):
         self.model.eval()
-        true_values = []
-        predicted_values = []
-        times = []
+        all_true_values = []
+        all_predicted_values = []
+        all_times = []
+        device = self.get_device()
     
         with torch.no_grad():
             for t, inputs, targets in self.train_loader:
-                inputs, targets = inputs.to(self.get_device()), targets.to(self.get_device())
+                inputs, targets = inputs.to(device), targets.to(device)
+                t = t.to(device)
                 outputs = self.model(inputs, t)
-                true_values.append(targets.cpu().numpy())
-                predicted_values.append(outputs.cpu().numpy())
-                times.append(t.cpu().numpy())
+
+                # Сохраняем данные для каждого батча
+                all_true_values.append(targets.cpu().numpy())
+                all_predicted_values.append(outputs.cpu().numpy())
+                all_times.append(t.cpu().numpy())
     
-        # Конкатенация всех предсказанных значений, истинных значений и временных меток
-        self.true_values = np.concatenate(true_values, axis=0)
-        self.predicted_values = np.concatenate(predicted_values, axis=0)
-        self.times = np.concatenate(times, axis=0)
+        # Конкатенируем данные после цикла по батчам
+        self.true_values = np.concatenate(all_true_values, axis=0)
+        self.predicted_values = np.concatenate(all_predicted_values, axis=0)
+        self.times = np.concatenate(all_times, axis=0)
     
-        # Сортировка данных по временам
+        # Сортируем данные по времени
         sort_indices = np.argsort(self.times)
+        print("After sort: ", self.times)
         self.times = self.times[sort_indices]
+        print("Become sort: ", self.times)
         self.true_values = self.true_values[sort_indices]
         self.predicted_values = self.predicted_values[sort_indices]
+            
+        # Находим индексы уникальных временных меток
+        # _, unique_indices = np.unique(self.times, return_index=True)
+            
+        # # Оставляем только уникальные временные метки и соответствующие данные
+        # self.times = self.times[unique_indices]
+        # self.true_values = self.true_values[unique_indices]
+        # self.predicted_values = self.predicted_values[unique_indices]
+
+        # Проверяем размерности и удаляем лишние, если необходимо
+        if len(self.true_values.shape) == 3 and self.true_values.shape[1] == 1:
+            self.true_values = self.true_values.squeeze(1)
+        if len(self.predicted_values.shape) == 3 and self.predicted_values.shape[1] == 1:
+            self.predicted_values = self.predicted_values.squeeze(1)
     
+        # Проверяем размерности после удаления лишних размерностей
+        assert self.true_values.shape[1] == 2, f"True values should have shape (n_samples, 2), but got {self.true_values.shape}"
+        assert self.predicted_values.shape[1] == 2, f"Predicted values should have shape (n_samples, 2), but got {self.predicted_values.shape}"
+
         # Сохраним предсказанные значения
         self.save_prediction(self.predicted_values)
         # Сохраним модель
         self.save_model(self.model)
-        
+
         # Вычисление RMSE
         rmse_real = mean_squared_error(self.true_values[:, 0], self.predicted_values[:, 0], squared=False)
         rmse_imag = mean_squared_error(self.true_values[:, 1], self.predicted_values[:, 1], squared=False)
@@ -281,7 +319,7 @@ class NeuralODETrainer:
         # Фильтрация данных по времени
         mask = (self.times >= time_start) & (self.times <= time_end)
         filtered_times = self.times[mask]
-        filtered_true_values = self.true_values[mask]
+        filtered_true_values = self.true_values[mask]  
         filtered_predicted_values = self.predicted_values[mask]
     
         # Построение графика для реальных значений
@@ -307,17 +345,21 @@ class NeuralODETrainer:
         plt.tight_layout()
         plt.show()
 
-    def cross_validate(self, param_grid, cv=5):
-        # Разделение данных на входы и выходы
-        X = self.dataset.inputs
-        y = self.dataset.outputs
-    
-        # Определение модели для кросс-валидации
-        model = self.NeuralODEModel(hidden_size=self.hidden_size)
-    
-        # Использование GridSearchCV для поиска лучших гиперпараметров
-        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, scoring='neg_root_mean_squared_error', cv=cv, n_jobs=-1)
-        grid_search.fit(X, y)
-    
-        print("Best parameters found: ", grid_search.best_params_)
-        print("Best score (RMSE): ", -grid_search.best_score_)
+    def print_model_summary(self):
+        """
+        Выводит информацию о модели: архитектуру, параметры и их размерности.
+        """
+        print(f"Model architecture: {self.model}")
+        print("-" * 50)
+
+        total_params = 0
+        for name, param in self.model.named_parameters():
+            print(f"Parameter name: {name}")
+            print(f"Parameter shape: {param.shape}")
+            param_count = torch.numel(param)
+            print(f"Parameter count: {param_count}")
+            print("-" * 30)
+            total_params += param_count
+
+        print(f"Total trainable parameters: {total_params}")
+        print("=" * 50)

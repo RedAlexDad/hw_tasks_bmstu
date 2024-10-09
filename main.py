@@ -27,18 +27,18 @@ if __name__ == '__main__':
     else:
         print("CUDA is not available. Running on CPU.")
 
-    batch_size=1024*1
-    learning_rate=1e-3
-    epochs=10
-    hidden_size=64
+    batch_size=1024*5
+    learning_rate=1e-4
+    epochs=2
+    layers=[64, 128, 256, 128]
 
     # Создание экземпляра класса с настройкой гиперпараметров
-    NODE_model = NeuralODETrainer(df, batch_size, learning_rate, epochs, hidden_size)
+    NODE_model = NeuralODETrainer(df, batch_size, learning_rate, epochs, layers)
 
     # Обучение модели
     NODE_model.train()
 
-    NODE_model.plot_training_history()
+    # NODE_model.plot_training_history()
 
     # Оценка модели
     NODE_model.evaluate()
