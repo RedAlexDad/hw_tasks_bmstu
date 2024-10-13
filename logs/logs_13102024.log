@@ -1,0 +1,1310 @@
+20.8s 1 Collecting torchdiffeq
+20.8s 2 Downloading torchdiffeq-0.2.4-py3-none-any.whl.metadata (440 bytes)
+20.9s 3 Requirement already satisfied: torch>=1.5.0 in /opt/conda/lib/python3.10/site-packages (from torchdiffeq) (2.4.0+cpu)
+20.9s 4 Requirement already satisfied: scipy>=1.4.0 in /opt/conda/lib/python3.10/site-packages (from torchdiffeq) (1.14.0)
+20.9s 5 Requirement already satisfied: numpy<2.3,>=1.23.5 in /opt/conda/lib/python3.10/site-packages (from scipy>=1.4.0->torchdiffeq) (1.26.4)
+20.9s 6 Requirement already satisfied: filelock in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (3.15.1)
+20.9s 7 Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (4.12.2)
+20.9s 8 Requirement already satisfied: sympy in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (1.12)
+20.9s 9 Requirement already satisfied: networkx in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (3.3)
+20.9s 10 Requirement already satisfied: jinja2 in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (3.1.4)
+20.9s 11 Requirement already satisfied: fsspec in /opt/conda/lib/python3.10/site-packages (from torch>=1.5.0->torchdiffeq) (2024.6.1)
+21.1s 12 Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.10/site-packages (from jinja2->torch>=1.5.0->torchdiffeq) (2.1.5)
+21.2s 13 Requirement already satisfied: mpmath>=0.19 in /opt/conda/lib/python3.10/site-packages (from sympy->torch>=1.5.0->torchdiffeq) (1.3.0)
+21.2s 14 Downloading torchdiffeq-0.2.4-py3-none-any.whl (32 kB)
+35.0s 15 Installing collected packages: torchdiffeq
+35.2s 16 Successfully installed torchdiffeq-0.2.4
+38.2s 17 Collecting TorchDiffEqPack
+38.2s 18 Downloading TorchDiffEqPack-1.0.1-py3-none-any.whl.metadata (718 bytes)
+38.3s 19 Requirement already satisfied: torch in /opt/conda/lib/python3.10/site-packages (from TorchDiffEqPack) (2.4.0+cpu)
+38.3s 20 Requirement already satisfied: filelock in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (3.15.1)
+38.3s 21 Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (4.12.2)
+38.3s 22 Requirement already satisfied: sympy in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (1.12)
+38.3s 23 Requirement already satisfied: networkx in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (3.3)
+38.3s 24 Requirement already satisfied: jinja2 in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (3.1.4)
+38.3s 25 Requirement already satisfied: fsspec in /opt/conda/lib/python3.10/site-packages (from torch->TorchDiffEqPack) (2024.6.1)
+38.5s 26 Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.10/site-packages (from jinja2->torch->TorchDiffEqPack) (2.1.5)
+38.5s 27 Requirement already satisfied: mpmath>=0.19 in /opt/conda/lib/python3.10/site-packages (from sympy->torch->TorchDiffEqPack) (1.3.0)
+38.5s 28 Downloading TorchDiffEqPack-1.0.1-py3-none-any.whl (33 kB)
+51.3s 29 Installing collected packages: TorchDiffEqPack
+51.6s 30 Successfully installed TorchDiffEqPack-1.0.1
+52.6s 31 /kaggle/input/amp-c-train/Amp_C_train.txt
+53.0s 32 CUDA is not available. Running on CPU.
+54.4s 33 CUDA not available, falling back to CPU.
+56.0s 34 Model architecture: NeuralODEModel(
+56.0s 35 (input_layer): Linear(in_features=2, out_features=64, bias=True)
+56.0s 36 (hidden_layers): ModuleList(
+56.0s 37 (0): Linear(in_features=64, out_features=128, bias=True)
+56.0s 38 (1): Linear(in_features=128, out_features=256, bias=True)
+56.0s 39 (2): Linear(in_features=256, out_features=256, bias=True)
+56.0s 40 (3): Linear(in_features=256, out_features=128, bias=True)
+56.0s 41 (4): Linear(in_features=128, out_features=64, bias=True)
+56.0s 42 )
+56.0s 43 (residual_connections): ModuleList(
+56.0s 44 (0): Linear(in_features=64, out_features=128, bias=True)
+56.0s 45 (1): Linear(in_features=128, out_features=256, bias=True)
+56.0s 46 (2): Identity()
+56.0s 47 (3): Linear(in_features=256, out_features=128, bias=True)
+56.0s 48 (4): Linear(in_features=128, out_features=64, bias=True)
+56.0s 49 )
+56.0s 50 (ode_func): ODEFunc(
+56.0s 51 (fc1): Linear(in_features=64, out_features=64, bias=True)
+56.0s 52 (fc2): Linear(in_features=64, out_features=64, bias=True)
+56.0s 53 (relu): ReLU()
+56.0s 54 (norm): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+56.0s 55 )
+56.0s 56 (output_layer): Linear(in_features=64, out_features=2, bias=True)
+56.0s 57 (dropout): Dropout(p=0.5, inplace=False)
+56.0s 58 )
+56.0s 59 --------------------------------------------------
+56.0s 60 Parameter name: input_layer.weight
+56.0s 61 Parameter shape: torch.Size([64, 2])
+56.0s 62 Parameter count: 128
+56.0s 63 ------------------------------
+56.0s 64 Parameter name: input_layer.bias
+56.0s 65 Parameter shape: torch.Size([64])
+56.0s 66 Parameter count: 64
+56.0s 67 ------------------------------
+56.0s 68 Parameter name: hidden_layers.0.weight
+56.0s 69 Parameter shape: torch.Size([128, 64])
+56.0s 70 Parameter count: 8192
+56.0s 71 ------------------------------
+56.0s 72 Parameter name: hidden_layers.0.bias
+56.0s 73 Parameter shape: torch.Size([128])
+56.0s 74 Parameter count: 128
+56.0s 75 ------------------------------
+56.0s 76 Parameter name: hidden_layers.1.weight
+56.0s 77 Parameter shape: torch.Size([256, 128])
+56.0s 78 Parameter count: 32768
+56.0s 79 ------------------------------
+56.0s 80 Parameter name: hidden_layers.1.bias
+56.0s 81 Parameter shape: torch.Size([256])
+56.0s 82 Parameter count: 256
+56.0s 83 ------------------------------
+56.0s 84 Parameter name: hidden_layers.2.weight
+56.0s 85 Parameter shape: torch.Size([256, 256])
+56.0s 86 Parameter count: 65536
+56.0s 87 ------------------------------
+56.0s 88 Parameter name: hidden_layers.2.bias
+56.0s 89 Parameter shape: torch.Size([256])
+56.0s 90 Parameter count: 256
+56.0s 91 ------------------------------
+56.0s 92 Parameter name: hidden_layers.3.weight
+56.0s 93 Parameter shape: torch.Size([128, 256])
+56.0s 94 Parameter count: 32768
+56.0s 95 ------------------------------
+56.0s 96 Parameter name: hidden_layers.3.bias
+56.0s 97 Parameter shape: torch.Size([128])
+56.0s 98 Parameter count: 128
+56.0s 99 ------------------------------
+56.0s 100 Parameter name: hidden_layers.4.weight
+56.0s 101 Parameter shape: torch.Size([64, 128])
+56.0s 102 Parameter count: 8192
+56.0s 103 ------------------------------
+56.0s 104 Parameter name: hidden_layers.4.bias
+56.0s 105 Parameter shape: torch.Size([64])
+56.0s 106 Parameter count: 64
+56.0s 107 ------------------------------
+56.0s 108 Parameter name: residual_connections.0.weight
+56.0s 109 Parameter shape: torch.Size([128, 64])
+56.0s 110 Parameter count: 8192
+56.0s 111 ------------------------------
+56.0s 112 Parameter name: residual_connections.0.bias
+56.0s 113 Parameter shape: torch.Size([128])
+56.0s 114 Parameter count: 128
+56.0s 115 ------------------------------
+56.0s 116 Parameter name: residual_connections.1.weight
+56.0s 117 Parameter shape: torch.Size([256, 128])
+56.0s 118 Parameter count: 32768
+56.0s 119 ------------------------------
+56.0s 120 Parameter name: residual_connections.1.bias
+56.0s 121 Parameter shape: torch.Size([256])
+56.0s 122 Parameter count: 256
+56.0s 123 ------------------------------
+56.0s 124 Parameter name: residual_connections.3.weight
+56.0s 125 Parameter shape: torch.Size([128, 256])
+56.0s 126 Parameter count: 32768
+56.0s 127 ------------------------------
+56.0s 128 Parameter name: residual_connections.3.bias
+56.0s 129 Parameter shape: torch.Size([128])
+56.0s 130 Parameter count: 128
+56.0s 131 ------------------------------
+56.0s 132 Parameter name: residual_connections.4.weight
+56.0s 133 Parameter shape: torch.Size([64, 128])
+56.0s 134 Parameter count: 8192
+56.0s 135 ------------------------------
+56.0s 136 Parameter name: residual_connections.4.bias
+56.0s 137 Parameter shape: torch.Size([64])
+56.0s 138 Parameter count: 64
+56.0s 139 ------------------------------
+56.0s 140 Parameter name: ode_func.fc1.weight
+56.0s 141 Parameter shape: torch.Size([64, 64])
+56.0s 142 Parameter count: 4096
+56.0s 143 ------------------------------
+56.0s 144 Parameter name: ode_func.fc1.bias
+56.0s 145 Parameter shape: torch.Size([64])
+56.0s 146 Parameter count: 64
+56.0s 147 ------------------------------
+56.0s 148 Parameter name: ode_func.fc2.weight
+56.0s 149 Parameter shape: torch.Size([64, 64])
+56.0s 150 Parameter count: 4096
+56.0s 151 ------------------------------
+56.0s 152 Parameter name: ode_func.fc2.bias
+56.0s 153 Parameter shape: torch.Size([64])
+56.0s 154 Parameter count: 64
+56.0s 155 ------------------------------
+56.0s 156 Parameter name: ode_func.norm.weight
+56.0s 157 Parameter shape: torch.Size([64])
+56.0s 158 Parameter count: 64
+56.0s 159 ------------------------------
+56.0s 160 Parameter name: ode_func.norm.bias
+56.0s 161 Parameter shape: torch.Size([64])
+56.0s 162 Parameter count: 64
+56.0s 163 ------------------------------
+56.0s 164 Parameter name: output_layer.weight
+56.0s 165 Parameter shape: torch.Size([2, 64])
+56.0s 166 Parameter count: 128
+56.0s 167 ------------------------------
+56.0s 168 Parameter name: output_layer.bias
+56.0s 169 Parameter shape: torch.Size([2])
+56.0s 170 Parameter count: 2
+56.0s 171 ------------------------------
+56.0s 172 Total trainable parameters: 239554
+56.0s 173 ==================================================
+70.3s 174 Epoch 1/1000 completed with RMSE: 2.082786
+84.7s 175 Epoch 2/1000 completed with RMSE: 2.001860
+98.3s 176 Epoch 3/1000 completed with RMSE: 1.908338
+112.4s 177 Epoch 4/1000 completed with RMSE: 1.788921
+126.1s 178 Epoch 5/1000 completed with RMSE: 1.632106
+139.8s 179 Epoch 6/1000 completed with RMSE: 1.429280
+154.0s 180 Epoch 7/1000 completed with RMSE: 1.183954
+167.4s 181 Epoch 8/1000 completed with RMSE: 0.942740
+181.2s 182 Epoch 9/1000 completed with RMSE: 0.809996
+194.7s 183 Epoch 10/1000 completed with RMSE: 0.771114
+208.4s 184 Epoch 11/1000 completed with RMSE: 0.751285
+221.9s 185 Epoch 12/1000 completed with RMSE: 0.734193
+235.4s 186 Epoch 13/1000 completed with RMSE: 0.720179
+249.6s 187 Epoch 14/1000 completed with RMSE: 0.705920
+263.8s 188 Epoch 15/1000 completed with RMSE: 0.691835
+278.3s 189 Epoch 16/1000 completed with RMSE: 0.678809
+292.0s 190 Epoch 17/1000 completed with RMSE: 0.666255
+305.9s 191 Epoch 18/1000 completed with RMSE: 0.651531
+319.6s 192 Epoch 19/1000 completed with RMSE: 0.638487
+333.9s 193 Epoch 20/1000 completed with RMSE: 0.626647
+348.1s 194 Epoch 21/1000 completed with RMSE: 0.613272
+362.0s 195 Epoch 22/1000 completed with RMSE: 0.600795
+375.8s 196 Epoch 23/1000 completed with RMSE: 0.587338
+389.3s 197 Epoch 24/1000 completed with RMSE: 0.575688
+403.6s 198 Epoch 25/1000 completed with RMSE: 0.563125
+417.1s 199 Epoch 26/1000 completed with RMSE: 0.548682
+430.9s 200 Epoch 27/1000 completed with RMSE: 0.535983
+444.8s 201 Epoch 28/1000 completed with RMSE: 0.523656
+458.3s 202 Epoch 29/1000 completed with RMSE: 0.511778
+472.4s 203 Epoch 30/1000 completed with RMSE: 0.500133
+486.2s 204 Epoch 31/1000 completed with RMSE: 0.489163
+500.3s 205 Epoch 32/1000 completed with RMSE: 0.478816
+514.1s 206 Epoch 33/1000 completed with RMSE: 0.468370
+527.7s 207 Epoch 34/1000 completed with RMSE: 0.459647
+541.9s 208 Epoch 35/1000 completed with RMSE: 0.451174
+555.3s 209 Epoch 36/1000 completed with RMSE: 0.441364
+569.2s 210 Epoch 37/1000 completed with RMSE: 0.433105
+582.9s 211 Epoch 38/1000 completed with RMSE: 0.425605
+597.4s 212 Epoch 39/1000 completed with RMSE: 0.418373
+611.3s 213 Epoch 40/1000 completed with RMSE: 0.410813
+624.5s 214 Epoch 41/1000 completed with RMSE: 0.404461
+638.5s 215 Epoch 42/1000 completed with RMSE: 0.397623
+652.0s 216 Epoch 43/1000 completed with RMSE: 0.392288
+666.1s 217 Epoch 44/1000 completed with RMSE: 0.386781
+679.7s 218 Epoch 45/1000 completed with RMSE: 0.381422
+693.5s 219 Epoch 46/1000 completed with RMSE: 0.375376
+706.8s 220 Epoch 47/1000 completed with RMSE: 0.370192
+720.3s 221 Epoch 48/1000 completed with RMSE: 0.366365
+734.2s 222 Epoch 49/1000 completed with RMSE: 0.361945
+747.7s 223 Epoch 50/1000 completed with RMSE: 0.356568
+761.8s 224 Epoch 51/1000 completed with RMSE: 0.351783
+775.3s 225 Epoch 52/1000 completed with RMSE: 0.347407
+789.1s 226 Epoch 53/1000 completed with RMSE: 0.344021
+802.4s 227 Epoch 54/1000 completed with RMSE: 0.339405
+815.7s 228 Epoch 55/1000 completed with RMSE: 0.336090
+829.5s 229 Epoch 56/1000 completed with RMSE: 0.332316
+843.3s 230 Epoch 57/1000 completed with RMSE: 0.327951
+857.1s 231 Epoch 58/1000 completed with RMSE: 0.324878
+870.8s 232 Epoch 59/1000 completed with RMSE: 0.321396
+884.2s 233 Epoch 60/1000 completed with RMSE: 0.317789
+897.9s 234 Epoch 61/1000 completed with RMSE: 0.313674
+911.3s 235 Epoch 62/1000 completed with RMSE: 0.310927
+925.2s 236 Epoch 63/1000 completed with RMSE: 0.308197
+938.7s 237 Epoch 64/1000 completed with RMSE: 0.305661
+952.7s 238 Epoch 65/1000 completed with RMSE: 0.302435
+966.2s 239 Epoch 66/1000 completed with RMSE: 0.299664
+979.7s 240 Epoch 67/1000 completed with RMSE: 0.296400
+993.6s 241 Epoch 68/1000 completed with RMSE: 0.293031
+1007.2s 242 Epoch 69/1000 completed with RMSE: 0.290544
+1020.9s 243 Epoch 70/1000 completed with RMSE: 0.288291
+1034.4s 244 Epoch 71/1000 completed with RMSE: 0.285962
+1047.9s 245 Epoch 72/1000 completed with RMSE: 0.283182
+1061.2s 246 Epoch 73/1000 completed with RMSE: 0.280192
+1074.7s 247 Epoch 74/1000 completed with RMSE: 0.278491
+1088.3s 248 Epoch 75/1000 completed with RMSE: 0.275593
+1101.5s 249 Epoch 76/1000 completed with RMSE: 0.274401
+1115.4s 250 Epoch 77/1000 completed with RMSE: 0.272412
+1128.7s 251 Epoch 78/1000 completed with RMSE: 0.269675
+1142.0s 252 Epoch 79/1000 completed with RMSE: 0.267501
+1155.7s 253 Epoch 80/1000 completed with RMSE: 0.265857
+1169.2s 254 Epoch 81/1000 completed with RMSE: 0.264383
+1182.7s 255 Epoch 82/1000 completed with RMSE: 0.261953
+1196.1s 256 Epoch 83/1000 completed with RMSE: 0.260462
+1209.8s 257 Epoch 84/1000 completed with RMSE: 0.258773
+1223.2s 258 Epoch 85/1000 completed with RMSE: 0.256973
+1236.7s 259 Epoch 86/1000 completed with RMSE: 0.255651
+1250.2s 260 Epoch 87/1000 completed with RMSE: 0.253853
+1263.6s 261 Epoch 88/1000 completed with RMSE: 0.252229
+1277.3s 262 Epoch 89/1000 completed with RMSE: 0.250733
+1290.5s 263 Epoch 90/1000 completed with RMSE: 0.248615
+1303.8s 264 Epoch 91/1000 completed with RMSE: 0.248014
+1317.4s 265 Epoch 92/1000 completed with RMSE: 0.246323
+1330.9s 266 Epoch 93/1000 completed with RMSE: 0.244786
+1344.8s 267 Epoch 94/1000 completed with RMSE: 0.243179
+1358.4s 268 Epoch 95/1000 completed with RMSE: 0.242033
+1372.4s 269 Epoch 96/1000 completed with RMSE: 0.241124
+1385.9s 270 Epoch 97/1000 completed with RMSE: 0.239699
+1399.3s 271 Epoch 98/1000 completed with RMSE: 0.237680
+1412.8s 272 Epoch 99/1000 completed with RMSE: 0.237290
+1426.5s 273 Epoch 100/1000 completed with RMSE: 0.235559
+1439.9s 274 Epoch 101/1000 completed with RMSE: 0.235145
+1453.1s 275 Epoch 102/1000 completed with RMSE: 0.233624
+1466.6s 276 Epoch 103/1000 completed with RMSE: 0.232049
+1480.4s 277 Epoch 104/1000 completed with RMSE: 0.231297
+1493.7s 278 Epoch 105/1000 completed with RMSE: 0.230334
+1507.6s 279 Epoch 106/1000 completed with RMSE: 0.228812
+1520.9s 280 Epoch 107/1000 completed with RMSE: 0.227926
+1534.7s 281 Epoch 108/1000 completed with RMSE: 0.226808
+1548.4s 282 Epoch 109/1000 completed with RMSE: 0.226094
+1561.8s 283 Epoch 110/1000 completed with RMSE: 0.225134
+1575.7s 284 Epoch 111/1000 completed with RMSE: 0.225133
+1589.0s 285 Epoch 112/1000 completed with RMSE: 0.223297
+1602.7s 286 Epoch 113/1000 completed with RMSE: 0.222603
+1616.3s 287 Epoch 114/1000 completed with RMSE: 0.221409
+1629.9s 288 Epoch 115/1000 completed with RMSE: 0.220141
+1643.3s 289 Epoch 116/1000 completed with RMSE: 0.219927
+1656.6s 290 Epoch 117/1000 completed with RMSE: 0.218745
+1670.5s 291 Epoch 118/1000 completed with RMSE: 0.217797
+1684.1s 292 Epoch 119/1000 completed with RMSE: 0.216798
+1698.1s 293 Epoch 120/1000 completed with RMSE: 0.216218
+1711.8s 294 Epoch 121/1000 completed with RMSE: 0.215264
+1725.2s 295 Epoch 122/1000 completed with RMSE: 0.214317
+1738.9s 296 Epoch 123/1000 completed with RMSE: 0.214002
+1752.4s 297 Epoch 124/1000 completed with RMSE: 0.212855
+1766.0s 298 Epoch 125/1000 completed with RMSE: 0.212271
+1779.6s 299 Epoch 126/1000 completed with RMSE: 0.211714
+1793.6s 300 Epoch 127/1000 completed with RMSE: 0.210480
+1807.1s 301 Epoch 128/1000 completed with RMSE: 0.210122
+1820.6s 302 Epoch 129/1000 completed with RMSE: 0.209093
+1834.6s 303 Epoch 130/1000 completed with RMSE: 0.208854
+1848.0s 304 Epoch 131/1000 completed with RMSE: 0.207658
+1861.9s 305 Epoch 132/1000 completed with RMSE: 0.207112
+1875.7s 306 Epoch 133/1000 completed with RMSE: 0.206267
+1889.3s 307 Epoch 134/1000 completed with RMSE: 0.205968
+1902.8s 308 Epoch 135/1000 completed with RMSE: 0.205804
+1916.3s 309 Epoch 136/1000 completed with RMSE: 0.204380
+1930.2s 310 Epoch 137/1000 completed with RMSE: 0.204151
+1943.6s 311 Epoch 138/1000 completed with RMSE: 0.203680
+1957.2s 312 Epoch 139/1000 completed with RMSE: 0.202790
+1971.0s 313 Epoch 140/1000 completed with RMSE: 0.201862
+1984.2s 314 Epoch 141/1000 completed with RMSE: 0.201969
+1998.0s 315 Epoch 142/1000 completed with RMSE: 0.201093
+2011.5s 316 Epoch 143/1000 completed with RMSE: 0.200535
+2025.4s 317 Epoch 144/1000 completed with RMSE: 0.200134
+2038.8s 318 Epoch 145/1000 completed with RMSE: 0.199501
+2052.5s 319 Epoch 146/1000 completed with RMSE: 0.198383
+2066.1s 320 Epoch 147/1000 completed with RMSE: 0.198021
+2079.3s 321 Epoch 148/1000 completed with RMSE: 0.197461
+2093.0s 322 Epoch 149/1000 completed with RMSE: 0.197277
+2106.4s 323 Epoch 150/1000 completed with RMSE: 0.196631
+2120.4s 324 Epoch 151/1000 completed with RMSE: 0.196286
+2133.8s 325 Epoch 152/1000 completed with RMSE: 0.195760
+2147.6s 326 Epoch 153/1000 completed with RMSE: 0.194959
+2161.5s 327 Epoch 154/1000 completed with RMSE: 0.194082
+2174.9s 328 Epoch 155/1000 completed with RMSE: 0.194103
+2188.8s 329 Epoch 156/1000 completed with RMSE: 0.193212
+2202.4s 330 Epoch 157/1000 completed with RMSE: 0.193120
+2216.4s 331 Epoch 158/1000 completed with RMSE: 0.193018
+2229.9s 332 Epoch 159/1000 completed with RMSE: 0.192290
+2243.3s 333 Epoch 160/1000 completed with RMSE: 0.191329
+2257.2s 334 Epoch 161/1000 completed with RMSE: 0.191686
+2270.7s 335 Epoch 162/1000 completed with RMSE: 0.190548
+2284.8s 336 Epoch 163/1000 completed with RMSE: 0.190108
+2298.3s 337 Epoch 164/1000 completed with RMSE: 0.189455
+2312.5s 338 Epoch 165/1000 completed with RMSE: 0.189141
+2326.3s 339 Epoch 166/1000 completed with RMSE: 0.188883
+2339.8s 340 Epoch 167/1000 completed with RMSE: 0.188471
+2354.0s 341 Epoch 168/1000 completed with RMSE: 0.188125
+2367.5s 342 Epoch 169/1000 completed with RMSE: 0.188098
+2381.5s 343 Epoch 170/1000 completed with RMSE: 0.187503
+2395.1s 344 Epoch 171/1000 completed with RMSE: 0.186407
+2409.1s 345 Epoch 172/1000 completed with RMSE: 0.186331
+2422.7s 346 Epoch 173/1000 completed with RMSE: 0.186161
+2436.1s 347 Epoch 174/1000 completed with RMSE: 0.185882
+2450.1s 348 Epoch 175/1000 completed with RMSE: 0.185293
+2463.5s 349 Epoch 176/1000 completed with RMSE: 0.184998
+2477.6s 350 Epoch 177/1000 completed with RMSE: 0.184860
+2490.9s 351 Epoch 178/1000 completed with RMSE: 0.183672
+2504.9s 352 Epoch 179/1000 completed with RMSE: 0.183683
+2518.1s 353 Epoch 180/1000 completed with RMSE: 0.183458
+2531.7s 354 Epoch 181/1000 completed with RMSE: 0.182633
+2545.8s 355 Epoch 182/1000 completed with RMSE: 0.182719
+2559.5s 356 Epoch 183/1000 completed with RMSE: 0.182579
+2574.0s 357 Epoch 184/1000 completed with RMSE: 0.182211
+2587.3s 358 Epoch 185/1000 completed with RMSE: 0.181673
+2601.1s 359 Epoch 186/1000 completed with RMSE: 0.181389
+2614.3s 360 Epoch 187/1000 completed with RMSE: 0.180885
+2627.8s 361 Epoch 188/1000 completed with RMSE: 0.180471
+2641.8s 362 Epoch 189/1000 completed with RMSE: 0.180284
+2655.0s 363 Epoch 190/1000 completed with RMSE: 0.179976
+2668.9s 364 Epoch 191/1000 completed with RMSE: 0.179722
+2682.3s 365 Epoch 192/1000 completed with RMSE: 0.179446
+2696.3s 366 Epoch 193/1000 completed with RMSE: 0.178920
+2709.8s 367 Epoch 194/1000 completed with RMSE: 0.178567
+2723.5s 368 Epoch 195/1000 completed with RMSE: 0.178791
+2737.3s 369 Epoch 196/1000 completed with RMSE: 0.178671
+2750.7s 370 Epoch 197/1000 completed with RMSE: 0.177836
+2764.7s 371 Epoch 198/1000 completed with RMSE: 0.177177
+2778.0s 372 Epoch 199/1000 completed with RMSE: 0.177428
+2791.6s 373 Epoch 200/1000 completed with RMSE: 0.177328
+2805.6s 374 Epoch 201/1000 completed with RMSE: 0.176888
+2819.3s 375 Epoch 202/1000 completed with RMSE: 0.176200
+2833.2s 376 Epoch 203/1000 completed with RMSE: 0.176186
+2846.9s 377 Epoch 204/1000 completed with RMSE: 0.176076
+2860.6s 378 Epoch 205/1000 completed with RMSE: 0.175927
+2874.4s 379 Epoch 206/1000 completed with RMSE: 0.175205
+2887.8s 380 Epoch 207/1000 completed with RMSE: 0.175270
+2901.9s 381 Epoch 208/1000 completed with RMSE: 0.174761
+2915.5s 382 Epoch 209/1000 completed with RMSE: 0.174423
+2929.2s 383 Epoch 210/1000 completed with RMSE: 0.174675
+2942.5s 384 Epoch 211/1000 completed with RMSE: 0.174304
+2956.1s 385 Epoch 212/1000 completed with RMSE: 0.173608
+2969.8s 386 Epoch 213/1000 completed with RMSE: 0.173809
+2983.3s 387 Epoch 214/1000 completed with RMSE: 0.173352
+2997.2s 388 Epoch 215/1000 completed with RMSE: 0.173440
+3010.4s 389 Epoch 216/1000 completed with RMSE: 0.172799
+3024.6s 390 Epoch 217/1000 completed with RMSE: 0.172659
+3037.9s 391 Epoch 218/1000 completed with RMSE: 0.172289
+3051.7s 392 Epoch 219/1000 completed with RMSE: 0.172280
+3065.4s 393 Epoch 220/1000 completed with RMSE: 0.172187
+3078.8s 394 Epoch 221/1000 completed with RMSE: 0.171280
+3093.0s 395 Epoch 222/1000 completed with RMSE: 0.171702
+3106.6s 396 Epoch 223/1000 completed with RMSE: 0.171360
+3120.9s 397 Epoch 224/1000 completed with RMSE: 0.171299
+3134.4s 398 Epoch 225/1000 completed with RMSE: 0.171033
+3148.3s 399 Epoch 226/1000 completed with RMSE: 0.170838
+3162.2s 400 Epoch 227/1000 completed with RMSE: 0.170634
+3176.0s 401 Epoch 228/1000 completed with RMSE: 0.170198
+3190.1s 402 Epoch 229/1000 completed with RMSE: 0.170048
+3203.4s 403 Epoch 230/1000 completed with RMSE: 0.169558
+3217.3s 404 Epoch 231/1000 completed with RMSE: 0.169676
+3230.7s 405 Epoch 232/1000 completed with RMSE: 0.169759
+3244.3s 406 Epoch 233/1000 completed with RMSE: 0.169269
+3258.1s 407 Epoch 234/1000 completed with RMSE: 0.169329
+3271.6s 408 Epoch 235/1000 completed with RMSE: 0.169114
+3285.7s 409 Epoch 236/1000 completed with RMSE: 0.168793
+3299.1s 410 Epoch 237/1000 completed with RMSE: 0.168814
+3313.2s 411 Epoch 238/1000 completed with RMSE: 0.168155
+3326.6s 412 Epoch 239/1000 completed with RMSE: 0.168234
+3340.1s 413 Epoch 240/1000 completed with RMSE: 0.167703
+3353.9s 414 Epoch 241/1000 completed with RMSE: 0.167552
+3367.8s 415 Epoch 242/1000 completed with RMSE: 0.167421
+3381.7s 416 Epoch 243/1000 completed with RMSE: 0.166907
+3395.5s 417 Epoch 244/1000 completed with RMSE: 0.167076
+3409.3s 418 Epoch 245/1000 completed with RMSE: 0.167461
+3423.0s 419 Epoch 246/1000 completed with RMSE: 0.166828
+3436.5s 420 Epoch 247/1000 completed with RMSE: 0.166475
+3450.5s 421 Epoch 248/1000 completed with RMSE: 0.166727
+3464.1s 422 Epoch 249/1000 completed with RMSE: 0.166674
+3477.9s 423 Epoch 250/1000 completed with RMSE: 0.166484
+3491.4s 424 Epoch 251/1000 completed with RMSE: 0.166334
+3505.3s 425 Epoch 252/1000 completed with RMSE: 0.165983
+3519.0s 426 Epoch 253/1000 completed with RMSE: 0.165715
+3532.3s 427 Epoch 254/1000 completed with RMSE: 0.165607
+3546.2s 428 Epoch 255/1000 completed with RMSE: 0.165268
+3559.4s 429 Epoch 256/1000 completed with RMSE: 0.164879
+3573.3s 430 Epoch 257/1000 completed with RMSE: 0.164979
+3586.6s 431 Epoch 258/1000 completed with RMSE: 0.165255
+3600.6s 432 Epoch 259/1000 completed with RMSE: 0.164928
+3614.3s 433 Epoch 260/1000 completed with RMSE: 0.164666
+3627.9s 434 Epoch 261/1000 completed with RMSE: 0.164469
+3641.8s 435 Epoch 262/1000 completed with RMSE: 0.164150
+3655.0s 436 Epoch 263/1000 completed with RMSE: 0.164199
+3669.5s 437 Epoch 264/1000 completed with RMSE: 0.164057
+3683.2s 438 Epoch 265/1000 completed with RMSE: 0.163617
+3697.6s 439 Epoch 266/1000 completed with RMSE: 0.163872
+3711.7s 440 Epoch 267/1000 completed with RMSE: 0.163700
+3725.7s 441 Epoch 268/1000 completed with RMSE: 0.163358
+3740.0s 442 Epoch 269/1000 completed with RMSE: 0.163308
+3754.0s 443 Epoch 270/1000 completed with RMSE: 0.163483
+3768.2s 444 Epoch 271/1000 completed with RMSE: 0.163255
+3781.8s 445 Epoch 272/1000 completed with RMSE: 0.162839
+3796.0s 446 Epoch 273/1000 completed with RMSE: 0.162728
+3809.5s 447 Epoch 274/1000 completed with RMSE: 0.162453
+3823.2s 448 Epoch 275/1000 completed with RMSE: 0.162452
+3837.1s 449 Epoch 276/1000 completed with RMSE: 0.162503
+3850.9s 450 Epoch 277/1000 completed with RMSE: 0.162266
+3864.9s 451 Epoch 278/1000 completed with RMSE: 0.162223
+3878.6s 452 Epoch 279/1000 completed with RMSE: 0.162120
+3892.7s 453 Epoch 280/1000 completed with RMSE: 0.162152
+3906.4s 454 Epoch 281/1000 completed with RMSE: 0.161589
+3919.9s 455 Epoch 282/1000 completed with RMSE: 0.161414
+3934.1s 456 Epoch 283/1000 completed with RMSE: 0.161476
+3947.7s 457 Epoch 284/1000 completed with RMSE: 0.161289
+3961.6s 458 Epoch 285/1000 completed with RMSE: 0.161062
+3975.2s 459 Epoch 286/1000 completed with RMSE: 0.161282
+3989.2s 460 Epoch 287/1000 completed with RMSE: 0.160884
+4003.1s 461 Epoch 288/1000 completed with RMSE: 0.161303
+4016.7s 462 Epoch 289/1000 completed with RMSE: 0.160751
+4031.2s 463 Epoch 290/1000 completed with RMSE: 0.160502
+4044.8s 464 Epoch 291/1000 completed with RMSE: 0.160412
+4059.1s 465 Epoch 292/1000 completed with RMSE: 0.160322
+4073.0s 466 Epoch 293/1000 completed with RMSE: 0.160320
+4087.6s 467 Epoch 294/1000 completed with RMSE: 0.160261
+4101.5s 468 Epoch 295/1000 completed with RMSE: 0.160171
+4115.4s 469 Epoch 296/1000 completed with RMSE: 0.159611
+4129.4s 470 Epoch 297/1000 completed with RMSE: 0.159629
+4143.3s 471 Epoch 298/1000 completed with RMSE: 0.159841
+4157.3s 472 Epoch 299/1000 completed with RMSE: 0.159641
+4170.9s 473 Epoch 300/1000 completed with RMSE: 0.159693
+4185.2s 474 Epoch 301/1000 completed with RMSE: 0.159542
+4198.7s 475 Epoch 302/1000 completed with RMSE: 0.159172
+4212.6s 476 Epoch 303/1000 completed with RMSE: 0.159091
+4226.4s 477 Epoch 304/1000 completed with RMSE: 0.158996
+4240.1s 478 Epoch 305/1000 completed with RMSE: 0.158650
+4254.3s 479 Epoch 306/1000 completed with RMSE: 0.158924
+4268.1s 480 Epoch 307/1000 completed with RMSE: 0.158772
+4282.3s 481 Epoch 308/1000 completed with RMSE: 0.158607
+4296.1s 482 Epoch 309/1000 completed with RMSE: 0.158273
+4310.0s 483 Epoch 310/1000 completed with RMSE: 0.158310
+4323.8s 484 Epoch 311/1000 completed with RMSE: 0.158283
+4337.7s 485 Epoch 312/1000 completed with RMSE: 0.158002
+4351.6s 486 Epoch 313/1000 completed with RMSE: 0.158148
+4365.4s 487 Epoch 314/1000 completed with RMSE: 0.158128
+4379.1s 488 Epoch 315/1000 completed with RMSE: 0.157822
+4393.0s 489 Epoch 316/1000 completed with RMSE: 0.157836
+4406.7s 490 Epoch 317/1000 completed with RMSE: 0.158067
+4420.3s 491 Epoch 318/1000 completed with RMSE: 0.157579
+4433.8s 492 Epoch 319/1000 completed with RMSE: 0.157679
+4448.0s 493 Epoch 320/1000 completed with RMSE: 0.157454
+4461.5s 494 Epoch 321/1000 completed with RMSE: 0.157342
+4476.3s 495 Epoch 322/1000 completed with RMSE: 0.157164
+4489.9s 496 Epoch 323/1000 completed with RMSE: 0.156947
+4503.4s 497 Epoch 324/1000 completed with RMSE: 0.156906
+4517.4s 498 Epoch 325/1000 completed with RMSE: 0.156800
+4530.8s 499 Epoch 326/1000 completed with RMSE: 0.156755
+4545.0s 500 Epoch 327/1000 completed with RMSE: 0.156642
+4558.6s 501 Epoch 328/1000 completed with RMSE: 0.156563
+4572.9s 502 Epoch 329/1000 completed with RMSE: 0.156320
+4586.3s 503 Epoch 330/1000 completed with RMSE: 0.156246
+4600.0s 504 Epoch 331/1000 completed with RMSE: 0.156273
+4613.8s 505 Epoch 332/1000 completed with RMSE: 0.156707
+4627.5s 506 Epoch 333/1000 completed with RMSE: 0.155894
+4641.4s 507 Epoch 334/1000 completed with RMSE: 0.156090
+4655.1s 508 Epoch 335/1000 completed with RMSE: 0.155917
+4669.0s 509 Epoch 336/1000 completed with RMSE: 0.155998
+4682.5s 510 Epoch 337/1000 completed with RMSE: 0.155648
+4696.4s 511 Epoch 338/1000 completed with RMSE: 0.155674
+4710.3s 512 Epoch 339/1000 completed with RMSE: 0.155652
+4723.7s 513 Epoch 340/1000 completed with RMSE: 0.155631
+4737.8s 514 Epoch 341/1000 completed with RMSE: 0.155701
+4751.3s 515 Epoch 342/1000 completed with RMSE: 0.155408
+4765.3s 516 Epoch 343/1000 completed with RMSE: 0.155023
+4779.0s 517 Epoch 344/1000 completed with RMSE: 0.154943
+4792.3s 518 Epoch 345/1000 completed with RMSE: 0.155243
+4806.1s 519 Epoch 346/1000 completed with RMSE: 0.155153
+4819.7s 520 Epoch 347/1000 completed with RMSE: 0.155067
+4834.0s 521 Epoch 348/1000 completed with RMSE: 0.154629
+4847.5s 522 Epoch 349/1000 completed with RMSE: 0.154978
+4861.4s 523 Epoch 350/1000 completed with RMSE: 0.154317
+4874.8s 524 Epoch 351/1000 completed with RMSE: 0.154554
+4888.5s 525 Epoch 352/1000 completed with RMSE: 0.154598
+4902.5s 526 Epoch 353/1000 completed with RMSE: 0.154365
+4916.2s 527 Epoch 354/1000 completed with RMSE: 0.154057
+4929.9s 528 Epoch 355/1000 completed with RMSE: 0.154373
+4943.2s 529 Epoch 356/1000 completed with RMSE: 0.154373
+4957.1s 530 Epoch 357/1000 completed with RMSE: 0.154180
+4970.6s 531 Epoch 358/1000 completed with RMSE: 0.154062
+4984.0s 532 Epoch 359/1000 completed with RMSE: 0.153900
+4997.9s 533 Epoch 360/1000 completed with RMSE: 0.154036
+5011.7s 534 Epoch 361/1000 completed with RMSE: 0.153982
+5025.9s 535 Epoch 362/1000 completed with RMSE: 0.153862
+5039.3s 536 Epoch 363/1000 completed with RMSE: 0.153645
+5052.7s 537 Epoch 364/1000 completed with RMSE: 0.153347
+5066.9s 538 Epoch 365/1000 completed with RMSE: 0.153352
+5080.7s 539 Epoch 366/1000 completed with RMSE: 0.153243
+5094.9s 540 Epoch 367/1000 completed with RMSE: 0.153325
+5108.7s 541 Epoch 368/1000 completed with RMSE: 0.153233
+5123.2s 542 Epoch 369/1000 completed with RMSE: 0.153154
+5136.5s 543 Epoch 370/1000 completed with RMSE: 0.153196
+5150.3s 544 Epoch 371/1000 completed with RMSE: 0.153011
+5164.1s 545 Epoch 372/1000 completed with RMSE: 0.153212
+5178.1s 546 Epoch 373/1000 completed with RMSE: 0.153165
+5192.3s 547 Epoch 374/1000 completed with RMSE: 0.152763
+5206.4s 548 Epoch 375/1000 completed with RMSE: 0.152746
+5220.5s 549 Epoch 376/1000 completed with RMSE: 0.152623
+5234.5s 550 Epoch 377/1000 completed with RMSE: 0.152641
+5248.6s 551 Epoch 378/1000 completed with RMSE: 0.152673
+5262.7s 552 Epoch 379/1000 completed with RMSE: 0.152389
+5276.7s 553 Epoch 380/1000 completed with RMSE: 0.152400
+5291.2s 554 Epoch 381/1000 completed with RMSE: 0.152374
+5305.1s 555 Epoch 382/1000 completed with RMSE: 0.152409
+5319.5s 556 Epoch 383/1000 completed with RMSE: 0.152159
+5333.5s 557 Epoch 384/1000 completed with RMSE: 0.152269
+5348.1s 558 Epoch 385/1000 completed with RMSE: 0.151770
+5361.8s 559 Epoch 386/1000 completed with RMSE: 0.151676
+5375.2s 560 Epoch 387/1000 completed with RMSE: 0.151829
+5389.0s 561 Epoch 388/1000 completed with RMSE: 0.151689
+5402.4s 562 Epoch 389/1000 completed with RMSE: 0.151749
+5416.6s 563 Epoch 390/1000 completed with RMSE: 0.151600
+5430.0s 564 Epoch 391/1000 completed with RMSE: 0.151486
+5443.9s 565 Epoch 392/1000 completed with RMSE: 0.151318
+5457.4s 566 Epoch 393/1000 completed with RMSE: 0.151357
+5470.8s 567 Epoch 394/1000 completed with RMSE: 0.151556
+5484.7s 568 Epoch 395/1000 completed with RMSE: 0.151314
+5498.4s 569 Epoch 396/1000 completed with RMSE: 0.151129
+5512.2s 570 Epoch 397/1000 completed with RMSE: 0.151105
+5525.9s 571 Epoch 398/1000 completed with RMSE: 0.151005
+5540.0s 572 Epoch 399/1000 completed with RMSE: 0.151109
+5554.0s 573 Epoch 400/1000 completed with RMSE: 0.150923
+5567.4s 574 Epoch 401/1000 completed with RMSE: 0.151063
+5581.6s 575 Epoch 402/1000 completed with RMSE: 0.151080
+5595.2s 576 Epoch 403/1000 completed with RMSE: 0.150864
+5609.6s 577 Epoch 404/1000 completed with RMSE: 0.150789
+5623.5s 578 Epoch 405/1000 completed with RMSE: 0.150620
+5637.8s 579 Epoch 406/1000 completed with RMSE: 0.150827
+5651.5s 580 Epoch 407/1000 completed with RMSE: 0.150681
+5665.3s 581 Epoch 408/1000 completed with RMSE: 0.150449
+5679.2s 582 Epoch 409/1000 completed with RMSE: 0.150592
+5692.8s 583 Epoch 410/1000 completed with RMSE: 0.150349
+5706.6s 584 Epoch 411/1000 completed with RMSE: 0.150449
+5720.4s 585 Epoch 412/1000 completed with RMSE: 0.150428
+5734.4s 586 Epoch 413/1000 completed with RMSE: 0.150226
+5748.1s 587 Epoch 414/1000 completed with RMSE: 0.150289
+5761.5s 588 Epoch 415/1000 completed with RMSE: 0.150346
+5775.4s 589 Epoch 416/1000 completed with RMSE: 0.150043
+5789.1s 590 Epoch 417/1000 completed with RMSE: 0.149931
+5803.2s 591 Epoch 418/1000 completed with RMSE: 0.150084
+5817.2s 592 Epoch 419/1000 completed with RMSE: 0.149638
+5831.0s 593 Epoch 420/1000 completed with RMSE: 0.149753
+5845.0s 594 Epoch 421/1000 completed with RMSE: 0.149439
+5858.6s 595 Epoch 422/1000 completed with RMSE: 0.149703
+5872.9s 596 Epoch 423/1000 completed with RMSE: 0.149702
+5886.5s 597 Epoch 424/1000 completed with RMSE: 0.149564
+5900.7s 598 Epoch 425/1000 completed with RMSE: 0.149456
+5914.6s 599 Epoch 426/1000 completed with RMSE: 0.149442
+5929.0s 600 Epoch 427/1000 completed with RMSE: 0.149449
+5942.8s 601 Epoch 428/1000 completed with RMSE: 0.149544
+5956.6s 602 Epoch 429/1000 completed with RMSE: 0.149322
+5970.8s 603 Epoch 430/1000 completed with RMSE: 0.149236
+5984.6s 604 Epoch 431/1000 completed with RMSE: 0.149460
+5998.8s 605 Epoch 432/1000 completed with RMSE: 0.149041
+6012.8s 606 Epoch 433/1000 completed with RMSE: 0.149219
+6027.0s 607 Epoch 434/1000 completed with RMSE: 0.149032
+6040.5s 608 Epoch 435/1000 completed with RMSE: 0.149038
+6054.1s 609 Epoch 436/1000 completed with RMSE: 0.149200
+6067.9s 610 Epoch 437/1000 completed with RMSE: 0.148868
+6081.5s 611 Epoch 438/1000 completed with RMSE: 0.148838
+6095.4s 612 Epoch 439/1000 completed with RMSE: 0.148618
+6108.9s 613 Epoch 440/1000 completed with RMSE: 0.148845
+6123.0s 614 Epoch 441/1000 completed with RMSE: 0.148581
+6136.6s 615 Epoch 442/1000 completed with RMSE: 0.148642
+6150.1s 616 Epoch 443/1000 completed with RMSE: 0.148510
+6164.4s 617 Epoch 444/1000 completed with RMSE: 0.148664
+6177.9s 618 Epoch 445/1000 completed with RMSE: 0.148532
+6192.2s 619 Epoch 446/1000 completed with RMSE: 0.148175
+6205.8s 620 Epoch 447/1000 completed with RMSE: 0.148463
+6220.0s 621 Epoch 448/1000 completed with RMSE: 0.148170
+6233.5s 622 Epoch 449/1000 completed with RMSE: 0.148258
+6247.2s 623 Epoch 450/1000 completed with RMSE: 0.147937
+6261.3s 624 Epoch 451/1000 completed with RMSE: 0.148098
+6275.1s 625 Epoch 452/1000 completed with RMSE: 0.148038
+6289.2s 626 Epoch 453/1000 completed with RMSE: 0.148152
+6302.8s 627 Epoch 454/1000 completed with RMSE: 0.147964
+6316.8s 628 Epoch 455/1000 completed with RMSE: 0.147923
+6330.5s 629 Epoch 456/1000 completed with RMSE: 0.147997
+6344.6s 630 Epoch 457/1000 completed with RMSE: 0.147619
+6358.5s 631 Epoch 458/1000 completed with RMSE: 0.147875
+6372.0s 632 Epoch 459/1000 completed with RMSE: 0.147548
+6386.0s 633 Epoch 460/1000 completed with RMSE: 0.147453
+6399.6s 634 Epoch 461/1000 completed with RMSE: 0.147764
+6413.6s 635 Epoch 462/1000 completed with RMSE: 0.147352
+6427.3s 636 Epoch 463/1000 completed with RMSE: 0.147517
+6440.8s 637 Epoch 464/1000 completed with RMSE: 0.147316
+6454.9s 638 Epoch 465/1000 completed with RMSE: 0.147296
+6468.6s 639 Epoch 466/1000 completed with RMSE: 0.147439
+6482.6s 640 Epoch 467/1000 completed with RMSE: 0.147148
+6495.9s 641 Epoch 468/1000 completed with RMSE: 0.147429
+6509.9s 642 Epoch 469/1000 completed with RMSE: 0.147095
+6523.4s 643 Epoch 470/1000 completed with RMSE: 0.147418
+6536.8s 644 Epoch 471/1000 completed with RMSE: 0.147199
+6550.9s 645 Epoch 472/1000 completed with RMSE: 0.147066
+6564.4s 646 Epoch 473/1000 completed with RMSE: 0.147282
+6578.1s 647 Epoch 474/1000 completed with RMSE: 0.147024
+6591.5s 648 Epoch 475/1000 completed with RMSE: 0.146987
+6605.3s 649 Epoch 476/1000 completed with RMSE: 0.146923
+6618.8s 650 Epoch 477/1000 completed with RMSE: 0.147010
+6632.3s 651 Epoch 478/1000 completed with RMSE: 0.146881
+6646.3s 652 Epoch 479/1000 completed with RMSE: 0.146793
+6659.7s 653 Epoch 480/1000 completed with RMSE: 0.146722
+6673.5s 654 Epoch 481/1000 completed with RMSE: 0.146660
+6687.0s 655 Epoch 482/1000 completed with RMSE: 0.146486
+6700.7s 656 Epoch 483/1000 completed with RMSE: 0.146264
+6714.4s 657 Epoch 484/1000 completed with RMSE: 0.146613
+6727.8s 658 Epoch 485/1000 completed with RMSE: 0.146758
+6741.6s 659 Epoch 486/1000 completed with RMSE: 0.146367
+6755.1s 660 Epoch 487/1000 completed with RMSE: 0.146469
+6769.1s 661 Epoch 488/1000 completed with RMSE: 0.146510
+6782.5s 662 Epoch 489/1000 completed with RMSE: 0.146339
+6796.0s 663 Epoch 490/1000 completed with RMSE: 0.146313
+6809.7s 664 Epoch 491/1000 completed with RMSE: 0.146012
+6823.3s 665 Epoch 492/1000 completed with RMSE: 0.145971
+6837.3s 666 Epoch 493/1000 completed with RMSE: 0.146239
+6850.7s 667 Epoch 494/1000 completed with RMSE: 0.146101
+6864.5s 668 Epoch 495/1000 completed with RMSE: 0.145901
+6878.1s 669 Epoch 496/1000 completed with RMSE: 0.146194
+6891.4s 670 Epoch 497/1000 completed with RMSE: 0.146093
+6905.5s 671 Epoch 498/1000 completed with RMSE: 0.145997
+6918.9s 672 Epoch 499/1000 completed with RMSE: 0.145726
+6932.6s 673 Epoch 500/1000 completed with RMSE: 0.145739
+6946.2s 674 Epoch 501/1000 completed with RMSE: 0.145845
+6959.7s 675 Epoch 502/1000 completed with RMSE: 0.145877
+6973.8s 676 Epoch 503/1000 completed with RMSE: 0.145741
+6987.3s 677 Epoch 504/1000 completed with RMSE: 0.145842
+7001.1s 678 Epoch 505/1000 completed with RMSE: 0.145531
+7014.6s 679 Epoch 506/1000 completed with RMSE: 0.145376
+7028.6s 680 Epoch 507/1000 completed with RMSE: 0.145528
+7042.1s 681 Epoch 508/1000 completed with RMSE: 0.145648
+7055.6s 682 Epoch 509/1000 completed with RMSE: 0.145387
+7069.6s 683 Epoch 510/1000 completed with RMSE: 0.145650
+7083.2s 684 Epoch 511/1000 completed with RMSE: 0.145362
+7097.5s 685 Epoch 512/1000 completed with RMSE: 0.145572
+7111.0s 686 Epoch 513/1000 completed with RMSE: 0.145389
+7125.3s 687 Epoch 514/1000 completed with RMSE: 0.145395
+7138.8s 688 Epoch 515/1000 completed with RMSE: 0.145321
+7152.3s 689 Epoch 516/1000 completed with RMSE: 0.145047
+7166.1s 690 Epoch 517/1000 completed with RMSE: 0.145078
+7179.5s 691 Epoch 518/1000 completed with RMSE: 0.145219
+7193.5s 692 Epoch 519/1000 completed with RMSE: 0.145251
+7207.0s 693 Epoch 520/1000 completed with RMSE: 0.145132
+7221.2s 694 Epoch 521/1000 completed with RMSE: 0.145088
+7235.0s 695 Epoch 522/1000 completed with RMSE: 0.144921
+7248.6s 696 Epoch 523/1000 completed with RMSE: 0.145018
+7263.0s 697 Epoch 524/1000 completed with RMSE: 0.144837
+7276.8s 698 Epoch 525/1000 completed with RMSE: 0.145125
+7290.9s 699 Epoch 526/1000 completed with RMSE: 0.144789
+7304.7s 700 Epoch 527/1000 completed with RMSE: 0.144824
+7319.0s 701 Epoch 528/1000 completed with RMSE: 0.144791
+7332.7s 702 Epoch 529/1000 completed with RMSE: 0.144798
+7346.3s 703 Epoch 530/1000 completed with RMSE: 0.144647
+7360.2s 704 Epoch 531/1000 completed with RMSE: 0.144562
+7373.5s 705 Epoch 532/1000 completed with RMSE: 0.144837
+7387.5s 706 Epoch 533/1000 completed with RMSE: 0.144594
+7401.2s 707 Epoch 534/1000 completed with RMSE: 0.144559
+7415.3s 708 Epoch 535/1000 completed with RMSE: 0.144359
+7428.9s 709 Epoch 536/1000 completed with RMSE: 0.144653
+7442.6s 710 Epoch 537/1000 completed with RMSE: 0.144351
+7456.7s 711 Epoch 538/1000 completed with RMSE: 0.144414
+7470.4s 712 Epoch 539/1000 completed with RMSE: 0.144319
+7484.8s 713 Epoch 540/1000 completed with RMSE: 0.144131
+7498.7s 714 Epoch 541/1000 completed with RMSE: 0.144272
+7513.3s 715 Epoch 542/1000 completed with RMSE: 0.144039
+7527.2s 716 Epoch 543/1000 completed with RMSE: 0.144234
+7540.8s 717 Epoch 544/1000 completed with RMSE: 0.144201
+7555.0s 718 Epoch 545/1000 completed with RMSE: 0.144014
+7568.4s 719 Epoch 546/1000 completed with RMSE: 0.144266
+7582.6s 720 Epoch 547/1000 completed with RMSE: 0.143762
+7595.9s 721 Epoch 548/1000 completed with RMSE: 0.143959
+7609.7s 722 Epoch 549/1000 completed with RMSE: 0.144197
+7623.1s 723 Epoch 550/1000 completed with RMSE: 0.143859
+7636.6s 724 Epoch 551/1000 completed with RMSE: 0.143753
+7650.5s 725 Epoch 552/1000 completed with RMSE: 0.143838
+7664.1s 726 Epoch 553/1000 completed with RMSE: 0.143928
+7677.8s 727 Epoch 554/1000 completed with RMSE: 0.143945
+7691.6s 728 Epoch 555/1000 completed with RMSE: 0.143719
+7705.4s 729 Epoch 556/1000 completed with RMSE: 0.143814
+7718.9s 730 Epoch 557/1000 completed with RMSE: 0.143637
+7732.6s 731 Epoch 558/1000 completed with RMSE: 0.143690
+7746.7s 732 Epoch 559/1000 completed with RMSE: 0.143826
+7760.2s 733 Epoch 560/1000 completed with RMSE: 0.143597
+7774.2s 734 Epoch 561/1000 completed with RMSE: 0.143489
+7787.7s 735 Epoch 562/1000 completed with RMSE: 0.143604
+7801.4s 736 Epoch 563/1000 completed with RMSE: 0.143529
+7815.5s 737 Epoch 564/1000 completed with RMSE: 0.143578
+7829.3s 738 Epoch 565/1000 completed with RMSE: 0.143811
+7843.4s 739 Epoch 566/1000 completed with RMSE: 0.143334
+7857.1s 740 Epoch 567/1000 completed with RMSE: 0.143574
+7871.0s 741 Epoch 568/1000 completed with RMSE: 0.143289
+7884.9s 742 Epoch 569/1000 completed with RMSE: 0.143279
+7898.6s 743 Epoch 570/1000 completed with RMSE: 0.143144
+7912.6s 744 Epoch 571/1000 completed with RMSE: 0.143160
+7926.1s 745 Epoch 572/1000 completed with RMSE: 0.143225
+7940.5s 746 Epoch 573/1000 completed with RMSE: 0.143327
+7953.8s 747 Epoch 574/1000 completed with RMSE: 0.142963
+7967.9s 748 Epoch 575/1000 completed with RMSE: 0.143070
+7981.1s 749 Epoch 576/1000 completed with RMSE: 0.142904
+7994.9s 750 Epoch 577/1000 completed with RMSE: 0.142930
+8008.5s 751 Epoch 578/1000 completed with RMSE: 0.143103
+8022.2s 752 Epoch 579/1000 completed with RMSE: 0.142969
+8036.0s 753 Epoch 580/1000 completed with RMSE: 0.142866
+8049.8s 754 Epoch 581/1000 completed with RMSE: 0.142949
+8063.7s 755 Epoch 582/1000 completed with RMSE: 0.142987
+8077.4s 756 Epoch 583/1000 completed with RMSE: 0.143021
+8091.2s 757 Epoch 584/1000 completed with RMSE: 0.142790
+8105.3s 758 Epoch 585/1000 completed with RMSE: 0.142827
+8118.9s 759 Epoch 586/1000 completed with RMSE: 0.142917
+8133.0s 760 Epoch 587/1000 completed with RMSE: 0.142819
+8146.5s 761 Epoch 588/1000 completed with RMSE: 0.142627
+8160.3s 762 Epoch 589/1000 completed with RMSE: 0.142521
+8173.6s 763 Epoch 590/1000 completed with RMSE: 0.142605
+8187.5s 764 Epoch 591/1000 completed with RMSE: 0.142665
+8201.2s 765 Epoch 592/1000 completed with RMSE: 0.142646
+8214.9s 766 Epoch 593/1000 completed with RMSE: 0.142556
+8228.6s 767 Epoch 594/1000 completed with RMSE: 0.142591
+8242.2s 768 Epoch 595/1000 completed with RMSE: 0.142582
+8256.1s 769 Epoch 596/1000 completed with RMSE: 0.142301
+8269.6s 770 Epoch 597/1000 completed with RMSE: 0.142677
+8282.9s 771 Epoch 598/1000 completed with RMSE: 0.142635
+8296.8s 772 Epoch 599/1000 completed with RMSE: 0.142312
+8310.4s 773 Epoch 600/1000 completed with RMSE: 0.142332
+8324.5s 774 Epoch 601/1000 completed with RMSE: 0.142251
+8338.1s 775 Epoch 602/1000 completed with RMSE: 0.142356
+8352.1s 776 Epoch 603/1000 completed with RMSE: 0.142028
+8365.6s 777 Epoch 604/1000 completed with RMSE: 0.142226
+8379.1s 778 Epoch 605/1000 completed with RMSE: 0.142236
+8392.8s 779 Epoch 606/1000 completed with RMSE: 0.142203
+8406.5s 780 Epoch 607/1000 completed with RMSE: 0.142215
+8420.5s 781 Epoch 608/1000 completed with RMSE: 0.142059
+8434.3s 782 Epoch 609/1000 completed with RMSE: 0.142139
+8448.4s 783 Epoch 610/1000 completed with RMSE: 0.142118
+8462.2s 784 Epoch 611/1000 completed with RMSE: 0.142026
+8475.9s 785 Epoch 612/1000 completed with RMSE: 0.142169
+8489.8s 786 Epoch 613/1000 completed with RMSE: 0.142127
+8503.5s 787 Epoch 614/1000 completed with RMSE: 0.142158
+8517.7s 788 Epoch 615/1000 completed with RMSE: 0.142191
+8531.2s 789 Epoch 616/1000 completed with RMSE: 0.141814
+8545.3s 790 Epoch 617/1000 completed with RMSE: 0.142054
+8559.1s 791 Epoch 618/1000 completed with RMSE: 0.141757
+8572.4s 792 Epoch 619/1000 completed with RMSE: 0.141774
+8586.7s 793 Epoch 620/1000 completed with RMSE: 0.141797
+8600.1s 794 Epoch 621/1000 completed with RMSE: 0.141931
+8614.5s 795 Epoch 622/1000 completed with RMSE: 0.141764
+8627.9s 796 Epoch 623/1000 completed with RMSE: 0.141773
+8641.6s 797 Epoch 624/1000 completed with RMSE: 0.141596
+8655.2s 798 Epoch 625/1000 completed with RMSE: 0.141711
+8668.8s 799 Epoch 626/1000 completed with RMSE: 0.141633
+8682.6s 800 Epoch 627/1000 completed with RMSE: 0.141836
+8696.4s 801 Epoch 628/1000 completed with RMSE: 0.141718
+8710.0s 802 Epoch 629/1000 completed with RMSE: 0.141414
+8723.4s 803 Epoch 630/1000 completed with RMSE: 0.141579
+8736.9s 804 Epoch 631/1000 completed with RMSE: 0.141607
+8750.9s 805 Epoch 632/1000 completed with RMSE: 0.141559
+8764.6s 806 Epoch 633/1000 completed with RMSE: 0.141484
+8778.3s 807 Epoch 634/1000 completed with RMSE: 0.141494
+8791.8s 808 Epoch 635/1000 completed with RMSE: 0.141455
+8805.8s 809 Epoch 636/1000 completed with RMSE: 0.141480
+8819.5s 810 Epoch 637/1000 completed with RMSE: 0.141529
+8833.1s 811 Epoch 638/1000 completed with RMSE: 0.141507
+8847.1s 812 Epoch 639/1000 completed with RMSE: 0.141592
+8860.7s 813 Epoch 640/1000 completed with RMSE: 0.141405
+8874.7s 814 Epoch 641/1000 completed with RMSE: 0.141451
+8888.1s 815 Epoch 642/1000 completed with RMSE: 0.141329
+8902.3s 816 Epoch 643/1000 completed with RMSE: 0.141310
+8916.1s 817 Epoch 644/1000 completed with RMSE: 0.141072
+8929.7s 818 Epoch 645/1000 completed with RMSE: 0.141285
+8943.6s 819 Epoch 646/1000 completed with RMSE: 0.141076
+8957.5s 820 Epoch 647/1000 completed with RMSE: 0.141170
+8971.4s 821 Epoch 648/1000 completed with RMSE: 0.141105
+8985.1s 822 Epoch 649/1000 completed with RMSE: 0.141181
+8999.0s 823 Epoch 650/1000 completed with RMSE: 0.141135
+9012.6s 824 Epoch 651/1000 completed with RMSE: 0.140980
+9025.9s 825 Epoch 652/1000 completed with RMSE: 0.140986
+9040.0s 826 Epoch 653/1000 completed with RMSE: 0.141007
+9053.3s 827 Epoch 654/1000 completed with RMSE: 0.141044
+9067.2s 828 Epoch 655/1000 completed with RMSE: 0.140781
+9080.7s 829 Epoch 656/1000 completed with RMSE: 0.140986
+9094.5s 830 Epoch 657/1000 completed with RMSE: 0.140775
+9108.3s 831 Epoch 658/1000 completed with RMSE: 0.140730
+9122.1s 832 Epoch 659/1000 completed with RMSE: 0.140701
+9136.1s 833 Epoch 660/1000 completed with RMSE: 0.140735
+9149.3s 834 Epoch 661/1000 completed with RMSE: 0.140813
+9163.3s 835 Epoch 662/1000 completed with RMSE: 0.140738
+9176.7s 836 Epoch 663/1000 completed with RMSE: 0.140565
+9190.1s 837 Epoch 664/1000 completed with RMSE: 0.140687
+9203.8s 838 Epoch 665/1000 completed with RMSE: 0.140821
+9217.5s 839 Epoch 666/1000 completed with RMSE: 0.140487
+9231.0s 840 Epoch 667/1000 completed with RMSE: 0.140557
+9244.5s 841 Epoch 668/1000 completed with RMSE: 0.140716
+9258.2s 842 Epoch 669/1000 completed with RMSE: 0.140550
+9272.0s 843 Epoch 670/1000 completed with RMSE: 0.140534
+9285.5s 844 Epoch 671/1000 completed with RMSE: 0.140597
+9299.5s 845 Epoch 672/1000 completed with RMSE: 0.140761
+9312.8s 846 Epoch 673/1000 completed with RMSE: 0.140540
+9326.7s 847 Epoch 674/1000 completed with RMSE: 0.140560
+9340.4s 848 Epoch 675/1000 completed with RMSE: 0.140536
+9354.2s 849 Epoch 676/1000 completed with RMSE: 0.140533
+9367.7s 850 Epoch 677/1000 completed with RMSE: 0.140426
+9381.1s 851 Epoch 678/1000 completed with RMSE: 0.140442
+9394.7s 852 Epoch 679/1000 completed with RMSE: 0.140301
+9408.1s 853 Epoch 680/1000 completed with RMSE: 0.140317
+9422.0s 854 Epoch 681/1000 completed with RMSE: 0.140450
+9435.5s 855 Epoch 682/1000 completed with RMSE: 0.140391
+9449.1s 856 Epoch 683/1000 completed with RMSE: 0.140302
+9463.2s 857 Epoch 684/1000 completed with RMSE: 0.140185
+9476.7s 858 Epoch 685/1000 completed with RMSE: 0.140385
+9490.2s 859 Epoch 686/1000 completed with RMSE: 0.140145
+9503.8s 860 Epoch 687/1000 completed with RMSE: 0.140279
+9517.5s 861 Epoch 688/1000 completed with RMSE: 0.140080
+9531.5s 862 Epoch 689/1000 completed with RMSE: 0.139989
+9544.7s 863 Epoch 690/1000 completed with RMSE: 0.140073
+9558.7s 864 Epoch 691/1000 completed with RMSE: 0.140248
+9572.0s 865 Epoch 692/1000 completed with RMSE: 0.140103
+9586.1s 866 Epoch 693/1000 completed with RMSE: 0.139893
+9599.4s 867 Epoch 694/1000 completed with RMSE: 0.140076
+9613.5s 868 Epoch 695/1000 completed with RMSE: 0.140051
+9627.0s 869 Epoch 696/1000 completed with RMSE: 0.139895
+9640.1s 870 Epoch 697/1000 completed with RMSE: 0.140052
+9654.2s 871 Epoch 698/1000 completed with RMSE: 0.139815
+9667.7s 872 Epoch 699/1000 completed with RMSE: 0.139758
+9681.9s 873 Epoch 700/1000 completed with RMSE: 0.139904
+9695.5s 874 Epoch 701/1000 completed with RMSE: 0.139890
+9709.3s 875 Epoch 702/1000 completed with RMSE: 0.139965
+9722.9s 876 Epoch 703/1000 completed with RMSE: 0.139888
+9736.6s 877 Epoch 704/1000 completed with RMSE: 0.139702
+9750.4s 878 Epoch 705/1000 completed with RMSE: 0.139720
+9764.5s 879 Epoch 706/1000 completed with RMSE: 0.139668
+9778.4s 880 Epoch 707/1000 completed with RMSE: 0.139693
+9792.1s 881 Epoch 708/1000 completed with RMSE: 0.139937
+9805.6s 882 Epoch 709/1000 completed with RMSE: 0.139540
+9819.6s 883 Epoch 710/1000 completed with RMSE: 0.139586
+9833.1s 884 Epoch 711/1000 completed with RMSE: 0.139922
+9847.1s 885 Epoch 712/1000 completed with RMSE: 0.139582
+9860.8s 886 Epoch 713/1000 completed with RMSE: 0.139680
+9874.5s 887 Epoch 714/1000 completed with RMSE: 0.139596
+9888.1s 888 Epoch 715/1000 completed with RMSE: 0.139446
+9901.4s 889 Epoch 716/1000 completed with RMSE: 0.139600
+9915.4s 890 Epoch 717/1000 completed with RMSE: 0.139381
+9929.0s 891 Epoch 718/1000 completed with RMSE: 0.139580
+9942.8s 892 Epoch 719/1000 completed with RMSE: 0.139610
+9956.3s 893 Epoch 720/1000 completed with RMSE: 0.139440
+9970.2s 894 Epoch 721/1000 completed with RMSE: 0.139570
+9983.5s 895 Epoch 722/1000 completed with RMSE: 0.139423
+9997.0s 896 Epoch 723/1000 completed with RMSE: 0.139375
+10011.0s 897 Epoch 724/1000 completed with RMSE: 0.139363
+10024.7s 898 Epoch 725/1000 completed with RMSE: 0.139362
+10038.6s 899 Epoch 726/1000 completed with RMSE: 0.139429
+10052.1s 900 Epoch 727/1000 completed with RMSE: 0.139451
+10066.2s 901 Epoch 728/1000 completed with RMSE: 0.139445
+10079.5s 902 Epoch 729/1000 completed with RMSE: 0.139434
+10093.0s 903 Epoch 730/1000 completed with RMSE: 0.139406
+10106.7s 904 Epoch 731/1000 completed with RMSE: 0.139443
+10120.2s 905 Epoch 732/1000 completed with RMSE: 0.139246
+10134.3s 906 Epoch 733/1000 completed with RMSE: 0.139191
+10147.8s 907 Epoch 734/1000 completed with RMSE: 0.139187
+10161.4s 908 Epoch 735/1000 completed with RMSE: 0.139366
+10175.1s 909 Epoch 736/1000 completed with RMSE: 0.139238
+10188.4s 910 Epoch 737/1000 completed with RMSE: 0.139105
+10202.5s 911 Epoch 738/1000 completed with RMSE: 0.139097
+10216.1s 912 Epoch 739/1000 completed with RMSE: 0.138969
+10230.2s 913 Epoch 740/1000 completed with RMSE: 0.139120
+10243.6s 914 Epoch 741/1000 completed with RMSE: 0.139093
+10257.0s 915 Epoch 742/1000 completed with RMSE: 0.139086
+10270.9s 916 Epoch 743/1000 completed with RMSE: 0.138828
+10284.3s 917 Epoch 744/1000 completed with RMSE: 0.139085
+10298.4s 918 Epoch 745/1000 completed with RMSE: 0.139038
+10311.7s 919 Epoch 746/1000 completed with RMSE: 0.139076
+10325.7s 920 Epoch 747/1000 completed with RMSE: 0.139089
+10339.1s 921 Epoch 748/1000 completed with RMSE: 0.138868
+10352.8s 922 Epoch 749/1000 completed with RMSE: 0.139010
+10366.9s 923 Epoch 750/1000 completed with RMSE: 0.138826
+10380.4s 924 Epoch 751/1000 completed with RMSE: 0.139011
+10394.2s 925 Epoch 752/1000 completed with RMSE: 0.139027
+10407.8s 926 Epoch 753/1000 completed with RMSE: 0.138773
+10421.5s 927 Epoch 754/1000 completed with RMSE: 0.138991
+10435.3s 928 Epoch 755/1000 completed with RMSE: 0.138950
+10448.6s 929 Epoch 756/1000 completed with RMSE: 0.138935
+10462.6s 930 Epoch 757/1000 completed with RMSE: 0.138760
+10475.9s 931 Epoch 758/1000 completed with RMSE: 0.138841
+10489.9s 932 Epoch 759/1000 completed with RMSE: 0.138742
+10503.3s 933 Epoch 760/1000 completed with RMSE: 0.138801
+10516.9s 934 Epoch 761/1000 completed with RMSE: 0.138632
+10531.1s 935 Epoch 762/1000 completed with RMSE: 0.138927
+10544.4s 936 Epoch 763/1000 completed with RMSE: 0.138879
+10558.3s 937 Epoch 764/1000 completed with RMSE: 0.138670
+10571.6s 938 Epoch 765/1000 completed with RMSE: 0.138439
+10585.3s 939 Epoch 766/1000 completed with RMSE: 0.138797
+10598.6s 940 Epoch 767/1000 completed with RMSE: 0.138591
+10611.9s 941 Epoch 768/1000 completed with RMSE: 0.138615
+10625.6s 942 Epoch 769/1000 completed with RMSE: 0.138624
+10639.1s 943 Epoch 770/1000 completed with RMSE: 0.138456
+10653.0s 944 Epoch 771/1000 completed with RMSE: 0.138737
+10666.5s 945 Epoch 772/1000 completed with RMSE: 0.138651
+10679.9s 946 Epoch 773/1000 completed with RMSE: 0.138230
+10693.7s 947 Epoch 774/1000 completed with RMSE: 0.138355
+10707.2s 948 Epoch 775/1000 completed with RMSE: 0.138528
+10721.0s 949 Epoch 776/1000 completed with RMSE: 0.138575
+10734.5s 950 Epoch 777/1000 completed with RMSE: 0.138352
+10748.4s 951 Epoch 778/1000 completed with RMSE: 0.138709
+10762.1s 952 Epoch 779/1000 completed with RMSE: 0.138341
+10775.5s 953 Epoch 780/1000 completed with RMSE: 0.138271
+10789.5s 954 Epoch 781/1000 completed with RMSE: 0.138269
+10803.2s 955 Epoch 782/1000 completed with RMSE: 0.138361
+10817.0s 956 Epoch 783/1000 completed with RMSE: 0.138392
+10830.3s 957 Epoch 784/1000 completed with RMSE: 0.138173
+10844.0s 958 Epoch 785/1000 completed with RMSE: 0.138136
+10857.5s 959 Epoch 786/1000 completed with RMSE: 0.138333
+10870.7s 960 Epoch 787/1000 completed with RMSE: 0.138386
+10884.6s 961 Epoch 788/1000 completed with RMSE: 0.138209
+10898.1s 962 Epoch 789/1000 completed with RMSE: 0.138060
+10912.2s 963 Epoch 790/1000 completed with RMSE: 0.138302
+10925.6s 964 Epoch 791/1000 completed with RMSE: 0.138261
+10939.3s 965 Epoch 792/1000 completed with RMSE: 0.138368
+10952.7s 966 Epoch 793/1000 completed with RMSE: 0.138395
+10966.1s 967 Epoch 794/1000 completed with RMSE: 0.138314
+10979.8s 968 Epoch 795/1000 completed with RMSE: 0.138128
+10993.4s 969 Epoch 796/1000 completed with RMSE: 0.138139
+11007.4s 970 Epoch 797/1000 completed with RMSE: 0.138240
+11021.1s 971 Epoch 798/1000 completed with RMSE: 0.138048
+11034.7s 972 Epoch 799/1000 completed with RMSE: 0.138096
+11048.4s 973 Epoch 800/1000 completed with RMSE: 0.138263
+11062.0s 974 Epoch 801/1000 completed with RMSE: 0.138115
+11075.8s 975 Epoch 802/1000 completed with RMSE: 0.138247
+11089.6s 976 Epoch 803/1000 completed with RMSE: 0.138013
+11103.4s 977 Epoch 804/1000 completed with RMSE: 0.138084
+11116.9s 978 Epoch 805/1000 completed with RMSE: 0.137873
+11130.5s 979 Epoch 806/1000 completed with RMSE: 0.137934
+11144.7s 980 Epoch 807/1000 completed with RMSE: 0.137834
+11158.5s 981 Epoch 808/1000 completed with RMSE: 0.137854
+11172.5s 982 Epoch 809/1000 completed with RMSE: 0.138056
+11186.2s 983 Epoch 810/1000 completed with RMSE: 0.137911
+11200.2s 984 Epoch 811/1000 completed with RMSE: 0.138267
+11213.9s 985 Epoch 812/1000 completed with RMSE: 0.137878
+11227.2s 986 Epoch 813/1000 completed with RMSE: 0.137797
+11241.3s 987 Epoch 814/1000 completed with RMSE: 0.137696
+11254.6s 988 Epoch 815/1000 completed with RMSE: 0.137772
+11268.6s 989 Epoch 816/1000 completed with RMSE: 0.137877
+11282.0s 990 Epoch 817/1000 completed with RMSE: 0.137989
+11295.8s 991 Epoch 818/1000 completed with RMSE: 0.138019
+11309.3s 992 Epoch 819/1000 completed with RMSE: 0.137996
+11322.8s 993 Epoch 820/1000 completed with RMSE: 0.137542
+11337.0s 994 Epoch 821/1000 completed with RMSE: 0.138008
+11350.4s 995 Epoch 822/1000 completed with RMSE: 0.137772
+11364.6s 996 Epoch 823/1000 completed with RMSE: 0.137567
+11378.1s 997 Epoch 824/1000 completed with RMSE: 0.137844
+11392.5s 998 Epoch 825/1000 completed with RMSE: 0.137736
+11406.1s 999 Epoch 826/1000 completed with RMSE: 0.137557
+11420.0s 1000 Epoch 827/1000 completed with RMSE: 0.137701
+11433.9s 1001 Epoch 828/1000 completed with RMSE: 0.137731
+11447.4s 1002 Epoch 829/1000 completed with RMSE: 0.137760
+11461.5s 1003 Epoch 830/1000 completed with RMSE: 0.137603
+11475.0s 1004 Epoch 831/1000 completed with RMSE: 0.137612
+11489.1s 1005 Epoch 832/1000 completed with RMSE: 0.137552
+11502.4s 1006 Epoch 833/1000 completed with RMSE: 0.137717
+11516.2s 1007 Epoch 834/1000 completed with RMSE: 0.137527
+11530.0s 1008 Epoch 835/1000 completed with RMSE: 0.137648
+11543.7s 1009 Epoch 836/1000 completed with RMSE: 0.137653
+11557.5s 1010 Epoch 837/1000 completed with RMSE: 0.137787
+11571.0s 1011 Epoch 838/1000 completed with RMSE: 0.137626
+11585.2s 1012 Epoch 839/1000 completed with RMSE: 0.137572
+11598.7s 1013 Epoch 840/1000 completed with RMSE: 0.137763
+11612.2s 1014 Epoch 841/1000 completed with RMSE: 0.137632
+11626.5s 1015 Epoch 842/1000 completed with RMSE: 0.137342
+11640.3s 1016 Epoch 843/1000 completed with RMSE: 0.137388
+11654.3s 1017 Epoch 844/1000 completed with RMSE: 0.137507
+11668.2s 1018 Epoch 845/1000 completed with RMSE: 0.137602
+11682.2s 1019 Epoch 846/1000 completed with RMSE: 0.137455
+11696.2s 1020 Epoch 847/1000 completed with RMSE: 0.137438
+11709.8s 1021 Epoch 848/1000 completed with RMSE: 0.137448
+11723.8s 1022 Epoch 849/1000 completed with RMSE: 0.137226
+11737.2s 1023 Epoch 850/1000 completed with RMSE: 0.137403
+11751.4s 1024 Epoch 851/1000 completed with RMSE: 0.137513
+11764.8s 1025 Epoch 852/1000 completed with RMSE: 0.137383
+11778.7s 1026 Epoch 853/1000 completed with RMSE: 0.137457
+11792.2s 1027 Epoch 854/1000 completed with RMSE: 0.137409
+11805.7s 1028 Epoch 855/1000 completed with RMSE: 0.137241
+11820.0s 1029 Epoch 856/1000 completed with RMSE: 0.137156
+11833.3s 1030 Epoch 857/1000 completed with RMSE: 0.137374
+11847.3s 1031 Epoch 858/1000 completed with RMSE: 0.137164
+11860.7s 1032 Epoch 859/1000 completed with RMSE: 0.137246
+11874.6s 1033 Epoch 860/1000 completed with RMSE: 0.137178
+11888.4s 1034 Epoch 861/1000 completed with RMSE: 0.137155
+11902.2s 1035 Epoch 862/1000 completed with RMSE: 0.137167
+11915.9s 1036 Epoch 863/1000 completed with RMSE: 0.137341
+11929.4s 1037 Epoch 864/1000 completed with RMSE: 0.136984
+11943.8s 1038 Epoch 865/1000 completed with RMSE: 0.137084
+11957.3s 1039 Epoch 866/1000 completed with RMSE: 0.137156
+11971.3s 1040 Epoch 867/1000 completed with RMSE: 0.137187
+11985.2s 1041 Epoch 868/1000 completed with RMSE: 0.137042
+11999.1s 1042 Epoch 869/1000 completed with RMSE: 0.137252
+12012.8s 1043 Epoch 870/1000 completed with RMSE: 0.137076
+12026.0s 1044 Epoch 871/1000 completed with RMSE: 0.137205
+12039.9s 1045 Epoch 872/1000 completed with RMSE: 0.137161
+12053.6s 1046 Epoch 873/1000 completed with RMSE: 0.137101
+12067.2s 1047 Epoch 874/1000 completed with RMSE: 0.137056
+12081.3s 1048 Epoch 875/1000 completed with RMSE: 0.137118
+12094.9s 1049 Epoch 876/1000 completed with RMSE: 0.136941
+12108.6s 1050 Epoch 877/1000 completed with RMSE: 0.136814
+12122.5s 1051 Epoch 878/1000 completed with RMSE: 0.137026
+12136.3s 1052 Epoch 879/1000 completed with RMSE: 0.136995
+12149.7s 1053 Epoch 880/1000 completed with RMSE: 0.136998
+12163.5s 1054 Epoch 881/1000 completed with RMSE: 0.137021
+12177.3s 1055 Epoch 882/1000 completed with RMSE: 0.136981
+12190.9s 1056 Epoch 883/1000 completed with RMSE: 0.136881
+12204.7s 1057 Epoch 884/1000 completed with RMSE: 0.136788
+12218.3s 1058 Epoch 885/1000 completed with RMSE: 0.136969
+12231.6s 1059 Epoch 886/1000 completed with RMSE: 0.137009
+12245.4s 1060 Epoch 887/1000 completed with RMSE: 0.136997
+12258.7s 1061 Epoch 888/1000 completed with RMSE: 0.136702
+12273.0s 1062 Epoch 889/1000 completed with RMSE: 0.136863
+12286.3s 1063 Epoch 890/1000 completed with RMSE: 0.136722
+12300.3s 1064 Epoch 891/1000 completed with RMSE: 0.136877
+12314.0s 1065 Epoch 892/1000 completed with RMSE: 0.136677
+12327.4s 1066 Epoch 893/1000 completed with RMSE: 0.136865
+12341.7s 1067 Epoch 894/1000 completed with RMSE: 0.136887
+12355.0s 1068 Epoch 895/1000 completed with RMSE: 0.136645
+12369.1s 1069 Epoch 896/1000 completed with RMSE: 0.136790
+12382.5s 1070 Epoch 897/1000 completed with RMSE: 0.136688
+12396.9s 1071 Epoch 898/1000 completed with RMSE: 0.136771
+12410.3s 1072 Epoch 899/1000 completed with RMSE: 0.136787
+12423.6s 1073 Epoch 900/1000 completed with RMSE: 0.136729
+12437.8s 1074 Epoch 901/1000 completed with RMSE: 0.136662
+12451.0s 1075 Epoch 902/1000 completed with RMSE: 0.136574
+12465.2s 1076 Epoch 903/1000 completed with RMSE: 0.136805
+12478.2s 1077 Epoch 904/1000 completed with RMSE: 0.136707
+12492.2s 1078 Epoch 905/1000 completed with RMSE: 0.136583
+12505.7s 1079 Epoch 906/1000 completed with RMSE: 0.136785
+12519.1s 1080 Epoch 907/1000 completed with RMSE: 0.136487
+12533.2s 1081 Epoch 908/1000 completed with RMSE: 0.136712
+12546.6s 1082 Epoch 909/1000 completed with RMSE: 0.136611
+12560.5s 1083 Epoch 910/1000 completed with RMSE: 0.136758
+12574.4s 1084 Epoch 911/1000 completed with RMSE: 0.136475
+12588.2s 1085 Epoch 912/1000 completed with RMSE: 0.136688
+12601.8s 1086 Epoch 913/1000 completed with RMSE: 0.136549
+12615.7s 1087 Epoch 914/1000 completed with RMSE: 0.136775
+12629.8s 1088 Epoch 915/1000 completed with RMSE: 0.136521
+12643.5s 1089 Epoch 916/1000 completed with RMSE: 0.136487
+12657.7s 1090 Epoch 917/1000 completed with RMSE: 0.136559
+12671.3s 1091 Epoch 918/1000 completed with RMSE: 0.136514
+12685.2s 1092 Epoch 919/1000 completed with RMSE: 0.136214
+12698.7s 1093 Epoch 920/1000 completed with RMSE: 0.136405
+12712.5s 1094 Epoch 921/1000 completed with RMSE: 0.136402
+12726.4s 1095 Epoch 922/1000 completed with RMSE: 0.136388
+12740.0s 1096 Epoch 923/1000 completed with RMSE: 0.136529
+12753.6s 1097 Epoch 924/1000 completed with RMSE: 0.136352
+12767.0s 1098 Epoch 925/1000 completed with RMSE: 0.136492
+12780.4s 1099 Epoch 926/1000 completed with RMSE: 0.136572
+12794.2s 1100 Epoch 927/1000 completed with RMSE: 0.136408
+12808.0s 1101 Epoch 928/1000 completed with RMSE: 0.136547
+12822.0s 1102 Epoch 929/1000 completed with RMSE: 0.136473
+12835.6s 1103 Epoch 930/1000 completed with RMSE: 0.136543
+12849.3s 1104 Epoch 931/1000 completed with RMSE: 0.136486
+12862.8s 1105 Epoch 932/1000 completed with RMSE: 0.136224
+12876.2s 1106 Epoch 933/1000 completed with RMSE: 0.136168
+12889.9s 1107 Epoch 934/1000 completed with RMSE: 0.136491
+12903.4s 1108 Epoch 935/1000 completed with RMSE: 0.136216
+12917.3s 1109 Epoch 936/1000 completed with RMSE: 0.136372
+12930.8s 1110 Epoch 937/1000 completed with RMSE: 0.136157
+12944.8s 1111 Epoch 938/1000 completed with RMSE: 0.136503
+12958.2s 1112 Epoch 939/1000 completed with RMSE: 0.136297
+12971.4s 1113 Epoch 940/1000 completed with RMSE: 0.136194
+12985.2s 1114 Epoch 941/1000 completed with RMSE: 0.136173
+12998.8s 1115 Epoch 942/1000 completed with RMSE: 0.136374
+13012.7s 1116 Epoch 943/1000 completed with RMSE: 0.136125
+13025.9s 1117 Epoch 944/1000 completed with RMSE: 0.136438
+13039.4s 1118 Epoch 945/1000 completed with RMSE: 0.136025
+13053.4s 1119 Epoch 946/1000 completed with RMSE: 0.136333
+13066.6s 1120 Epoch 947/1000 completed with RMSE: 0.136110
+13080.4s 1121 Epoch 948/1000 completed with RMSE: 0.136216
+13093.9s 1122 Epoch 949/1000 completed with RMSE: 0.136150
+13107.8s 1123 Epoch 950/1000 completed with RMSE: 0.136321
+13121.3s 1124 Epoch 951/1000 completed with RMSE: 0.136038
+13134.6s 1125 Epoch 952/1000 completed with RMSE: 0.136028
+13148.7s 1126 Epoch 953/1000 completed with RMSE: 0.136367
+13162.1s 1127 Epoch 954/1000 completed with RMSE: 0.136189
+13175.7s 1128 Epoch 955/1000 completed with RMSE: 0.136125
+13189.1s 1129 Epoch 956/1000 completed with RMSE: 0.136056
+13202.9s 1130 Epoch 957/1000 completed with RMSE: 0.136124
+13216.5s 1131 Epoch 958/1000 completed with RMSE: 0.136223
+13229.8s 1132 Epoch 959/1000 completed with RMSE: 0.136081
+13243.5s 1133 Epoch 960/1000 completed with RMSE: 0.136119
+13256.8s 1134 Epoch 961/1000 completed with RMSE: 0.135918
+13270.8s 1135 Epoch 962/1000 completed with RMSE: 0.136040
+13284.1s 1136 Epoch 963/1000 completed with RMSE: 0.136074
+13297.6s 1137 Epoch 964/1000 completed with RMSE: 0.136014
+13311.1s 1138 Epoch 965/1000 completed with RMSE: 0.135940
+13324.7s 1139 Epoch 966/1000 completed with RMSE: 0.136031
+13338.5s 1140 Epoch 967/1000 completed with RMSE: 0.136023
+13351.9s 1141 Epoch 968/1000 completed with RMSE: 0.135897
+13366.1s 1142 Epoch 969/1000 completed with RMSE: 0.136060
+13379.5s 1143 Epoch 970/1000 completed with RMSE: 0.135990
+13392.8s 1144 Epoch 971/1000 completed with RMSE: 0.136015
+13406.8s 1145 Epoch 972/1000 completed with RMSE: 0.136148
+13420.2s 1146 Epoch 973/1000 completed with RMSE: 0.135977
+13434.4s 1147 Epoch 974/1000 completed with RMSE: 0.135971
+13448.2s 1148 Epoch 975/1000 completed with RMSE: 0.135948
+13462.2s 1149 Epoch 976/1000 completed with RMSE: 0.135941
+13475.6s 1150 Epoch 977/1000 completed with RMSE: 0.136041
+13489.4s 1151 Epoch 978/1000 completed with RMSE: 0.135866
+13503.0s 1152 Epoch 979/1000 completed with RMSE: 0.136038
+13516.8s 1153 Epoch 980/1000 completed with RMSE: 0.135901
+13530.7s 1154 Epoch 981/1000 completed with RMSE: 0.135968
+13544.1s 1155 Epoch 982/1000 completed with RMSE: 0.135712
+13557.9s 1156 Epoch 983/1000 completed with RMSE: 0.135947
+13571.2s 1157 Epoch 984/1000 completed with RMSE: 0.135864
+13585.0s 1158 Epoch 985/1000 completed with RMSE: 0.135761
+13598.8s 1159 Epoch 986/1000 completed with RMSE: 0.135813
+13612.5s 1160 Epoch 987/1000 completed with RMSE: 0.135551
+13626.1s 1161 Epoch 988/1000 completed with RMSE: 0.135946
+13639.7s 1162 Epoch 989/1000 completed with RMSE: 0.135695
+13653.0s 1163 Epoch 990/1000 completed with RMSE: 0.135678
+13666.8s 1164 Epoch 991/1000 completed with RMSE: 0.135972
+13680.5s 1165 Epoch 992/1000 completed with RMSE: 0.135847
+13694.0s 1166 Epoch 993/1000 completed with RMSE: 0.135785
+13707.7s 1167 Epoch 994/1000 completed with RMSE: 0.135647
+13721.5s 1168 Epoch 995/1000 completed with RMSE: 0.135756
+13735.1s 1169 Epoch 996/1000 completed with RMSE: 0.135666
+13748.3s 1170 Epoch 997/1000 completed with RMSE: 0.135853
+13762.0s 1171 Epoch 998/1000 completed with RMSE: 0.135789
+13775.8s 1172 Epoch 999/1000 completed with RMSE: 0.135694
+13789.8s 1173 Epoch 1000/1000 completed with RMSE: 0.135908
+13789.8s 1174 Training completed!
+13804.4s 1175 Training history saved to history/predictions_20241013_191814_38c99d63-7d15-4ee3-97b7-32d7b1aaae99.csv
+13804.4s 1176 Evaluation RMSE (Real): 0.124559
+13804.4s 1177 Evaluation RMSE (Imaginary): 0.124272
+13804.4s 1178 CPU times: user 16.2 s, sys: 78.8 ms, total: 16.3 s
+13804.4s 1179 Wall time: 10.1 s
+13807.7s 1180 CPU times: user 882 ms, sys: 301 ms, total: 1.18 s
+13807.7s 1181 Wall time: 715 ms
+13809.2s 1182 CPU times: user 973 ms, sys: 302 ms, total: 1.28 s
+13809.2s 1183 Wall time: 787 ms
+13810.6s 1184 CPU times: user 948 ms, sys: 307 ms, total: 1.25 s
+13810.6s 1185 Wall time: 770 ms
+13812.0s 1186 CPU times: user 939 ms, sys: 293 ms, total: 1.23 s
+13812.0s 1187 Wall time: 744 ms
+13822.5s 1188 Traceback (most recent call last):
+13822.5s 1189 File "<string>", line 1, in <module>
+13822.5s 1190 File "/opt/conda/lib/python3.10/site-packages/papermill/execute.py", line 131, in execute_notebook
+13822.5s 1191 raise_for_execution_errors(nb, output_path)
+13822.5s 1192 File "/opt/conda/lib/python3.10/site-packages/papermill/execute.py", line 251, in raise_for_execution_errors
+13822.5s 1193 raise error
+13822.5s 1194 papermill.exceptions.PapermillExecutionError:
+13822.5s 1195 ---------------------------------------------------------------------------
+13822.5s 1196 Exception encountered at "In [9]":
+13822.5s 1197 ---------------------------------------------------------------------------
+13822.5s 1198 OSError                                   Traceback (most recent call last)
+13822.5s 1199 File <timed eval>:1
+13822.5s 1200 
+13822.5s 1201 Cell In[5], line 151, in NeuralODETrainer.train(self)
+13822.5s 1202 148     print(f"Epoch {epoch+1}/{self.epochs} completed with RMSE: {avg_rmse:.6f}")
+13822.5s 1203 150 print("Training completed!")
+13822.5s 1204 --> 151 self.save_training_history(self.history)
+13822.5s 1205 
+13822.5s 1206 Cell In[5], line 267, in NeuralODETrainer.save_training_history(self, filename_prefix, save_dir)
+13822.5s 1207 264 filepath = os.path.join(save_dir, filename)
+13822.5s 1208 266 df_history = pd.DataFrame(self.history)
+13822.5s 1209 --> 267 df_history.to_csv(filepath, index=False)
+13822.5s 1210 268 print(f"Training history saved to {filepath}")
+13822.5s 1211 
+13822.5s 1212 File /opt/conda/lib/python3.10/site-packages/pandas/util/_decorators.py:333, in deprecate_nonkeyword_arguments.<locals>.decorate.<locals>.wrapper(*args, **kwargs)
+13822.5s 1213 327 if len(args) > num_allow_args:
+13822.5s 1214 328     warnings.warn(
+13822.5s 1215 329         msg.format(arguments=_format_argument_list(allow_args)),
+13822.5s 1216 330         FutureWarning,
+13822.5s 1217 331         stacklevel=find_stack_level(),
+13822.5s 1218 332     )
+13822.5s 1219 --> 333 return func(*args, **kwargs)
+13822.5s 1220 
+13822.5s 1221 File /opt/conda/lib/python3.10/site-packages/pandas/core/generic.py:3967, in NDFrame.to_csv(self, path_or_buf, sep, na_rep, float_format, columns, header, index, index_label, mode, encoding, compression, quoting, quotechar, lineterminator, chunksize, date_format, doublequote, escapechar, decimal, errors, storage_options)
+13822.5s 1222 3956 df = self if isinstance(self, ABCDataFrame) else self.to_frame()
+13822.5s 1223 3958 formatter = DataFrameFormatter(
+13822.5s 1224 3959     frame=df,
+13822.5s 1225 3960     header=header,
+13822.5s 1226 (...)
+13822.5s 1227 3964     decimal=decimal,
+13822.5s 1228 3965 )
+13822.5s 1229 -> 3967 return DataFrameRenderer(formatter).to_csv(
+13822.5s 1230 3968     path_or_buf,
+13822.5s 1231 3969     lineterminator=lineterminator,
+13822.5s 1232 3970     sep=sep,
+13822.5s 1233 3971     encoding=encoding,
+13822.5s 1234 3972     errors=errors,
+13822.5s 1235 3973     compression=compression,
+13822.5s 1236 3974     quoting=quoting,
+13822.5s 1237 3975     columns=columns,
+13822.5s 1238 3976     index_label=index_label,
+13822.5s 1239 3977     mode=mode,
+13822.5s 1240 3978     chunksize=chunksize,
+13822.5s 1241 3979     quotechar=quotechar,
+13822.5s 1242 3980     date_format=date_format,
+13822.5s 1243 3981     doublequote=doublequote,
+13822.5s 1244 3982     escapechar=escapechar,
+13822.5s 1245 3983     storage_options=storage_options,
+13822.5s 1246 3984 )
+13822.5s 1247 
+13822.5s 1248 File /opt/conda/lib/python3.10/site-packages/pandas/io/formats/format.py:1014, in DataFrameRenderer.to_csv(self, path_or_buf, encoding, sep, columns, index_label, mode, compression, quoting, quotechar, lineterminator, chunksize, date_format, doublequote, escapechar, errors, storage_options)
+13822.5s 1249 993     created_buffer = False
+13822.5s 1250 995 csv_formatter = CSVFormatter(
+13822.5s 1251 996     path_or_buf=path_or_buf,
+13822.5s 1252 997     lineterminator=lineterminator,
+13822.5s 1253 (...)
+13822.5s 1254 1012     formatter=self.fmt,
+13822.5s 1255 1013 )
+13822.5s 1256 -> 1014 csv_formatter.save()
+13822.5s 1257 1016 if created_buffer:
+13822.5s 1258 1017     assert isinstance(path_or_buf, StringIO)
+13822.5s 1259 
+13822.5s 1260 File /opt/conda/lib/python3.10/site-packages/pandas/io/formats/csvs.py:251, in CSVFormatter.save(self)
+13822.5s 1261 247 """
+13822.5s 1262 248 Create the writer & save.
+13822.5s 1263 249 """
+13822.5s 1264 250 # apply compression and byte/text conversion
+13822.5s 1265 --> 251 with get_handle(
+13822.5s 1266 252     self.filepath_or_buffer,
+13822.5s 1267 253     self.mode,
+13822.5s 1268 254     encoding=self.encoding,
+13822.5s 1269 255     errors=self.errors,
+13822.5s 1270 256     compression=self.compression,
+13822.5s 1271 257     storage_options=self.storage_options,
+13822.5s 1272 258 ) as handles:
+13822.5s 1273 259     # Note: self.encoding is irrelevant here
+13822.5s 1274 260     self.writer = csvlib.writer(
+13822.5s 1275 261         handles.handle,
+13822.5s 1276 262         lineterminator=self.lineterminator,
+13822.5s 1277 (...)
+13822.5s 1278 267         quotechar=self.quotechar,
+13822.5s 1279 268     )
+13822.5s 1280 270     self._save()
+13822.5s 1281 
+13822.5s 1282 File /opt/conda/lib/python3.10/site-packages/pandas/io/common.py:873, in get_handle(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)
+13822.5s 1283 868 elif isinstance(handle, str):
+13822.5s 1284 869     # Check whether the filename is to be opened in binary mode.
+13822.5s 1285 870     # Binary mode does not support 'encoding' and 'newline'.
+13822.5s 1286 871     if ioargs.encoding and "b" not in ioargs.mode:
+13822.5s 1287 872         # Encoding
+13822.5s 1288 --> 873         handle = open(
+13822.5s 1289 874             handle,
+13822.5s 1290 875             ioargs.mode,
+13822.5s 1291 876             encoding=ioargs.encoding,
+13822.5s 1292 877             errors=errors,
+13822.5s 1293 878             newline="",
+13822.5s 1294 879         )
+13822.5s 1295 880     else:
+13822.5s 1296 881         # Binary mode
+13822.5s 1297 882         handle = open(handle, ioargs.mode)
+13822.5s 1298 
+13822.5s 1299 OSError: [Errno 36] File name too long: "history/{'epoch': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662, 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 886, 887, 888, 889, 890, 891, 892, 893, 894, 895, 896, 897, 898, 899, 900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929, 930, 931, 932, 933, 934, 935, 936, 937, 938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965, 966, 967, 968, 969, 970, 971, 972, 973, 974, 975, 976, 977, 978, 979, 980, 981, 982, 983, 984, 985, 986, 987, 988, 989, 990, 991, 992, 993, 994, 995, 996, 997, 998, 999, 1000], 'rmse': [2.082785557298099, 2.0018602539511288, 1.908338420531329, 1.7889211808933931, 1.632106065750122, 1.429280046154471, 1.1839543405701132, 0.9427402738262626, 0.8099962946246652, 0.7711142336621004, 0.7512851392521578, 0.7341929656617782, 0.7201792930855471, 0.7059203579145319, 0.6918352228753707, 0.678809206275379, 0.6662550235495848, 0.6515314649133122, 0.6384869393180398, 0.6266468658166773, 0.6132716273560244, 0.6007951760993284, 0.5873375009087956, 0.5756880307898802, 0.5631253929699168, 0.5486821970518898, 0.5359834940994487, 0.523655610926011, 0.5117776735740549, 0.5001328876789879, 0.48916318223756905, 0.4788157466579886, 0.4683703815235811, 0.45964745475965385, 0.45117386299021106, 0.44136350645738487, 0.4331052566275877, 0.4256052190766615, 0.4183729737997055, 0.41081269611330595, 0.40446127337567944, 0.3976231822196175, 0.3922882106374292, 0.38678115168038535, 0.3814220410936019, 0.37537574680412517, 0.3701917257379083, 0.36636538803577423, 0.36194530830663796, 0.3565681287470986, 0.3517828908036737, 0.3474066906115588, 0.3440213606638067, 0.33940482928472404, 0.3360898030154845, 0.33231623558437123, 0.32795075020369363, 0.3248777442118701, 0.3213963122928844, 0.31778912246227264, 0.31367378287455616, 0.31092659866108613, 0.3081965490299113, 0.30566119358820076, 0.30243458292063546, 0.2996640433283413, 0.296400232350125, 0.293030510930454, 0.29054417154368234, 0.2882906312451643, 0.28596243700560403, 0.2831818627960542, 0.28019188695094166, 0.2784906730932348, 0.2755933859769036, 0.27440133164910707, 0.27241166111300974, 0.26967452729449554, 0.267500614418703, 0.2658569286851322, 0.26438324854654427, 0.2619527341688381, 0.26046231827315164, 0.25877274572849274, 0.25697318508344535, 0.2556505501270294, 0.2538533710381564, 0.25222909056088505, 0.25073344128973346, 0.24861494276453466, 0.24801350954700918, 0.2463229850811117, 0.24478632825262406, 0.2431788032545763, 0.24203255904071472, 0.24112432844498577, 0.23969864450833378, 0.2376798838376999, 0.23729024827480316, 0.2355589599293821, 0.2351448027526631, 0.23362427029539556, 0.23204927453223398, 0.23129673696616115, 0.23033378974479787, 0.22881247015560374, 0.22792556049192653, 0.22680819472845862, 0.22609425379949458, 0.2251344415194848, 0.22513254600412705, 0.22329659803825266, 0.22260265841203578, 0.22140878789565144, 0.22014055401086807, 0.21992665003327763, 0.2187449318521163, 0.217796567170059, 0.21679815474678488, 0.21621842989150217, 0.21526362264857574, 0.21431698211852243, 0.21400243964265375, 0.21285486484275146, 0.21227064202813542, 0.21171415641027339, 0.21047965174212174, 0.21012169210349813, 0.20909278313903248, 0.20885438822648106, 0.20765821898684783, 0.20711168252369938, 0.20626727053347757, 0.20596806310555515, 0.20580421914072597, 0.20438017739969142, 0.20415134815608754, 0.2036795734482653, 0.20279012357487397, 0.2018621984650107, 0.2019690371611539, 0.20109265692093792, 0.2005345032495611, 0.20013418136274114, 0.19950149865711436, 0.1983831476639299, 0.19802059496150298, 0.1974613583263229, 0.19727744030601838, 0.19663093721165376, 0.196286319371532, 0.19575957077391007, 0.19495906242552927, 0.1940815063083873, 0.1941034237251562, 0.19321158309193218, 0.19312046599738739, 0.19301768392324448, 0.1922899388215121, 0.19132854088264353, 0.19168626604711309, 0.19054796196082058, 0.19010840444003835, 0.1894554688650019, 0.18914099914186142, 0.18888328925651662, 0.1884714242290048, 0.18812529611236908, 0.18809786614249735, 0.18750270236940944, 0.1864071944180657, 0.18633123180445502, 0.18616064944688013, 0.18588151256827748, 0.18529331158189213, 0.18499841804013534, 0.1848603679853327, 0.1836716594064937, 0.18368319159044938, 0.1834576519973138, 0.18263256549835205, 0.1827193906202036, 0.18257855974576054, 0.182210789883838, 0.18167307359330795, 0.1813888282460325, 0.18088512867689133, 0.1804705599651617, 0.1802839343162144, 0.17997617581311395, 0.17972173892399845, 0.17944631594068863, 0.17892037726500454, 0.17856748971868963, 0.1787909374517553, 0.178670853814658, 0.17783558237202027, 0.17717713818830602, 0.17742793130524018, 0.17732838015345967, 0.17688841504209182, 0.176199792062535, 0.17618566313210657, 0.17607594456742792, 0.17592726428719127, 0.17520526577444637, 0.17526952966171153, 0.17476056603824391, 0.17442282289266586, 0.1746745740666109, 0.17430415749549866, 0.17360831402680454, 0.17380931973457336, 0.17335198512848685, 0.17343982265276067, 0.17279883386457667, 0.17265885235632167, 0.1722892592935001, 0.17227952269946828, 0.1721872157033752, 0.17127955047523274, 0.1717015745885232, 0.1713598313577035, 0.17129862878252478, 0.17103305196060853, 0.170838404665975, 0.17063423903549418, 0.1701979983378859, 0.17004763466470382, 0.16955824283992543, 0.1696760167970377, 0.16975880896343903, 0.1692693961017272, 0.16932855546474457, 0.16911444330916686, 0.16879339384682038, 0.168814294916742, 0.16815498120644512, 0.1682337504975936, 0.1677032893194872, 0.16755226079155416, 0.16742080713019653, 0.1669069642529768, 0.16707640360383427, 0.16746060988482306, 0.16682789474725723, 0.1664745001231923, 0.1667271252064144, 0.16667351827901952, 0.16648375681217978, 0.16633370474857442, 0.16598304010489406, 0.16571488099939682, 0.16560667665565715, 0.16526786413262873, 0.16487850292640574, 0.16497887408032136, 0.1652554229778402, 0.1649282776257571, 0.1646657117149409, 0.16446890375193426, 0.1641496783670257, 0.16419915811103933, 0.164056976490161, 0.1636172782848863, 0.1638715179527507, 0.16370011427823236, 0.1633576741989921, 0.1633082803557901, 0.1634831669576028, 0.16325452310197494, 0.1628392658689443, 0.1627278547076618, 0.16245292784536586, 0.16245230155832627, 0.16250262058833065, 0.16226617159212336, 0.16222337501890519, 0.16211961428908742, 0.16215219830765443, 0.16158875998328714, 0.16141444970579708, 0.16147581049624612, 0.1612889074227389, 0.16106152885100422, 0.16128224090618246, 0.16088401745347417, 0.16130262832431233, 0.1607512156752979, 0.16050217388307347, 0.16041170455077114, 0.16032208064023187, 0.16032000806401758, 0.1602613001185305, 0.16017069886712468, 0.1596108574201079, 0.15962922134820154, 0.1598412324400509, 0.1596409691607251, 0.15969285149784648, 0.1595416800940738, 0.15917206643258824, 0.1590905785560608, 0.1589956366840531, 0.15865023960085475, 0.15892421498018153, 0.15877200750743642, 0.15860732338007758, 0.15827344138832652, 0.1583104637615821, 0.15828334101859262, 0.15800240898833556, 0.1581476330757141, 0.15812763264950583, 0.15782220924601836, 0.1578358118148411, 0.15806705460828893, 0.1575794574968955, 0.15767889732823653, 0.15745424347765305, 0.1573418650557013, 0.15716425592408462, 0.1569467594518381, 0.1569064075455946, 0.15680029287057765, 0.15675543160999522, 0.15664206006947687, 0.15656300371184068, 0.15631989696446588, 0.1562458452056436, 0.15627270148080938, 0.15670684725046158, 0.15589442542370627, 0.1560895272037562, 0.15591681003570557, 0.15599842895479762, 0.15564848000512405, 0.15567430810016744, 0.15565201946917703, 0.15563109078828027, 0.15570066518643322, 0.15540763998732848, 0.15502250983434565, 0.15494347451364293, 0.15524330296937158, 0.15515345466487548, 0.15506735707030578, 0.1546288185259875, 0.15497775069054434, 0.1543170253143591, 0.15455384245690176, 0.15459845171255224, 0.1543651670217514, 0.1540568431510645, 0.15437314484049292, 0.1543734560118002, 0.1541802637717303, 0.15406195950858734, 0.15389968323356965, 0.1540357356562334, 0.15398242280763738, 0.15386204991270513, 0.15364522486925125, 0.15334704036221786, 0.15335152166731217, 0.1532430153559236, 0.15332504712483463, 0.15323316349702723, 0.15315385951715357, 0.15319613016703548, 0.15301084737567341, 0.15321164534372442, 0.15316546445383744, 0.15276308226234772, 0.1527456812122289, 0.1526225003249505, 0.15264140946023605, 0.15267273696029887, 0.15238883696934757, 0.15240022452438579, 0.15237416852923, 0.15240904513527365, 0.15215946164201288, 0.15226945018067078, 0.1517696161480511, 0.1516762581818244, 0.15182867383255677, 0.15168926338939107, 0.15174854722093134, 0.1515996565713602, 0.15148602776667652, 0.15131813857485266, 0.15135720109238343, 0.1515558633734198, 0.15131421606330311, 0.15112851165673313, 0.1511052443700678, 0.15100486050633824, 0.15110854278592503, 0.1509228427620495, 0.15106252668535008, 0.15107981860637665, 0.1508637614109937, 0.15078878534190795, 0.15061954408884048, 0.15082683545701644, 0.15068107931052938, 0.15044875223846996, 0.15059201813795986, 0.150348940754638, 0.15044880570734248, 0.15042794714955723, 0.15022576556486242, 0.1502894154366325, 0.1503461844780866, 0.1500431798836764, 0.14993098684970071, 0.15008399021976135, 0.1496375825475244, 0.14975287721437566, 0.14943924853030374, 0.14970259412246592, 0.1497024836785653, 0.1495635259677382, 0.14945607281783047, 0.14944165813572266, 0.149448824717718, 0.1495441180818221, 0.14932227441493204, 0.1492362140732653, 0.14945986910777934, 0.14904131871812484, 0.14921851499992259, 0.14903154355638168, 0.14903777750099406, 0.14920038247809692, 0.14886838504496744, 0.14883803751538782, 0.14861848643597433, 0.14884542980614832, 0.14858127867474274, 0.14864150873001883, 0.14850995163707173, 0.1486644398640184, 0.14853167665355346, 0.1481745010789703, 0.1484630914295421, 0.14817002152695374, 0.1482583613080137, 0.14793674297192516, 0.14809765710550196, 0.14803816158981883, 0.14815209323869033, 0.14796407038674636, 0.14792278365177267, 0.14799747835187352, 0.1476186018656282, 0.1478748908814262, 0.14754758862888112, 0.14745267962708192, 0.14776365590446136, 0.1473518728333361, 0.14751669589210958, 0.14731612100320704, 0.14729628711938858, 0.1474389201577972, 0.14714754811104605, 0.14742913886028178, 0.14709470859345267, 0.14741792047725005, 0.14719895711716482, 0.14706583145786734, 0.14728161298176823, 0.1470238093067618, 0.14698713009848313, 0.1469225269906661, 0.14700983201756196, 0.14688118547201157, 0.14679260113660028, 0.14672165013411465, 0.14666032046079636, 0.14648620126878514, 0.14626405168982112, 0.14661289094125524, 0.14675837185452967, 0.14636695604113972, 0.1464688720948556, 0.14650964035707362, 0.1463391737026327, 0.1463132448056165, 0.1460115572108942, 0.14597094760221593, 0.1462389936341959, 0.14610053379746044, 0.14590084377457113, 0.14619393033139846, 0.14609339088201523, 0.14599700798006618, 0.14572579457479365, 0.14573873404194326, 0.14584548026323318, 0.14587702952763615, 0.14574147103463903, 0.14584187462049372, 0.1455308685407919, 0.14537601172924042, 0.14552809780134873, 0.1456481634693987, 0.14538667219526627, 0.14565028513179107, 0.14536167330601635, 0.14557236608336954, 0.14538858962409637, 0.1453951877706191, 0.14532097516690984, 0.14504708656493356, 0.1450781598687172, 0.14521878913921468, 0.14525086301214554, 0.14513169491992278, 0.1450877250993953, 0.1449208228903658, 0.1450177483698901, 0.1448365024784032, 0.14512541758663514, 0.1447890900513705, 0.14482387944179423, 0.1447914900148616, 0.14479833052438848, 0.1446472068919855, 0.14456229174838348, 0.14483662782346501, 0.1445944523986648, 0.14455912568989923, 0.14435948300011017, 0.1446532642140108, 0.14435054975397446, 0.14441368641222224, 0.14431852233760498, 0.14413056478780858, 0.1442723909721655, 0.14403948406962788, 0.1442335844039917, 0.14420089739210465, 0.14401441111284144, 0.14426589187453775, 0.14376244036590352, 0.14395886571968303, 0.14419705113943884, 0.14385877286686616, 0.14375277827767766, 0.14383811415994868, 0.14392781082321615, 0.14394507644807591, 0.14371940362102845, 0.14381391598897822, 0.14363717682221355, 0.14368999924729853, 0.14382553582682328, 0.14359654267044628, 0.1434885600910467, 0.14360402480644338, 0.1435293726184789, 0.14357837859322042, 0.1438111614655046, 0.1433338768341962, 0.14357397705316544, 0.14328918080119527, 0.14327854619306676, 0.14314371215946534, 0.1431596809450318, 0.14322464650168137, 0.14332739570561578, 0.14296314295600443, 0.14307048566201153, 0.14290371230419943, 0.14293011847664328, 0.14310327654375748, 0.14296861518831813, 0.1428662731366999, 0.14294933703015833, 0.1429866315687404, 0.14302141876781688, 0.14279035566484227, 0.14282662947388255, 0.14291688887511983, 0.14281949707690408, 0.14262688905000687, 0.14252135289065979, 0.14260480509084814, 0.14266494004165425, 0.14264585954301498, 0.14255613702185013, 0.14259064591982784, 0.14258155752630794, 0.1423013679244939, 0.14267676849575603, 0.1426345136235742, 0.14231197886607228, 0.14233211296446183, 0.14225107431411743, 0.14235586629194372, 0.1420277549939997, 0.14222607673967586, 0.14223622355390997, 0.1422034260981223, 0.14221459890113158, 0.142059004482101, 0.14213867091080723, 0.14211774179164102, 0.14202575867666917, 0.14216924853184643, 0.14212712338742087, 0.14215798281571446, 0.1421908709932776, 0.1418144729207544, 0.14205372158218832, 0.14175661609453313, 0.14177364593043046, 0.14179657925577724, 0.1419309684458901, 0.1417636003564386, 0.14177269137957516, 0.1415962690816206, 0.1417110571089913, 0.14163271513055353, 0.14183569173602498, 0.1417181513765279, 0.14141420362626805, 0.14157892412999096, 0.14160749140907736, 0.14155914590639226, 0.14148367021013708, 0.14149406157872257, 0.14145533126943252, 0.14147968283470938, 0.14152874140178456, 0.1415067367693957, 0.14159203671357212, 0.141404687481768, 0.14145058393478394, 0.14132934107499964, 0.141309851232697, 0.1410720194963848, 0.1412852603723021, 0.1410759722485262, 0.14116985745289745, 0.14110459255821564, 0.14118092638604782, 0.141134933952023, 0.14097968225969987, 0.140986149363658, 0.14100665511453853, 0.14104443481739828, 0.14078093714573803, 0.14098584651947021, 0.14077463483109193, 0.1407299817484968, 0.14070140088305755, 0.14073487371206284, 0.1408128335195429, 0.14073801128303304, 0.1405645819271312, 0.14068719963817036, 0.14082061587011113, 0.14048679830396876, 0.14055693587836096, 0.140715690658373, 0.14055018302272348, 0.14053409809575362, 0.14059733555597417, 0.14076083723236532, 0.14053992006708593, 0.1405596426304649, 0.140535509761642, 0.14053277671337128, 0.14042643632958918, 0.1404423823251444, 0.14030088484287262, 0.14031713192953782, 0.14045025057652416, 0.14039072438197978, 0.14030182712218342, 0.14018531056011424, 0.14038462367127924, 0.14014478685224757, 0.14027872593963847, 0.14007969200611115, 0.13998939754331813, 0.14007292600239024, 0.1402477345922414, 0.1401028457809897, 0.13989267936524222, 0.14007637211505106, 0.14005115803550272, 0.13989497677368276, 0.1400518106187091, 0.13981547381948023, 0.13975809470695608, 0.139904202783809, 0.1398898200953708, 0.1399648294729345, 0.13988770763663685, 0.1397023981108385, 0.1397203645285438, 0.13966800316291697, 0.1396927592508933, 0.13993747970637152, 0.13954036025439992, 0.13958557607496486, 0.1399222568554037, 0.1395817271926824, 0.13968040574999416, 0.13959629439255772, 0.13944585270741405, 0.13959969843135162, 0.13938140387044234, 0.13958011874381235, 0.13961027650272145, 0.13943954557180405, 0.13956963314729579, 0.1394225380876485, 0.13937503713018753, 0.1393625043770846, 0.13936207268167944, 0.13942943601047292, 0.13945144765517292, 0.1394447592251441, 0.1394342964186388, 0.13940566865836873, 0.13944285319131963, 0.1392461771474165, 0.13919145307120154, 0.139186631230747, 0.13936615165542154, 0.13923788684255936, 0.13910490800352657, 0.13909742367618225, 0.13896882095757654, 0.13911964612848618, 0.1390930497471024, 0.1390864099649822, 0.13882813383551204, 0.13908459289985545, 0.13903812494348078, 0.1390757705358898, 0.13908857107162476, 0.13886775427004872, 0.13901049775235794, 0.1388257400077932, 0.13901105435455546, 0.13902678340673447, 0.13877349609837814, 0.13899067964623957, 0.13894995258134954, 0.13893542394918554, 0.13876011266427882, 0.13884148045497782, 0.13874195296974742, 0.1388009514878778, 0.13863182067871094, 0.13892661999253667, 0.13887875395662644, 0.13867003733620925, 0.13843899483189864, 0.13879689135972192, 0.1385912307921578, 0.1386154798023841, 0.1386236807002741, 0.1384555004975375, 0.13873721659183502, 0.13865085121463327, 0.1382298412568429, 0.13835535987335093, 0.13852824577513864, 0.13857535842586965, 0.1383515627068632, 0.138709116507979, 0.13834120946771958, 0.13827146370621288, 0.1382690703167635, 0.13836055468110478, 0.13839153551003514, 0.13817265103845036, 0.13813611076158636, 0.1383325514547965, 0.13838614435756907, 0.1382091290810529, 0.13805963624926174, 0.13830158158260233, 0.13826069148147807, 0.13836753543685465, 0.13839461698251612, 0.13831375276341157, 0.13812810226398356, 0.13813913525903926, 0.13823983905946507, 0.13804827060769587, 0.13809641801259098, 0.13826306865495794, 0.13811498705078573, 0.13824724844273398, 0.13801306223168092, 0.1380844278370633, 0.13787251097314498, 0.13793408783043132, 0.1378344393828336, 0.13785401994691177, 0.13805592016262166, 0.1379109905923114, 0.13826730233781478, 0.13787833119139953, 0.13779661760610692, 0.13769634243320017, 0.13777217312770731, 0.1378769379328279, 0.13798904813387813, 0.13801942064481623, 0.13799600872923345, 0.13754188532338424, 0.13800768554210663, 0.13777216523885727, 0.13756699903922923, 0.13784432980944128, 0.13773635599543066, 0.13755742022219827, 0.1377012510510052, 0.13773106257705128, 0.13775957551072626, 0.1376031361082021, 0.1376118712565478, 0.13755236872855356, 0.13771707213976803, 0.13752671506475, 0.13764814813347423, 0.13765318165807164, 0.137787026079262, 0.13762597871177337, 0.1375715005047181, 0.13776342044858372, 0.13763154911644318, 0.137341769740862, 0.13738848794909084, 0.13750692763749292, 0.1376020842615296, 0.1374551601269666, 0.13743792561923757, 0.13744823766105316, 0.13722563315840328, 0.13740324316655889, 0.13751336493912866, 0.1373833474867484, 0.13745740056037903, 0.1374090388417244, 0.13724146388909397, 0.13715620864840114, 0.13737439408021815, 0.13716427324449315, 0.13724617484737844, 0.13717838902683818, 0.1371547430753708, 0.13716689891674938, 0.1373411741326837, 0.13698441579061396, 0.1370844402733971, 0.13715566168813145, 0.1371870715828503, 0.13704176247119904, 0.1372518605169128, 0.137075897963608, 0.1372047592611874, 0.13716085956377141, 0.13710130751132965, 0.13705583179698272, 0.1371182347921764, 0.13694086144952214, 0.13681380845168056, 0.13702611844329274, 0.13699539005756378, 0.1369977676693131, 0.1370213829419192, 0.13698104549856746, 0.13688073394929662, 0.13678848611957886, 0.13696853465893688, 0.13700927224229364, 0.13699672546456843, 0.13670207823024078, 0.1368630348759539, 0.1367220015210264, 0.1368772632935468, 0.1366774632650263, 0.13686498692807028, 0.13688727161463568, 0.1366454542559736, 0.1367899354766397, 0.13668755748692682, 0.13677074847852483, 0.13678660682019064, 0.13672906510970173, 0.13666172807707505, 0.13657403561998815, 0.13680520215455225, 0.13670720992719426, 0.13658279925584793, 0.1367847130579107, 0.1364869326353073, 0.13671182446620045, 0.13661143052227356, 0.1367578708073672, 0.13647478424450932, 0.1366883884457981, 0.13654903673073826, 0.13677454476847367, 0.1365213665892096, 0.1364868335864123, 0.13655936761814005, 0.13651387349647634, 0.13621357565417008, 0.1364046878674451, 0.1364024316563326, 0.1363875909763224, 0.13652870760244482, 0.13635236901395462, 0.13649247279938528, 0.1365722970050924, 0.13640840395408518, 0.1365473029368064, 0.13647263058844736, 0.13654288781039856, 0.1364856208948528, 0.13622412217013977, 0.13616778920678532, 0.13649149589678822, 0.13621635603554108, 0.13637208675636964, 0.13615720543791265, 0.1365031411542612, 0.136297204915215, 0.1361939210225554, 0.13617279512040756, 0.1363738420255044, 0.13612516706480698, 0.13643804148716085, 0.13602480774416642, 0.13633340903941324, 0.1361101672929876, 0.13621564077980378, 0.13614986179506078, 0.13632059535559485, 0.13603816049940445, 0.13602826130740783, 0.13636679991203196, 0.13618946557535844, 0.1361246231724234, 0.13605647446478114, 0.13612423618050182, 0.13622296820668614, 0.13608092464068355, 0.13611925130381303, 0.13591795064070644, 0.1360403308097054, 0.13607412576675415, 0.1360137979773914, 0.1359401871176327, 0.13603073051747153, 0.13602299067903967, 0.1358966713442522, 0.1360600735334789, 0.1359897098120521, 0.13601509262533748, 0.13614757490508697, 0.13597742380464778, 0.13597074282519958, 0.13594799883225384, 0.13594087651547263, 0.13604134321212769, 0.13586583339116154, 0.1360379457473755, 0.13590144278372035, 0.13596810926409328, 0.13571195742663214, 0.13594718277454376, 0.13586419908439412, 0.1357614823123988, 0.13581262835684946, 0.13555075315868154, 0.13594603363205404, 0.13569491225130417, 0.1356782654629034, 0.1359722539782524, 0.13584680986755035, 0.13578534301589518, 0.13564710056080537, 0.1357559671296793, 0.1356656533830306, 0.13585285579457002, 0.13578884566531463, 0.13569405455799663, 0.13590751237729015]}_20241013_191800_38c99d63-7d15-4ee3-97b7-32d7b1aaae99.csv"
+13822.5s 1300 
+13825.1s 1301 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+13834.0s 1302 [NbConvertApp] Writing 12376644 bytes to __notebook__.ipynb
+13836.2s 1303 [NbConvertApp] Converting notebook __notebook__.ipynb to html
+13843.5s 1304 [NbConvertApp] Support files will be in __results___files/
+13843.5s 1305 [NbConvertApp] Making directory __results___files
+13843.5s 1306 [NbConvertApp] Making directory __results___files
+13843.5s 1307 [NbConvertApp] Making directory __results___files
+13843.5s 1308 [NbConvertApp] Making directory __results___files
+13843.5s 1309 [NbConvertApp] Making directory __results___files
+13843.5s 1310 [NbConvertApp] Writing 9556505 bytes to __results__.html

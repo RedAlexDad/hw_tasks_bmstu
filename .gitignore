@@ -4,6 +4,8 @@ __pycache__/
 *.pyc
 .pytest_cache/
 env/ 
+dist/
+build/
 
 models/node_20241012_101209_670a4faa-6a3d-46e1-b982-8814554f0953.pth
 models/node_20241012_113949_d8ca82eb-8c7e-490a-b13d-3b256582ea51.pth

@@ -1,0 +1,29 @@
+Parameter name,Parameter shape,Parameter count
+input_layer.weight,"torch.Size([64, 2])",128
+input_layer.bias,torch.Size([64]),64
+hidden_layers.0.weight,"torch.Size([128, 64])",8192
+hidden_layers.0.bias,torch.Size([128]),128
+hidden_layers.1.weight,"torch.Size([256, 128])",32768
+hidden_layers.1.bias,torch.Size([256]),256
+hidden_layers.2.weight,"torch.Size([256, 256])",65536
+hidden_layers.2.bias,torch.Size([256]),256
+hidden_layers.3.weight,"torch.Size([128, 256])",32768
+hidden_layers.3.bias,torch.Size([128]),128
+hidden_layers.4.weight,"torch.Size([64, 128])",8192
+hidden_layers.4.bias,torch.Size([64]),64
+residual_connections.0.weight,"torch.Size([128, 64])",8192
+residual_connections.0.bias,torch.Size([128]),128
+residual_connections.1.weight,"torch.Size([256, 128])",32768
+residual_connections.1.bias,torch.Size([256]),256
+residual_connections.3.weight,"torch.Size([128, 256])",32768
+residual_connections.3.bias,torch.Size([128]),128
+residual_connections.4.weight,"torch.Size([64, 128])",8192
+residual_connections.4.bias,torch.Size([64]),64
+ode_func.fc1.weight,"torch.Size([64, 64])",4096
+ode_func.fc1.bias,torch.Size([64]),64
+ode_func.fc2.weight,"torch.Size([64, 64])",4096
+ode_func.fc2.bias,torch.Size([64]),64
+ode_func.norm.weight,torch.Size([64]),64
+ode_func.norm.bias,torch.Size([64]),64
+output_layer.weight,"torch.Size([2, 64])",128
+output_layer.bias,torch.Size([2]),2
