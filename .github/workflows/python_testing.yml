@@ -33,7 +33,7 @@ jobs:
       - name: Build executable
         if: always()  # Выполнится всегда, независимо от тестов
         run: |
-          pyinstaller --onefile main.py  # Замените "main.py" на ваш главный файл
+          pyinstaller --onefile test_model.py  # Замените "main.py" на ваш главный файл
 
       - name: Upload artifact
         if: always()  # Выполнится всегда, независимо от тестов
