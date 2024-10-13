@@ -32,7 +32,7 @@ class NeuralODEEvaluator:
         
     def load_model(self):
         """Загружает модель с указанного пути."""
-        print(f"Using device: {self.device}")
+        # print(f"Using device: {self.device}")
         self.loaded_model = torch.load(self.model_path, map_location=self.device)
         self.loaded_model.to(self.device)
         self.loaded_model.eval()

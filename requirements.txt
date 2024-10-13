@@ -7,3 +7,4 @@ ipython==8.12.3
 torchdiffeq==0.2.4
 TorchDiffEqPack==1.0.1
 tqdm==4.66.5
+tensorboard==2.18.0

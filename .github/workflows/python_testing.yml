@@ -2,7 +2,8 @@ name: Python Testing and Build
 
 on:
   push:
-  pull_request:
+    tags: # Запускаем workflow при пуше тегов
+      - 'v*'
 
 jobs:
   build:
@@ -33,6 +34,8 @@ jobs:
       - name: Build executable
         if: always()  # Выполнится всегда, независимо от тестов
         run: |
+        
+          mkdir dist  # Создаём директорию dist
           pyinstaller --onefile test_model.py  # Замените "main.py" на ваш главный файл
 
       - name: Upload artifact
@@ -40,4 +43,39 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: executable
-          path: dist/main  # Путь к исполняемому файлу
+          path: dist/  # Путь к папке dist
+
+      - name: List dist directory
+        run: |
+          ls -alh dist/
+          
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: New release of test_model! 
+          draft: false
+          prerelease: false
+
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: linux-executable/node_model_test
+          asset_name: node_model_test-linux
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: windows-executable/node_model_test.exe
+          asset_name: node_model_test-windows.exe
+          asset_content_type: application/octet-stream
