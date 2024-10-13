@@ -1,0 +1,43 @@
+Parameter name,Parameter shape,Parameter count
+input_layer.weight,"torch.Size([64, 2])",128
+input_layer.bias,torch.Size([64]),64
+hidden_layers.0.weight,"torch.Size([512, 64])",32768
+hidden_layers.0.bias,torch.Size([512]),512
+hidden_layers.1.weight,"torch.Size([1024, 512])",524288
+hidden_layers.1.bias,torch.Size([1024]),1024
+hidden_layers.2.weight,"torch.Size([2048, 1024])",2097152
+hidden_layers.2.bias,torch.Size([2048]),2048
+hidden_layers.3.weight,"torch.Size([4096, 2048])",8388608
+hidden_layers.3.bias,torch.Size([4096]),4096
+hidden_layers.4.weight,"torch.Size([2048, 4096])",8388608
+hidden_layers.4.bias,torch.Size([2048]),2048
+hidden_layers.5.weight,"torch.Size([1024, 2048])",2097152
+hidden_layers.5.bias,torch.Size([1024]),1024
+hidden_layers.6.weight,"torch.Size([512, 1024])",524288
+hidden_layers.6.bias,torch.Size([512]),512
+hidden_layers.7.weight,"torch.Size([64, 512])",32768
+hidden_layers.7.bias,torch.Size([64]),64
+residual_connections.0.weight,"torch.Size([512, 64])",32768
+residual_connections.0.bias,torch.Size([512]),512
+residual_connections.1.weight,"torch.Size([1024, 512])",524288
+residual_connections.1.bias,torch.Size([1024]),1024
+residual_connections.2.weight,"torch.Size([2048, 1024])",2097152
+residual_connections.2.bias,torch.Size([2048]),2048
+residual_connections.3.weight,"torch.Size([4096, 2048])",8388608
+residual_connections.3.bias,torch.Size([4096]),4096
+residual_connections.4.weight,"torch.Size([2048, 4096])",8388608
+residual_connections.4.bias,torch.Size([2048]),2048
+residual_connections.5.weight,"torch.Size([1024, 2048])",2097152
+residual_connections.5.bias,torch.Size([1024]),1024
+residual_connections.6.weight,"torch.Size([512, 1024])",524288
+residual_connections.6.bias,torch.Size([512]),512
+residual_connections.7.weight,"torch.Size([64, 512])",32768
+residual_connections.7.bias,torch.Size([64]),64
+ode_func.fc1.weight,"torch.Size([64, 64])",4096
+ode_func.fc1.bias,torch.Size([64]),64
+ode_func.fc2.weight,"torch.Size([64, 64])",4096
+ode_func.fc2.bias,torch.Size([64]),64
+ode_func.norm.weight,torch.Size([64]),64
+ode_func.norm.bias,torch.Size([64]),64
+output_layer.weight,"torch.Size([2, 64])",128
+output_layer.bias,torch.Size([2]),2

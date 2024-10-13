@@ -1,0 +1,13 @@
+Parameter name,Parameter shape,Parameter count
+input_layer.weight,"torch.Size([64, 2])",128
+input_layer.bias,torch.Size([64]),64
+hidden_layers.0.weight,"torch.Size([64, 64])",4096
+hidden_layers.0.bias,torch.Size([64]),64
+ode_func.fc1.weight,"torch.Size([64, 64])",4096
+ode_func.fc1.bias,torch.Size([64]),64
+ode_func.fc2.weight,"torch.Size([64, 64])",4096
+ode_func.fc2.bias,torch.Size([64]),64
+ode_func.norm.weight,torch.Size([64]),64
+ode_func.norm.bias,torch.Size([64]),64
+output_layer.weight,"torch.Size([2, 64])",128
+output_layer.bias,torch.Size([2]),2
