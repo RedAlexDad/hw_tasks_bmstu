@@ -6,3 +6,6 @@ __pycache__/
 env/ 
 dist/
 build/
+
+# Big models
+models/ctdrnn_20241017_013453_c470d2c7-3e4a-4617-90cb-df6f48afe721.pt
