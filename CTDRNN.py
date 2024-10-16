@@ -1,18 +1,13 @@
-import time
-import csv
-import sys
 import os
+import csv
+import time
+import uuid
+import imageio
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 import matplotlib.pyplot as plt
-from datetime import datetime
 from IPython.display import display, HTML
-
-# Разбиение на обучающую, валидационную и тестовую выборку
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, cross_val_predict, TimeSeriesSplit
-
-# Масштабируемость модели
-from sklearn.preprocessing import StandardScaler
 
 # Метрики
 from sklearn.metrics import mean_squared_error
@@ -24,216 +19,349 @@ from torch.utils.data import Dataset, DataLoader, TensorDataset
 import torch.optim as optim
 
 class CTDRNN:
-    def __init__(self, input_size, hidden_sizes, output_size, num_layers, num_epochs=100, learning_rate=0.001, p=10, q=5, batch_size=64):
-        self.input_size = input_size
-        self.hidden_sizes = hidden_sizes
-        self.output_size = output_size
-        self.num_layers = num_layers
-        self.num_epochs = num_epochs
-        self.learning_rate = learning_rate
+    def __init__(self, df, input_size:int, output_size:int, p:int, q:int, batch_size:int=1024, learning_rate:float=1e-4, epochs:int=10, hidden_layers:np.ndarray=[64, 128, 128, 64], dropout:float=0.5, device:str=None):
+        # Преобразуем данные
+        self.df = self.prepare_data(df)
         self.p = p
         self.q = q
+        self.device = self.get_device(device)
         self.batch_size = batch_size
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+        self.input_size = input_size
+        self.output_size = output_size
+        self.hidden_layers = hidden_layers
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        self.model = CTDRNN_Model(input_size, hidden_sizes, output_size, num_layers).to(self.device)
-        self.criterion = nn.MSELoss().to(self.device)
+        self.history = {"epoch": [], "rmse": []}  # История обучения
+        # Генерация уникального ID при создании экземпляра класса
+        self.model_id = str(uuid.uuid4())
+        
+        # Подготовка данных
+        self.X_combined, self.Y_combined = self.create_time_delays_with_feedback(df, p, q, input_size, batch_size)
+        
+        # Обновление индекса
+        time_index = self.df.index.values[max(p, q):len(self.X_combined) + max(p, q)]
+        # Создание TensorDataset с обновленным индексом
+        self.dataset = TensorDataset(
+            torch.tensor(time_index, dtype=torch.float32), 
+            torch.tensor(self.X_combined, dtype=torch.float32).unsqueeze(1), 
+            torch.tensor(self.Y_combined, dtype=torch.float32)
+        )
+        self.train_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=0, pin_memory=True)
+        
+        # Инициализация модели
+        self.model = self.CTDRNN_Model(input_size, hidden_layers, output_size, dropout).to(self.device)
+        self.criterion = nn.MSELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
+    
+    class CTDRNN_Model(nn.Module):
+        def __init__(self, input_size:int, hidden_layers:np.ndarray, output_size:int, dropout:float=0.5):
+            super().__init__()
+            num_layers = hidden_layers.__len__()
+            
+            # LSTM слой
+            self.lstm = nn.LSTM(
+                input_size=input_size, 
+                hidden_size=hidden_layers[0], 
+                num_layers=num_layers, 
+                batch_first=True,
+                bidirectional=True, 
+                dropout=dropout
+            )
 
-        self.scaler_X = StandardScaler()
-        self.scaler_Y = StandardScaler()
+            # Динамическое создание полносвязных слоев
+            self.fcs = nn.ModuleList()
+            self.layer_norms = nn.ModuleList()
+            input_dim = hidden_layers[0] * 2  + 1 # Учитываем bidirectional и временной индекс t
+            for i in range(1, len(hidden_layers)):
+                self.fcs.append(nn.Linear(input_dim, hidden_layers[i]))
+                self.layer_norms.append(nn.LayerNorm(hidden_layers[i]))  # Инициализируем LayerNorm с правильным размером
+                input_dim = hidden_layers[i]  # Для следующего слоя
 
-        self.loss_values = []
-
-    def create_time_delays_with_feedback(self, X_real, X_imag, Y_real, Y_imag):
-        X_delayed = []
-        Y_delayed = []
+            # Финальный выходной слой
+            self.fc_out = nn.Linear(hidden_layers[-1], output_size)
+            
+            self.relu = nn.ReLU()
+            self.dropout = nn.Dropout(0.3)
         
-        for i in range(max(self.p, self.q), len(X_real)):
-            # Входные задержки для X_real и X_imag
-            X_real_window = X_real.iloc[i-self.p:i+1].values  # Входные задержки (x(k), x(k-1), ..., x(k-p))
-            X_imag_window = X_imag.iloc[i-self.p:i+1].values
+        def forward(self, x:torch.Tensor, t:torch.Tensor):
+            # Проход через LSTM
+            lstm_out, _ = self.lstm(x)
+            x = lstm_out[:, -1, :]  # Берем последний временной шаг для каждого батча
+
+            # Добавляем t как дополнительный признак
+            t = t.unsqueeze(1)  # Добавляем дополнительное измерение, если нужно
+            x = torch.cat((x, t), dim=1)  # Объединяем t с основными данными
+
+            # Проход через динамически созданные полносвязные слои
+            for fc, ln in zip(self.fcs, self.layer_norms):
+                x = self.relu(fc(x))
+                x = ln(x)  # Применяем заранее инициализированный LayerNorm
+                x = self.dropout(x)
             
-            # Обратная связь для Y_real и Y_imag
-            Y_real_window = Y_real.iloc[i-self.q:i].values  # Обратная связь (y(k-1), y(k-2), ..., y(k-q))
-            Y_imag_window = Y_imag.iloc[i-self.q:i].values
-            
-            # Комбинируем вещественные и мнимые части
-            X_combined = np.concatenate([X_real_window, X_imag_window, Y_real_window, Y_imag_window])
-            
-            X_delayed.append(X_combined)
-            
-            # Текущие значения выходных данных
-            Y_combined = np.array([Y_real.iloc[i], Y_imag.iloc[i]])
-            Y_delayed.append(Y_combined)
+            # Финальный выход
+            out = self.fc_out(x)
+            return out
+
+    @staticmethod
+    def get_device(select:str=None):
+        """
+        Получает устройство для вычислений (CPU или GPU).
+
+        Args:
+            select (str, optional): Выбор устройства ('cpu', 'gpu' или 'cuda'). По умолчанию None.
+
+        Returns:
+            torch.device: Устройство для выполнения вычислений.
+        """
+        if select is None or select == 'gpu' or select == 'cuda':
+            if torch.cuda.is_available():
+                # print('Using GPU (CUDA)')
+                return torch.device('cuda')
+            else:
+                # print("CUDA not available, falling back to CPU.")
+                return torch.device('cpu')
+        # CPU
+        else:
+            # print('Using CPU')
+            return torch.device('cpu')
+
+    @staticmethod
+    def prepare_data(df):
+        """
+        Преобразует исходные данные в нужный формат.
+
+        Args:
+            df (pd.DataFrame): Входные данные с колонками 'Input', 'Output' и 'Time'.
+
+        Returns:
+            pd.DataFrame: Обработанный DataFrame с раздельными вещественными и мнимыми частями.
+        """
+        # Приведение к нижнему регистру названия колонки
+        df.columns = df.columns.str.lower()
+        df['input'] = df['input'].apply(lambda x: complex(x))  # Преобразуем строки в комплексные числа
+        df['output'] = df['output'].apply(lambda x: complex(x))
+        df['input_real'] = df['input'].apply(lambda x: x.real)
+        df['input_imag'] = df['input'].apply(lambda x: x.imag)
+        df['output_real'] = df['output'].apply(lambda x: x.real)
+        df['output_imag'] = df['output'].apply(lambda x: x.imag)
+        df = df.drop(['input', 'output'], axis=1)
+        df = df.set_index('time')  # Устанавливаем временной ряд как индекс
+        return df
+
+
+    @staticmethod
+    def create_time_delays_with_feedback(df, p:int, q:int, input_size:int, batch_size:int):
+        """
+        Создает временные задержки с обратной связью с использованием apply.
+
+        Args:
+            df (pd.DataFrame): DataFrame, содержащий 'input_real', 'input_imag', 'output_real', 'output_imag'.
+            p (int): Порядок задержки для входных данных.
+            q (int): Порядок задержки для обратной связи.
+            input_size (int): Размер входных данных (не используется в текущей реализации).
+            batch_size (int): Размер пакета (не используется в текущей реализации).
+
+        Returns:
+            X_combine, Y_bicombine (np.array): Векторизованные входные и обратные задержки.
+        """
+        X_real, X_imag, Y_real, Y_imag = df['input_real'], df['input_imag'], df['output_real'], df['output_imag']
         
-        return np.array(X_delayed), np.array(Y_delayed)
+        # Используем np.array для векторизации данных
+        X_real_arr = X_real.values
+        X_imag_arr = X_imag.values
+        Y_real_arr = Y_real.values
+        Y_imag_arr = Y_imag.values
 
-    def prepare_data(self, df):
-        X_seq, Y_seq = self.create_time_delays_with_feedback(
-            df['input_real'],
-            df['input_imag'],
-            df['output_real'],
-            df['output_imag']
-        )   
-        # Переформатируем X_seq, чтобы соответствовать размеру входных данных модели
-        X_seq = X_seq.reshape(-1, self.input_size)
+        # Входные задержки
+        X_real_delays = np.lib.stride_tricks.sliding_window_view(X_real_arr, p+1)
+        X_imag_delays = np.lib.stride_tricks.sliding_window_view(X_imag_arr, p+1)
+        
+        # Обратная связь
+        Y_real_delays = np.lib.stride_tricks.sliding_window_view(Y_real_arr, q)
+        Y_imag_delays = np.lib.stride_tricks.sliding_window_view(Y_imag_arr, q)
 
-        X_scaled = self.scaler_X.fit_transform(X_seq)
-        Y_scaled = self.scaler_Y.fit_transform(Y_seq)
+        # Приводим все массивы к одному размеру
+        min_size = min(len(X_real_delays), len(Y_real_delays))
+        X_real_delays = X_real_delays[-min_size:]
+        X_imag_delays = X_imag_delays[-min_size:]
+        Y_real_delays = Y_real_delays[-min_size:]
+        Y_imag_delays = Y_imag_delays[-min_size:]
 
-        X_train_tensor = torch.tensor(X_scaled, dtype=torch.float32).unsqueeze(1).to(self.device)
-        Y_train_tensor = torch.tensor(Y_scaled, dtype=torch.float32).to(self.device)
+        # Комбинирование задержек
+        X_combined = np.hstack([X_real_delays, X_imag_delays, Y_real_delays, Y_imag_delays])
 
-        train_dataset = TensorDataset(X_train_tensor, Y_train_tensor)
-        self.train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
-        return X_seq, Y_seq
+        # Текущие значения выходных данных
+        Y_combined = np.column_stack([Y_real_arr[max(p, q):], Y_imag_arr[max(p, q):]])
 
-    def train(self, print_batch=True, csv_file='training_history.csv'):
-        print('Start train model')
-        start_time = time.time()
+        return X_combined, Y_combined
 
-        # Открываем файл для записи истории обучения
-        with open(csv_file, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            # Записываем заголовки столбцов
-            writer.writerow(['Epoch', 'Batch ID', 'Batch', 'Progress (%)', 'Loss'])
+    def train(self):
+        """
+        Обучает модель CTDRNN на заданных данных и сохраняет графики после каждой эпохи.
+        """
+        self.model.train()
+    
+        for epoch in range(self.epochs):
+            running_loss = 0.0
+            rmse_total = 0.0
+            progress_bar = tqdm(self.train_loader, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
+    
+            for batch_idx, (t, inputs, targets) in enumerate(progress_bar):
+                t, inputs, targets = t.to(self.device), inputs.to(self.device), targets.to(self.device) # Перенос батчей на GPU
+                self.optimizer.zero_grad()
 
-            for epoch in range(self.num_epochs):
-                epoch_loss = 0
-                for batch_idx, (X_batch, Y_batch) in enumerate(self.train_loader):
-                    # Перенос батчей на GPU
-                    X_batch, Y_batch = X_batch.to(self.device), Y_batch.to(self.device)  
-                    
-                    # Прямой проход
-                    outputs = self.model(X_batch)
-                    loss = self.criterion(outputs, Y_batch)
-                    
-                    # Обратное распространение и оптимизация
-                    self.optimizer.zero_grad()
-                    loss.backward()
-                    self.optimizer.step()
-                    
-                    epoch_loss += loss.item() * X_batch.size(0)  # Умножаем на размер батча для подсчета средней потери
-
-                    if print_batch:
-                        # Вывод прогресса обучения
-                        if batch_idx % 10 == 0:
-                            print(f'Train Epoch: [{epoch}/{self.num_epochs}] [{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)} ({100. * batch_idx / len(self.train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
-                    else:       
-                        print(f'Train Epoch: [{epoch}/{self.num_epochs}] \tLoss: {loss.item():.6f}')
-                    
-                    # Подсчет прогресса в процентах
-                    progress = 100. * batch_idx / len(self.train_loader)
-
-                    # Записываем каждую итерацию батча в CSV-файл
-                    writer.writerow([epoch, batch_idx, f'[{batch_idx * len(X_batch)}/{len(self.train_loader.dataset)}]', f'{progress:.0f}%', loss.item()])
+                # Прямой проход
+                outputs = self.model(inputs, t) # Передаем t в модель
+                loss = self.criterion(outputs, targets)
                 
-                # Сохраняем среднее значение функции потерь для текущей эпохи
-                avg_loss = epoch_loss / len(self.train_loader.dataset)
-                self.loss_values.append(avg_loss)
+                self.optimizer.zero_grad() # Обратное распространение и оптимизация
+                rmse = torch.sqrt(loss)  # RMSE
+                loss.backward()
+                self.optimizer.step()
+                
+                rmse_total += rmse.item() # Рассчитываем RMSE
+                progress_bar.set_postfix(rmse=f"{rmse:.6f}")
+    
+            avg_rmse = rmse_total / len(self.train_loader)
+            
+            # Сохраняем метрики в историю
+            self.history["epoch"].append(epoch + 1)
+            self.history["rmse"].append(avg_rmse)
 
-                # Записываем результат для завершенной эпохи в CSV
-                writer.writerow([epoch, 'DONE', '100%', avg_loss])
-
-                # Вывод потери для всей эпохи
-                print(f'Train Epoch: {epoch} [DONE]\tLoss: {avg_loss:.6f}')
-
-        end_time = time.time()
-        self.elapsed = end_time - start_time
+            print(f"Epoch {epoch+1}/{self.epochs} completed with RMSE: {avg_rmse:.6f}")
+    
+        print("Training completed!")
 
 
-    def predict(self, X_seq):
-        self.model.eval()
+    def evaluate(self, training:bool=False):
+        """
+        Оценка модели на обучающем наборе данных.
+
+        Args:
+            training (bool): Если True, оценка будет выполнена на обучающем наборе данных.
+            
+        Returns:
+            tuple: Значения RMSE для реальных и мнимых частей, предсказанные значения.
+        """     
+        if not training: self.model.eval()
+        true_values = []
+        predicted_values = []
+        times = []
+    
         with torch.no_grad():
-            # Очистка памяти GPU
-            torch.cuda.empty_cache()
-
-            try:
-                X_scaled = self.scaler_X.transform(X_seq)
-                X_tensor = torch.tensor(X_scaled, dtype=torch.float32).unsqueeze(1).to(self.device)
-                Y_pred_scaled = self.model(X_tensor).cpu().numpy()
-                Y_pred = self.scaler_Y.inverse_transform(Y_pred_scaled)
-            except RuntimeError as e:
-                # Если возникла ошибка нехватки памяти, переносим модель на CPU
-                if "CUDA out of memory" in str(e):
-                    print("CUDA out of memory! Moving model to CPU...")
-                    self.model.to(torch.device('cpu'))
-                    X_tensor = torch.tensor(X_scaled, dtype=torch.float32).unsqueeze(1).to(torch.device('cpu'))
-                    Y_pred_scaled = self.model(X_tensor).cpu().numpy()
-                    Y_pred = self.scaler_Y.inverse_transform(Y_pred_scaled)
-                else:
-                    raise e  # Если это не ошибка нехватки памяти, перенаправляем ее
-
-        return Y_pred
-
-    def evaluate(self, Y_seq, Y_pred):
-        rmse_real = np.sqrt(mean_squared_error(Y_seq[:, 0], Y_pred[:, 0]))
-        rmse_imag = np.sqrt(mean_squared_error(Y_seq[:, 1], Y_pred[:, 1]))
-
-        return rmse_real, rmse_imag
-
-    def plot_loss(self):
-        fig, axs = plt.subplots(1, 2, figsize=(14, 6))
-
-        epoch_start = 1
-        axs[0].plot(range(epoch_start, self.num_epochs + 1), self.loss_values[epoch_start-1:], marker='o', linestyle='-', color='b')
-        axs[0].set_xlabel('Epoch')
-        axs[0].set_ylabel('Average Loss')
-        axs[1].set_title(f'Loss Function (starting from Epoch {epoch_start})')
-        axs[0].grid(True)
-
-        epoch_start = self.num_epochs // 2
-        axs[1].plot(range(epoch_start, self.num_epochs + 1), self.loss_values[epoch_start-1:], marker='o', linestyle='-', color='b')
-        axs[1].set_xlabel('Epoch')
-        axs[1].set_ylabel('Average Loss')
-        axs[1].set_title(f'Loss Function (starting from Epoch {epoch_start})')
-        axs[1].grid(True)
-
-        plt.tight_layout()
-        plt.show()
-
-    def plot_predictions_vs_real(self, info_result, time_start, time_end):
-        # Фильтрация данных по временной отметке
-        filtered_data = info_result[(info_result.index >= time_start) & (info_result.index <= time_end)]
-        time = filtered_data.index
-
-        # Создание фигуры с двумя подграфиками
-        fig, axs = plt.subplots(1, 2, figsize=(20, 5), sharex=True, sharey=True)
+            for t, inputs, targets in self.train_loader:
+                t, inputs, targets = t.to(self.device), inputs.to(self.device), targets.to(self.device)
+                outputs = self.model(inputs, t)
+                true_values.append(targets.cpu().numpy())
+                predicted_values.append(outputs.cpu().numpy())
+                times.append(t.cpu().numpy())
+    
+        # Конкатенация всех предсказанных значений, истинных значений и временных меток
+        self.true_values = np.concatenate(true_values, axis=0)
+        self.predicted_values = np.concatenate(predicted_values, axis=0)
+        self.times = np.concatenate(times, axis=0)
+           
+        # Сортировка данных по временам
+        sort_indices = np.argsort(self.times)
+        self.times = self.times[sort_indices]
+        self.true_values = self.true_values[sort_indices]
+        self.predicted_values = self.predicted_values[sort_indices]
         
-        # Общий заголовок для всей фигуры
-        fig.suptitle('Comparison of Real and Predicted Values', fontsize=22)
+        # Дополнение предсказанных значений нулями, если их меньше
+        if len(self.predicted_values) < len(self.true_values):
+            padding_size = len(self.true_values) - len(self.predicted_values)
+            padding = np.zeros((padding_size, self.predicted_values.shape[1]))
+            self.predicted_values = np.vstack([self.predicted_values, padding])
+        elif len(self.true_values) < len(self.predicted_values):
+            padding_size = len(self.predicted_values) - len(self.true_values)
+            padding = np.zeros((padding_size, self.true_values.shape[1]))
+            self.true_values = np.vstack([self.true_values, padding])
+        
+        # Проверяем размерности после удаления лишних размерностей
+        assert self.true_values.shape[1] == 2, f"True values should have shape (n_samples, 2), but got {self.true_values.shape}"
+        assert self.predicted_values.shape[1] == 2, f"Predicted values should have shape (n_samples, 2), but got {self.predicted_values.shape}"
+        # Проверяем размер предсказанных данных
+        # self.assertEqual(len(self.predicted_values), len(self.true_values), "The size of the predictions and the actual data must match.")
 
-        # Построение графиков реальных и предсказанных значений (вещественная часть)
-        axs[0].plot(time, filtered_data['default_real'], alpha=0.7, color='red', lw=2.5, label='Real (default)')
-        axs[0].plot(time, filtered_data['pred_real'], alpha=0.7, color='blue', lw=2.5, label='Predicted')
-        axs[0].legend(fontsize='xx-large')
-        axs[0].grid()
-        axs[0].set_xlabel('Time', fontsize=20)
-        axs[0].set_ylabel('Real Part', fontsize=20)
-        axs[0].set_title('Real Part: Default vs Predicted', fontsize=20)
+        # Вычисление RMSE
+        rmse_real = mean_squared_error(self.true_values[:, 0], self.predicted_values[:, 0], squared=False)
+        rmse_imag = mean_squared_error(self.true_values[:, 1], self.predicted_values[:, 1], squared=False)
 
-        # Построение графиков реальных и предсказанных значений (мнимая часть)
-        axs[1].plot(time, filtered_data['default_imag'], alpha=0.7, color='red', lw=2.5, label='Real (default)')
-        axs[1].plot(time, filtered_data['pred_imag'], alpha=0.7, color='blue', lw=2.5, label='Predicted')
-        axs[1].legend(fontsize='xx-large')
-        axs[1].grid()
-        axs[1].set_xlabel('Time', fontsize=20)
-        axs[1].set_ylabel('Imaginary Part', fontsize=20)
-        axs[1].set_title('Imaginary Part: Default vs Predicted', fontsize=20)
+        return rmse_real, rmse_imag, self.predicted_values
 
-        # Показываем график
-        plt.tight_layout()
-        plt.show()
+    def train_and_save_plots(self, time_start:float=0, time_end:float=0.1e-5, duration:int=3):
+        """Обучаетмодель на обучающем наборе данных и сохраняет графики
 
-    def save_model(self, filename_prefix, save_dir='models'):
+        Args:
+            time_start (float, optional): Начало времени для отрисовки графика. Defaults to 0.
+            time_end (float, optional): Конечное время для отрисовки графика. Defaults to 0.1e-5.
+            duration (int, optional): Длительность фотографии для генерации гифки. Defaults to 3.
+        """
+        self.model.train()
+        
+        # Создаем уникальный путь для хранения изображений
+        folder_path = f"./history/{self.model_id}/"
+        os.makedirs(folder_path, exist_ok=True)
+        
+        for epoch in range(self.epochs):
+            running_loss = 0.0
+            rmse_total = 0.0
+            progress_bar = tqdm(self.train_loader, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
+
+            for batch_idx, (t, inputs, targets) in enumerate(progress_bar):
+                t, inputs, targets = t.to(self.device), inputs.to(self.device), targets.to(self.device)  # Перенос батчей на GPU
+                self.optimizer.zero_grad()
+
+                # Прямой проход
+                outputs = self.model(inputs, t)  # Передаем t в модель
+                loss = self.criterion(outputs, targets)
+                rmse = torch.sqrt(loss)  # RMSE
+
+                # Обратное распространение и оптимизация
+                loss.backward()
+                self.optimizer.step()
+
+                rmse_total += rmse.item()  # Рассчитываем RMSE
+                progress_bar.set_postfix(rmse=f"{rmse:.6f}")
+
+            avg_rmse = rmse_total / len(self.train_loader)
+            
+            # Сохраняем метрики в историю
+            self.history["epoch"].append(epoch + 1)
+            self.history["rmse"].append(avg_rmse)
+
+            # Оценка модели и создание графиков
+            rmse_real, rmse_imag, _ = self.evaluate(training=True)
+            self.plot_predictions(time_start=time_start, time_end=time_end, save_path=os.path.join(folder_path, f"epoch_{epoch + 1}.png"))
+
+            print(f"Epoch {epoch+1}/{self.epochs} completed with RMSE: {avg_rmse:.6f}")
+
+        # Создаем гифку из сохраненных изображений
+        images = []
+        for epoch in range(self.epochs):
+            image_path = os.path.join(folder_path, f"epoch_{epoch + 1}.png")
+            images.append(imageio.imread(image_path))
+        
+        gif_path = os.path.join(folder_path, "training_progress.gif")
+        imageio.mimsave(gif_path, images, duration=duration)  # 2 секунды на изображение
+        print(f"GIF saved along the way: {gif_path}")
+
+        print("Training completed!")
+
+    def save_model_pt(self, filename_prefix:str='ctdrnn', save_dir:str='models'):
+        """
+        Сохраняет всю модель PyTorch в формате .pt.
+
+        Args:
+            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'ctdrnn'.
+            save_dir (str, optional): Директория для сохранения модели. По умолчанию 'models'.
+        """
         # Создаем папку, если ее нет
         os.makedirs(save_dir, exist_ok=True)
 
         # Генерируем имя файла с текущей датой и временем
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{filename_prefix}_{timestamp}.pth"
+        filename = f"{filename_prefix}_{self.model_id}.pt"
 
         # Полный путь к файлу
         filepath = os.path.join(save_dir, filename)
@@ -241,35 +369,177 @@ class CTDRNN:
         # Сохраняем ВСЮ модель
         torch.save({
             'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
             'input_size': self.input_size,
-            'hidden_sizes': self.hidden_sizes,
+            'hidden_layers': self.hidden_layers,
             'output_size': self.output_size,
-            'num_layers': self.num_layers,
+            'learning_rate': self.learning_rate,
             'p': self.p,
             'q': self.q,
-            'scaler_X': self.scaler_X,
-            'scaler_Y': self.scaler_Y,
-            'epoch': self.num_epochs
+            'batch_size': self.batch_size,
+            'model_id': self.model_id,
         }, filepath)
 
-    def load_model(self, filename):
-        checkpoint = torch.load(filename)
-        self.model.load_state_dict(checkpoint['model_state_dict'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        self.num_epochs = checkpoint['epoch']
+        print(f"The model [{self.model_id}] is saved by path: {filepath}")
+        
+        # Проверяем, что файл сохранен
+        # self.assertTrue(os.path.exists(filepath), "The model file was not saved.")
 
-    def save_results(self, Y_seq, Y_pred, rmse_real, rmse_imag):
-        results = pd.Series({
-            'NAME': 'CTDRNN',  # Название модели
-            'RMSE VALID REAL': rmse_real,
-            'RMSE VALID IMAG': rmse_imag,
-            'TIME TRAINING [s]': self.elapsed,
-            'PREDICTIONS': Y_pred,
-            'PARAMETRS': self.model.state_dict()  # Хранение параметров модели
-        })
-   
-        return results
+    def save_prediction(self, predictions:np.ndarray, filename_prefix:str="predictions_train", save_dir:str='history'):
+        """
+        Сохраняет предсказанные значения в формате CSV.
+
+        Args:
+            predictions_train (np.ndarray): Предсказанные значения.
+            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'predictions'.
+            save_dir (str, optional): Директория для сохранения файла. По умолчанию 'history'.
+        """
+        # Создаем папку, если ее нет
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Генерируем имя файла
+        filename = f"{filename_prefix}_{self.model_id}.csv"
+
+        # Полный путь к файлу
+        filepath = os.path.join(save_dir, filename)
+        
+        df_predictions = pd.DataFrame({'real': predictions[:, 0], 'imag': predictions[:, 1],})
+        df_predictions.to_csv(filepath, index=False)
+        print(f"Predicted values [{self.model_id}] saved by path: {filepath}")
+
+    def save_training_history(self, filename_prefix:str="training_history", save_dir:str='history'):
+        """
+        Сохраняет историю обучения модели в формате CSV.
+
+        Args:
+            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'training_history'.
+            save_dir (str, optional): Директория для сохранения файла. По умолчанию 'history'.
+        """
+        # Создаем папку, если ее нет
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Генерируем имя файла
+        filename = f"{filename_prefix}_{self.model_id}.csv"
+
+        # Полный путь к файлу
+        filepath = os.path.join(save_dir, filename)
+        
+        df_history = pd.DataFrame(self.history)
+        df_history.to_csv(filepath, index=False)
+        print(f"The learning history [{self.model_id}] is saved along the path: {filepath}")
+
+    def plot_training_history(self):
+        """
+        Строит графики истории обучения модели, отображая RMSE на каждой эпохе.
+        """
+        fig, axs = plt.subplots(1, 2, figsize=(14, 6))
+    
+        # Преобразуем список эпох для оси X
+        epochs = self.history["epoch"]
+    
+        # Первый график: Полная история
+        axs[0].plot(epochs, self.history["rmse"], marker='o', linestyle='-', color='b', markersize=5, label='RMSE')
+        axs[0].set_xlabel('Epoch')
+        axs[0].set_ylabel('Average Loss')
+        axs[0].set_title('Loss Function (Full History)')
+        axs[0].grid(True)
+        axs[0].legend()
+
+        # Второй график: Половина истории
+        mid_index = len(epochs) // 2
+        axs[1].plot(epochs[mid_index:], self.history["rmse"][mid_index:], marker='o', linestyle='-', color='b', markersize=5, label='RMSE')
+        axs[1].set_xlabel('Epoch')
+        axs[1].set_ylabel('Average RMSE')
+        axs[1].set_title('Loss Function (Second Half of Training)')
+        axs[1].grid(True)
+        axs[1].legend()
+    
+        plt.tight_layout()
+        plt.show()
+
+    def plot_predictions(self, time_start:float=0, time_end:float=1.005e2, save_path:str=None):
+        """
+        Строит графики предсказанных и истинных значений.
+        
+        Args:
+            time_start (float, optional): Начальное время. По умолчанию 0.
+            time_end (float, optional): Конечное время. По умолчанию 1.005e2.
+            save_path (str, optional): Путь для сохранения графика. По умолчанию None.
+        """
+        if not hasattr(self, 'true_values') or not hasattr(self, 'predicted_values') or not hasattr(self, 'times'):
+            raise ValueError("You must run evaluate() before plotting predictions.")
+    
+        # Фильтрация данных по времени
+        mask = (self.times >= time_start) & (self.times <= time_end)
+        filtered_times = self.times[mask]
+        filtered_true_values = self.true_values[mask, :]  
+        filtered_predicted_values = self.predicted_values[mask, :]
+    
+        # Построение графика для реальных значений
+        plt.figure(figsize=(20, 5))
+    
+        plt.subplot(1, 2, 1)  # 1 ряд, 2 колонки, 1-й график
+        plt.plot(filtered_times, filtered_true_values[:, 0], label="True Real", linestyle='-', color='red')
+        plt.plot(filtered_times, filtered_predicted_values[:, 0], label="Predicted Real", linestyle='-', color='blue')
+        plt.legend()
+        plt.title("True vs Predicted Real Values")
+        plt.xlabel("Time")
+        plt.ylabel("Real Value")
+    
+        # Построение графика для мнимых значений
+        plt.subplot(1, 2, 2)  # 1 ряд, 2 колонки, 2-й график
+        plt.plot(filtered_times, filtered_true_values[:, 1], label="True Imag", linestyle='-', color='red')
+        plt.plot(filtered_times, filtered_predicted_values[:, 1], label="Predicted Imag", linestyle='-', color='blue')
+        plt.legend()
+        plt.title("True vs Predicted Imaginary Values")
+        plt.xlabel("Time")
+        plt.ylabel("Imaginary Value")
+    
+        if save_path:
+            plt.savefig(save_path)
+        else:
+            plt.show()
+        plt.close()
+
+    def print_model_summary(self, filename_prefix:str="model_parameters", save_dir:str='history'):
+        """
+        Выводит информацию о модели и сохраняет её параметры и их размерности в CSV файл.
+
+        Args:
+            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'model_parameters'.
+            save_dir (str, optional): Директория для сохранения файла. По умолчанию 'history'.
+        """
+        # Создаем папку, если ее нет
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Генерируем имя файла с текущей датой и временем
+        filename = f"{filename_prefix}_{self.model_id}.csv"
+
+        # Полный путь к файлу
+        filepath = os.path.join(save_dir, filename)
+        
+        df_params = pd.DataFrame(columns=['Parameter name', 'Parameter shape', 'Parameter count'])
+        
+        print(f"Model architecture: {self.model}")
+        print("-" * 50)
+
+        total_params = 0
+        for name, param in self.model.named_parameters():
+            print(f"Parameter name: {name}")
+            print(f"Parameter shape: {param.shape}")
+            param_count = torch.numel(param)
+            print(f"Parameter count: {param_count}")
+            print("-" * 30)
+
+            # Добавляем информацию о параметре в DataFrame
+            df_params.loc[len(df_params)] = [name, param.shape, param_count] 
+            
+            total_params += param_count
+
+        print(f"Total trainable parameters: {total_params}")
+        print("=" * 50)
+        
+        # Сохраняем DataFrame в CSV файл
+        df_params.to_csv(filepath, index=False)
 
     def print_params(self):
         html = """
@@ -280,10 +550,10 @@ class CTDRNN:
         </tr>
         """
         html += f"<tr><td>Input size</td><td>{self.input_size}</td></tr>"
-        html += f"<tr><td>Hidden sizes</td><td>{self.hidden_sizes}</td></tr>"
+        html += f"<tr><td>Hidden sizes</td><td>{self.hidden_layers}</td></tr>"
         html += f"<tr><td>Output size</td><td>{self.output_size}</td></tr>"
-        html += f"<tr><td>Number of layers</td><td>{self.num_layers}</td></tr>"
-        html += f"<tr><td>Number of epochs</td><td>{self.num_epochs}</td></tr>"
+        html += f"<tr><td>Number of layers</td><td>{self.hidden_layers.__len__()}</td></tr>"
+        html += f"<tr><td>Number of epochs</td><td>{self.epochs}</td></tr>"
         html += f"<tr><td>Learning rate</td><td>{self.learning_rate}</td></tr>"
         html += f"<tr><td>Input delay (p)</td><td>{self.p}</td></tr>"
         html += f"<tr><td>Output delay (q)</td><td>{self.q}</td></tr>"
@@ -291,42 +561,3 @@ class CTDRNN:
         html += "</table>"
         
         display(HTML(html))
-
-
-class CTDRNN_Model(nn.Module):
-    def __init__(self, input_size, hidden_sizes, output_size, num_layers):
-        super(CTDRNN_Model, self).__init__()
-        
-        # LSTM слой
-        self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_sizes[0], num_layers=num_layers, 
-                            batch_first=True, bidirectional=True, dropout=0.3)
-
-        # Динамическое создание полносвязных слоев
-        self.fcs = nn.ModuleList()
-        self.layer_norms = nn.ModuleList()
-        input_dim = hidden_sizes[0] * 2  # Учитываем bidirectional
-        for i in range(1, len(hidden_sizes)):
-            self.fcs.append(nn.Linear(input_dim, hidden_sizes[i]))
-            self.layer_norms.append(nn.LayerNorm(hidden_sizes[i]))  # Инициализируем LayerNorm с правильным размером
-            input_dim = hidden_sizes[i]  # Для следующего слоя
-
-        # Финальный выходной слой
-        self.fc_out = nn.Linear(hidden_sizes[-1], output_size)
-        
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(0.3)
-    
-    def forward(self, x):
-        # Проход через LSTM
-        lstm_out, _ = self.lstm(x)
-        x = lstm_out[:, -1, :]  # Берем последний временной шаг для каждого батча
-        
-        # Проход через динамически созданные полносвязные слои
-        for fc, ln in zip(self.fcs, self.layer_norms):
-            x = self.relu(fc(x))
-            x = ln(x)  # Применяем заранее инициализированный LayerNorm
-            x = self.dropout(x)
-        
-        # Финальный выход
-        out = self.fc_out(x)
-        return out
