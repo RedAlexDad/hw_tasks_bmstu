@@ -49,21 +49,18 @@ class MemoryPolynomialNNTrainer:
         self.model_id = str(uuid.uuid4())
 
         # Подготовка данных
-        X, y_real, y_imag, times = self.create_dataset(df, M, K)
-        # Создаем датасет, объединяя реальную и мнимую части в один тензор
-        
+        X, y, self.times = self.create_dataset(self.df, M, K)
         self.dataset = TensorDataset(
-            torch.tensor(times, dtype=torch.float32),
             torch.tensor(X, dtype=torch.float32),
-            torch.tensor(np.stack([y_real, y_imag], axis=1), dtype=torch.float32) # Объединяем реальную и мнимую части
+            torch.tensor(self.times, dtype=torch.float32),
+            torch.tensor(y, dtype=torch.float32)
         )
-        self.train_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=0, pin_memory=True)
+        self.train_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True)
 
-        # Заменяем предыдущую сеть на SimpleMLP
-        self.model = self.SimpleMLP(input_size=X.shape[1], hidden_layers=hidden_layers, output_size=2).to(self.device)
-        # Оптимизатор и функция потерь
+        # Инициализация модели
+        self.model = self.SimpleMLP(input_size=X.shape[1] + 1, hidden_layers=hidden_layers, output_size=2).to(self.device)
         self.criterion = nn.MSELoss()
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
 
     class SimpleMLP(nn.Module):
         def __init__(self, input_size, hidden_layers, output_size=2):
@@ -101,7 +98,7 @@ class MemoryPolynomialNNTrainer:
                 torch.Tensor: Прогнозы (реальная и мнимая части).
             """
             return self.model(x)
-
+                
     @staticmethod
     def prepare_data(df):
         """
@@ -121,11 +118,11 @@ class MemoryPolynomialNNTrainer:
         df['output_real'] = df['output'].apply(lambda x: x.real)
         df['output_imag'] = df['output'].apply(lambda x: x.imag)
         df = df.drop(['input', 'output'], axis=1)
-        df = df.set_index('time')  # Устанавливаем временной ряд как индекс
+        df = df.set_index('time')  # 'time' колонка теперь индекс
         return df
 
     @staticmethod
-    def get_device( select=None):
+    def get_device(select=None):
         """
         Определение устройства для вычислений (CPU или GPU).
 
@@ -142,22 +139,25 @@ class MemoryPolynomialNNTrainer:
     @staticmethod
     def create_dataset(df, M, K):
         """
-        Создание обучающих данных на основе полиномиальной модели с памятью.
+        Создание обучающих данных на основе полиномиальной модели с памятью и добавлением времени.
 
         Args:
             df (pd.DataFrame): Обработанные данные.
 
         Returns:
-            tuple: Матрица признаков X, реальные значения y_real и мнимые значения y_imag.
+            tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
         """
         x_real = df['input_real'].values
         x_imag = df['input_imag'].values
         y_real = df['output_real'].values[M:]
         y_imag = df['output_imag'].values[M:]
+        times = df.index.values[M:]
+
+        # Объединение реальных и мнимых частей в один целевой вектор
+        y = np.stack([y_real, y_imag], axis=1)
 
         N = len(x_real)
         X = np.zeros((N, (M + 1) * K * 2), dtype=np.float64)
-        
         for n in range(M, N):
             index = 0
             for m in range(M + 1):
@@ -165,139 +165,88 @@ class MemoryPolynomialNNTrainer:
                     X[n, index] = np.abs(x_real[n - m])**(k-1) * x_real[n - m]
                     X[n, index + 1] = np.abs(x_imag[n - m])**(k-1) * x_imag[n - m]
                     index += 2
-                    
-        times = np.arange(M, N)  # Генерируем временные метки для каждого наблюдения
-        
-        # Проверка порядка временных меток
-        assert np.all(np.diff(times) >= 0), "Временные метки не отсортированы!"
-
-        return X[M:], y_real, y_imag, times
+        return X[M:], y, times
 
     def train(self):
         """
-        Обучение модели на реальной и мнимой частях данных.
+        Обучение модели на объединенных целевых данных (реальная и мнимая части).
         """
         self.model.train()
 
         for epoch in range(self.epochs):
-            total_loss = 0
+            total_rmse = 0
             progress_bar = tqdm(self.train_loader, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
-                
-            for batch_idx, (X_batch, y_batch, times_batch) in enumerate(progress_bar):
-                X_batch, y_batch = X_batch.to(self.device), y_batch.to(self.device)
+
+            for batch_idx, (X_batch, times_batch, y_batch) in enumerate(progress_bar):
+                X_batch, times_batch, y_batch = X_batch.to(self.device), times_batch.to(self.device), y_batch.to(self.device)
+
+                # Объединение временных меток с входными признаками
+                X_with_times = torch.cat((X_batch, times_batch.unsqueeze(1)), dim=1)
 
                 self.optimizer.zero_grad()
-                predictions = self.model(X_batch)
-                loss = self.criterion(predictions, y_batch)  # Сравнение объединенных реальной и мнимой частей
-                loss.backward()
+                pred = self.model(X_with_times)
+                loss = self.criterion(pred, y_batch)
+                rmse = torch.sqrt(loss)  # RMSE
+                rmse.backward()
                 self.optimizer.step()
-    
-                total_loss += loss.item()
-                
-                progress_bar.set_postfix(loss=f'{loss:.10f}')
 
-            avg_loss = total_loss / len(self.train_loader)
-            
+                total_rmse += rmse.item()
+                progress_bar.set_postfix(rmse=f"{rmse:.6f}")
+
+            avg_rmse = total_rmse / len(self.train_loader)
             self.history["epoch"].append(epoch + 1)
-            self.history["rmse"].append(np.sqrt(avg_loss))
+            self.history["rmse"].append(avg_rmse)
 
-            print(f"Epoch {epoch+1}/{self.epochs}, Avg loss: {avg_loss:.6f}")
+            print(f"Epoch {epoch+1}/{self.epochs}, RMSE: {avg_rmse:.6f}")
 
     def evaluate(self):
         """
         Оценка модели после обучения.
         
         Returns:
-            tuple: Значения RMSE для реальной и мнимой частей.
+            float: Значение RMSE.
         """
-        self.model.eval()  # Используем только одну модель теперь
+        self.model.eval()
         all_preds = []
         all_true = []
-        times = []
 
         with torch.no_grad():
-            for X_batch, y_batch, times_batch in self.train_loader:
-                X_batch, y_batch = X_batch.to(self.device), y_batch.to(self.device)
-            
-                # Предсказание модели
-                predictions = self.model(X_batch)
+            for X_batch, times_batch, y_batch in self.train_loader:
+                X_batch, times_batch, y_batch = X_batch.to(self.device), times_batch.to(self.device), y_batch.to(self.device)
                 
-                all_preds.append(predictions.cpu().numpy())
+                # Объединение временных меток с входными признаками
+                X_with_times = torch.cat((X_batch, times_batch.unsqueeze(1)), dim=1)
+
+                pred = self.model(X_with_times)
+                
+                all_preds.append(pred.cpu().numpy())
                 all_true.append(y_batch.cpu().numpy())
-                times.append(times_batch.cpu().numpy())
 
         # Конкатенация всех предсказаний и истинных значений
-        self.predictions = np.concatenate(all_preds)
-        self.true_values = np.concatenate(all_true)
-        self.times = np.concatenate(times)  # Сохранение временных меток
+        self.pred = np.concatenate(all_preds)
+        self.true = np.concatenate(all_true)
+        
+        # Вычисление RMSE
+        rmse = np.sqrt(mean_squared_error(self.true, self.pred))
 
-        # Разделение реальной и мнимой частей
-        pred_real = self.predictions[:, 0]
-        pred_imag = self.predictions[:, 1]
-        true_real = self.true_values[:, 0]
-        true_imag = self.true_values[:, 1]
-    
-        # Вычисление RMSE для реальной и мнимой частей
-        rmse_real = np.sqrt(mean_squared_error(true_real, pred_real))
-        rmse_imag = np.sqrt(mean_squared_error(true_imag, pred_imag))
-    
-        print(f"Evaluation RMSE Real: {rmse_real:.6f}, RMSE Imag: {rmse_imag:.6f}")
-        return rmse_real, rmse_imag
+        print(f"Evaluation RMSE: {rmse:.6f}")
+        return rmse
 
-    def save_model_pt(self, filename_prefix='node', save_dir='models'):
+    def save_model(self, path="models"):
         """
-        Сохраняет всю модель PyTorch в формате .pt.
+        Сохранение модели в файл.
 
         Args:
-            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'node'.
-            save_dir (str, optional): Директория для сохранения модели. По умолчанию 'models'.
+            path (str, optional): Путь для сохранения модели. По умолчанию 'models'.
         """
-        # Создаем папку, если ее нет
-        os.makedirs(save_dir, exist_ok=True)
-
-        # Генерируем имя файла с текущей датой и временем
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.pt"
-
-        # Полный путь к файлу
-        filepath = os.path.join(save_dir, filename)
-
         os.makedirs(path, exist_ok=True)
-        torch.save(self.model_real.state_dict(), os.path.join(path, f"model_real_{self.model_id}.pt"))
-        torch.save(self.model_imag.state_dict(), os.path.join(path, f"model_imag_{self.model_id}.pt"))
-        print(f"Models saved in {path}")
-     
-    def save_prediction(self, predictions, filename_prefix="predictions", save_dir='history'):
-        # Создаем папку, если ее нет
-        os.makedirs(save_dir, exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join(path, f"model_{self.model_id}.pt"))
+        print(f"Model saved in {path}")
 
-        # Генерируем имя файла с текущей датой и временем
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.csv"
-
-        # Полный путь к файлу
-        filepath = os.path.join(save_dir, filename)
-        
-        df_predictions = pd.DataFrame({'real': predictions[:, 0], 'imag': predictions[:, 1],})
-        df_predictions.to_csv(filepath, index=False)
-        print(f"Training history saved to {filepath}")
-         
-    def save_training_history(self, filename_prefix="training_history", save_dir='history'):
-        # Создаем папку, если ее нет
-        os.makedirs(save_dir, exist_ok=True)
-
-        # Генерируем имя файла с текущей датой и временем
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.csv"
-
-        # Полный путь к файлу
-        filepath = os.path.join(save_dir, filename)
-        
-        df_history = pd.DataFrame(self.history)
-        df_history.to_csv(filepath, index=False)
-        print(f"Training history saved to {filepath}")
-        
     def plot_training_history(self):
+        """
+        Строит графики истории обучения модели, отображая RMSE на каждой эпохе.
+        """
         fig, axs = plt.subplots(1, 2, figsize=(14, 6))
     
         # Преобразуем список эпох для оси X
@@ -323,91 +272,81 @@ class MemoryPolynomialNNTrainer:
         plt.tight_layout()
         plt.show()
 
-    def plot_predictions(self, time_start=0, time_end=1.005e2):
+    def plot_predictions(self, time_start=0, time_end=1.01e-4):
         """
-        Построение графиков предсказанных и истинных значений для реальной и мнимой частей.
-    
-        Args:
-            time_start (float, optional): Начальное время для фильтрации данных. По умолчанию 0.
-            time_end (float, optional): Конечное время для фильтрации данных. По умолчанию 1.005e2.
-        """
-        # Проверяем, что оценка была выполнена, и данные сохранены
-        if not hasattr(self, 'times') or not hasattr(self, 'predictions') or not hasattr(self, 'true_values'):
-            raise ValueError("Необходимо сначала выполнить evaluate(), чтобы сохранить предсказанные значения.")
-    
-        # Фильтрация данных по времени
-        mask = (self.times >= time_start) & (self.times <= time_end)
-        filtered_times = self.times[mask]
-        # Сортировка данных по времени
-        sorted_indices = np.argsort(filtered_times)
-        
-        # Разделение истинных и предсказанных значений для реальной и мнимой частей
-        filtered_true_real = self.true_values[mask, 0][sorted_indices]
-        filtered_true_imag = self.true_values[mask, 1][sorted_indices]
-        filtered_pred_real = self.predictions[mask, 0][sorted_indices]
-        filtered_pred_imag = self.predictions[mask, 1][sorted_indices]
+        Построение графиков предсказанных и фактических значений в заданном временном диапазоне.
 
-        # Построение графика для реальных значений
-        plt.figure(figsize=(20, 5))
+        Args:
+            time_start (float, optional): Начальное время для отображения. По умолчанию 0.
+            time_end (float, optional): Конечное время для отображения. По умолчанию 1.01e-4.
+        """
+        self.model.eval()
+        pred_real, pred_imag = self.pred[:, 0], self.pred[:, 1]
+        true_real, true_imag = self.true[:, 0], self.true[:, 1]
+
+        # Фильтрация данных по указанному временному диапазону
+        time_mask = (self.times >= time_start) & (self.times <= time_end)
+
+        selected_times = self.times[time_mask]
+        
+        # Фильтрация предсказаний и фактических значений по временному диапазону
+        pred_real = pred_real[time_mask]
+        pred_imag = pred_imag[time_mask]
+        true_real = true_real[time_mask]
+        true_imag = true_imag[time_mask]
     
-        plt.subplot(1, 2, 1)  # 1 ряд, 2 колонки, 1-й график
-        plt.plot(filtered_times, filtered_true_real, label="True Real", linestyle='-', color='red')
-        plt.plot(filtered_times, filtered_pred_real, label="Predicted Real", linestyle='-', color='blue')
-        plt.legend()
-        plt.title("True vs Predicted Real Values")
-        plt.xlabel("Time")
-        plt.ylabel("Real Value")
-    
-        # Построение графика для мнимых значений
-        plt.subplot(1, 2, 2)  # 1 ряд, 2 колонки, 2-й график
-        plt.plot(filtered_times, filtered_true_imag, label="True Imag", linestyle='-', color='red')
-        plt.plot(filtered_times, filtered_pred_imag, label="Predicted Imag", linestyle='-', color='blue')
-        plt.legend()
-        plt.title("True vs Predicted Imaginary Values")
-        plt.xlabel("Time")
-        plt.ylabel("Imaginary Value")
-    
+        # Проверка, чтобы убедиться, что данные не пустые
+        if len(selected_times) == 0:
+            print(f"No data points found between {time_start} and {time_end}.")
+            return
+        
+        # Построение графиков
+        fig, axs = plt.subplots(2, 1, figsize=(15, 8))
+
+        # Реальная часть
+        axs[0].plot(selected_times, true_real, label='True Real', linestyle='-', color='red')
+        axs[0].plot(selected_times, pred_real, label='Predicted Real', linestyle='-', color='blue')
+        axs[0].set_xlabel('Time')
+        axs[0].set_ylabel('Real Part')
+        axs[0].legend()
+        axs[0].grid(True)
+
+        # Мнимая часть
+        axs[1].plot(selected_times, true_imag, label='True Imag', linestyle='-', color='red')
+        axs[1].plot(selected_times, pred_imag, label='Predicted Imag', linestyle='-', color='blue')
+        axs[1].set_xlabel('Time')
+        axs[1].set_ylabel('Imaginary Part')
+        axs[1].legend()
+        axs[1].grid(True)
+
         plt.tight_layout()
         plt.show()
-        
-    def print_model_summary(self, filename_prefix="model_parameters", save_dir='history'):
+
+    def draw_plot_signal(self, signal_type, time_start=0, time_end=1e-6):
         """
-        Выводит информацию о модели: архитектуру, параметры и их размерности.
+        Построение графика сигнала в указанном временном диапазоне.
+        
+        Args:
+            signal_type (str): Тип сигнала ('input' или 'output').
+            time_start (float): Начальное время.
+            time_end (float): Конечное время.
         """
-        # Создаем папку, если ее нет
-        os.makedirs(save_dir, exist_ok=True)
+        # Фильтрация данных по временной отметке
+        filtered_data = self.df[(self.df.index >= time_start) & (self.df.index <= time_end)]
+        time = filtered_data.index
 
-        # Генерируем имя файла с текущей датой и временем
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.csv"
-
-        # Полный путь к файлу
-        filepath = os.path.join(save_dir, filename)
+        # Построение графика реальной и мнимой частей сигнала
+        plt.figure(figsize=(10, 6))
+        plt.plot(time, filtered_data[f'{signal_type}_real'], label=f'{signal_type} Real Part', color='blue', linestyle='-')
+        plt.plot(time, filtered_data[f'{signal_type}_imag'], label=f'{signal_type} Imaginary Part', color='red', linestyle='-')
         
-        df_params = pd.DataFrame(columns=['Parameter name', 'Parameter shape', 'Parameter count'])
+        plt.title(f'{signal_type.capitalize()} Signal from {time_start} to {time_end} seconds')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Amplitude')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
         
-        print(f"Model architecture: {self.model}")
-        print("-" * 50)
-
-        total_params = 0
-        for name, param in self.model.named_parameters():
-            print(f"Parameter name: {name}")
-            print(f"Parameter shape: {param.shape}")
-            param_count = torch.numel(param)
-            print(f"Parameter count: {param_count}")
-            print("-" * 30)
-
-            # Добавляем информацию о параметре в DataFrame
-            df_params.loc[len(df_params)] = [name, param.shape, param_count] 
-            
-            total_params += param_count
-
-        print(f"Total trainable parameters: {total_params}")
-        print("=" * 50)
-        
-        # Сохраняем DataFrame в CSV файл
-        df_params.to_csv(filepath, index=False)
-
 
 if __name__ == '__main__':
     try:
