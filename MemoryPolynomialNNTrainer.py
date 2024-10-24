@@ -1,6 +1,7 @@
 import os
 import sys
 import uuid
+import time
 import numpy as np
 import pandas as pd
 import seaborn as sb
@@ -16,9 +17,10 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.tensorboard import SummaryWriter
 
 class MemoryPolynomialNNTrainer:
-    def __init__(self, df, M, K, batch_size=64, learning_rate=0.001, epochs=10, hidden_layers=[64, 128], device=None):
+    def __init__(self, df, M, K, batch_size=64, learning_rate=0.001, epochs=10, hidden_layers=[64, 128], dropout_rate=0.5, l1_lambda=0.0, l2_lambda=0.0, patience=2, factor=0.9, edit_model=None, device=None, experiment_name=None):
         """
         Инициализация класса для тренировки модели Memory Polynomial с использованием нейронных сетей.
 
@@ -31,6 +33,7 @@ class MemoryPolynomialNNTrainer:
             epochs (int, optional): Количество эпох. По умолчанию 10.
             hidden_layers (list, optional): Конфигурация скрытых слоев. По умолчанию [64, 128].
             device (str, optional): Устройство для выполнения вычислений ('cpu' или 'cuda'). По умолчанию None.
+            experiment_name(str, optional): Название эксперимента. По умолчанию None.
         """
         # Подготовка данных
         self.df = self.prepare_data(df)
@@ -41,63 +44,84 @@ class MemoryPolynomialNNTrainer:
         self.M = M
         self.K = K
         self.hidden_layers = hidden_layers
-
-        # История обучения
-        self.history = {"epoch": [], "rmse": []}
-
-        # Генерация уникального ID
-        self.model_id = str(uuid.uuid4())
+        self.dropout_rate = dropout_rate
+        self.l1_lambda = l1_lambda
+        self.l2_lambda = l2_lambda
+        self.history = {"epoch": [], "rmse": []} # История обучения
+        self.model_id = str(uuid.uuid4()) # Генерация уникального ID
+        self.experiment_name = 'memory_polynomial' if not experiment_name else experiment_name
+        self.writer = self.initialize_log_dir(self.experiment_name)
 
         # Подготовка данных
-        X, y, self.times = self.create_dataset(self.df, M, K)
+        self.X, self.y, self.times = self.create_dataset(self.df, M, K)
         self.dataset = TensorDataset(
-            torch.tensor(X, dtype=torch.float32),
+            torch.tensor(self.X, dtype=torch.float32),
             torch.tensor(self.times, dtype=torch.float32),
-            torch.tensor(y, dtype=torch.float32)
+            torch.tensor(self.y, dtype=torch.float32)
         )
         self.train_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True)
 
         # Инициализация модели
-        self.model = self.SimpleMLP(input_size=X.shape[1] + 1, hidden_layers=hidden_layers, output_size=2).to(self.device)
+        if edit_model:
+            self.model = edit_model(input_size=X.shape[1] + 1, hidden_layers=hidden_layers, output_size=2, dropout_rate=dropout_rate).to(self.device)
+        else:
+            self.model = self.DefaultSimpleMLP(input_size=self.X.shape[1] + 1, hidden_layers=hidden_layers, output_size=2, dropout_rate=dropout_rate).to(self.device)
+        
+        # Логирование структуры модели
+        self.writer.add_graph(self.model, torch.randn(1, self.X.shape[1] + 1).to(self.device))
+
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
+        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, 'min', patience=patience, factor=factor)
 
-    class SimpleMLP(nn.Module):
-        def __init__(self, input_size, hidden_layers, output_size=2):
-            """
-            Простая классическая нейросеть MLP для регрессии реальной и мнимой частей сигнала.
-    
-            Args:
-                input_size (int): Размерность входного слоя (количество признаков).
-                hidden_layers (list): Список размеров скрытых слоев.
-                output_size (int, optional): Размерность выходного слоя. По умолчанию 2 (для реальной и мнимой части).
-            """
+    class DefaultSimpleMLP(nn.Module):
+        def __init__(self, input_size, hidden_layers, output_size=2, dropout_rate=0.5):
             super().__init__()
-            
-            layers = []
+    
+            self.layers = []
+            self.activations = []  # Список для хранения активаций
+            self.hooks = []  # Список для хранения hook'ов
+    
             # Входной слой
-            layers.append(nn.Linear(input_size, hidden_layers[0]))
-            layers.append(nn.ReLU())
-            
+            layer = nn.Linear(input_size, hidden_layers[0])
+            self.layers.append(layer)
+            self.add_activation_logging(layer)  # Добавить логирование активаций
+            self.layers.append(nn.ReLU())
+            self.layers.append(nn.BatchNorm1d(hidden_layers[0]))  # Batch Normalization
+            self.layers.append(nn.Dropout(dropout_rate))
+    
             # Скрытые слои
             for i in range(1, len(hidden_layers)):
-                layers.append(nn.Linear(hidden_layers[i - 1], hidden_layers[i]))
-                layers.append(nn.ReLU())
-            
+                layer = nn.Linear(hidden_layers[i - 1], hidden_layers[i])
+                self.layers.append(layer)
+                self.add_activation_logging(layer)  # Добавить логирование активаций
+                self.layers.append(nn.ReLU())
+                self.layers.append(nn.BatchNorm1d(hidden_layers[i]))  # Batch Normalization
+                self.layers.append(nn.Dropout(dropout_rate))
+    
             # Выходной слой
-            layers.append(nn.Linear(hidden_layers[-1], output_size))
-            
-            self.model = nn.Sequential(*layers)
+            layer = nn.Linear(hidden_layers[-1], output_size)
+            self.layers.append(layer)
+    
+            self.model = nn.Sequential(*self.layers)
+    
+        def add_activation_logging(self, layer):
+            def hook(module, input, output):
+                self.activations.append(output.detach().cpu())
+    
+            self.hooks.append(layer.register_forward_hook(hook))
+    
+        def clear_activations(self):
+            """Очистка сохранённых активаций."""
+            self.activations = []
     
         def forward(self, x):
-            """
-            Прямой проход через MLP.
-            Args:
-                x (torch.Tensor): Входные данные.
-            Returns:
-                torch.Tensor: Прогнозы (реальная и мнимая части).
-            """
             return self.model(x)
+    
+        def close_hooks(self):
+            """Закрытие hook'ов после окончания обучения."""
+            for hook in self.hooks:
+                hook.remove()
                 
     @staticmethod
     def prepare_data(df):
@@ -166,12 +190,38 @@ class MemoryPolynomialNNTrainer:
                     X[n, index + 1] = np.abs(x_imag[n - m])**(k-1) * x_imag[n - m]
                     index += 2
         return X[M:], y, times
+        
+    def initialize_log_dir(self, experiment_name):
+        """
+        Проверяет существование директории для логов и создаёт новую, если она существует.
 
-    def train(self):
+        Args:
+            experiment_name (str): Имя эксперимента для создания директории.
+
+        Returns:
+            SummaryWriter: Экземпляр SummaryWriter для TensorBoard.
+        """
+        self.log_dir = f'logs/{experiment_name}'  # Базовый путь для логов
+        # Проверка существования директории и генерация нового имени, если необходимо
+        i = 0
+        while os.path.exists(self.log_dir):
+            self.log_dir = f'logs/{experiment_name}_{i}'
+            i += 1
+        os.makedirs(self.log_dir)  # Создание директории
+        return SummaryWriter(log_dir=self.log_dir)  # Инициализация SummaryWriter
+
+    def l1_l2_regularization(self):
+        l1_norm = sum(p.abs().sum() for p in self.model.parameters())
+        l2_norm = sum((p ** 2).sum() for p in self.model.parameters())
+        return self.l1_lambda * l1_norm + self.l2_lambda * l2_norm
+    
+    def train(self, max_early_stopping_counter=5):
         """
         Обучение модели на объединенных целевых данных (реальная и мнимая части).
         """
         self.model.train()
+        early_stopping_counter = 0
+        best_rmse = float('inf')
 
         for epoch in range(self.epochs):
             total_rmse = 0
@@ -191,14 +241,45 @@ class MemoryPolynomialNNTrainer:
                 self.optimizer.step()
 
                 total_rmse += rmse.item()
-                progress_bar.set_postfix(rmse=f"{rmse:.6f}")
+
+                # Логирование в TensorBoard
+                self.writer.add_scalar('Training/RMSE', rmse.item(), epoch * len(self.train_loader) + batch_idx)
+
+                # Получение текущего значения learning rate
+                current_learning_rate = self.optimizer.param_groups[0]['lr']
+                progress_bar.set_postfix(rmse=f"{rmse:.10f}", lr=f"{current_learning_rate:.6f}")
 
             avg_rmse = total_rmse / len(self.train_loader)
             self.history["epoch"].append(epoch + 1)
             self.history["rmse"].append(avg_rmse)
 
-            print(f"Epoch {epoch+1}/{self.epochs}, RMSE: {avg_rmse:.6f}")
+            # Логирование средней RMSE в TensorBoard
+            self.writer.add_scalar('Training/Average_RMSE', avg_rmse, epoch)
+            self.writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch)
 
+            # Логирование распределения весов для каждого слоя
+            for name, param in self.model.named_parameters():
+                self.writer.add_histogram(f'Weights/{name}', param, epoch)
+                if param.grad is not None:
+                    self.writer.add_histogram(f'Gradients/{name}', param.grad, epoch)
+
+            # Обновление learning rate scheduler
+            self.scheduler.step(avg_rmse)
+
+            # Early Stopping
+            if avg_rmse < best_rmse:
+                best_rmse = avg_rmse
+                early_stopping_counter = 0
+            else:
+                early_stopping_counter += 1
+
+            if early_stopping_counter >= max_early_stopping_counter:  # Параметр patience для Early Stopping
+                print("Early stopping activated.")
+                break
+
+            print(f"Epoch {epoch+1}/{self.epochs}, RMSE: {avg_rmse:.6f}")
+            
+            
     def evaluate(self):
         """
         Оценка модели после обучения.
@@ -226,43 +307,70 @@ class MemoryPolynomialNNTrainer:
         self.pred = np.concatenate(all_preds)
         self.true = np.concatenate(all_true)
         
-        # Вычисление RMSE
-        rmse = np.sqrt(mean_squared_error(self.true, self.pred))
+        # Извлечение реальной и мнимой частей
+        self.pred_real = self.pred[:, 0]
+        self.true_real = self.true[:, 0]
+        self.pred_imag = self.pred[:, 1]
+        self.true_imag = self.true[:, 1]
+        
+        # Вычисление RMSE для реальной и мнимой части
+        rmse_real = np.sqrt(mean_squared_error(self.true_real, self.pred_real))
+        rmse_imag = np.sqrt(mean_squared_error(self.true_imag, self.pred_imag))
+    
+        # Логируем RMSE в TensorBoard
+        self.writer.add_scalar('Evaluation/REAL', rmse_real, len(self.history["epoch"]) - 1)
+        self.writer.add_scalar('Evaluation/IMAG', rmse_imag, len(self.history["epoch"]) - 1)
 
-        print(f"Evaluation RMSE: {rmse:.6f}")
-        return rmse
-
-    def save_model(self, path="models"):
+        return rmse_real, rmse_imag
+        
+    def save_model_pt(self, filename_prefix='node', save_dir='models'):
         """
-        Сохранение модели в файл.
+        Сохраняет всю модель PyTorch в формате .pt.
 
         Args:
-            path (str, optional): Путь для сохранения модели. По умолчанию 'models'.
+            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'node'.
+            save_dir (str, optional): Директория для сохранения модели. По умолчанию 'models'.
         """
-        os.makedirs(path, exist_ok=True)
-        torch.save(self.model.state_dict(), os.path.join(path, f"model_{self.model_id}.pt"))
-        print(f"Model saved in {path}")
+        # Создаем папку, если ее нет
+        os.makedirs(save_dir, exist_ok=True)
 
-    def plot_training_history(self):
+        # Генерируем имя файла с текущей датой и временем
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.pt"
+
+        # Полный путь к файлу
+        filepath = os.path.join(save_dir, filename)
+
+        # Сохраняем ВСЮ модель
+        torch.save(self.model, filepath)
+        print(f"Model saved in {filepath}")
+
+    def plot_training_history(self, window_size=5):
         """
-        Строит графики истории обучения модели, отображая RMSE на каждой эпохе.
+        Строит графики истории обучения модели, отображая RMSE на каждой эпохе и скользящее среднее.
         """
         fig, axs = plt.subplots(1, 2, figsize=(14, 6))
     
         # Преобразуем список эпох для оси X
         epochs = self.history["epoch"]
     
+        # Вычисляем скользящее среднее
+        rmse = np.array(self.history["rmse"])
+        moving_avg = np.convolve(rmse, np.ones(window_size)/window_size, mode='valid')
+    
         # Первый график: Полная история
-        axs[0].plot(epochs, self.history["rmse"], marker='o', linestyle='-', color='b', markersize=5, label='RMSE')
+        axs[0].plot(epochs, rmse, marker='o', linestyle='-', color='b', markersize=5, label='RMSE')
+        axs[0].plot(epochs[window_size-1:], moving_avg, color='r', label=f'Moving Average (window size={window_size})')
         axs[0].set_xlabel('Epoch')
         axs[0].set_ylabel('Average Loss')
         axs[0].set_title('Loss Function (Full History)')
         axs[0].grid(True)
         axs[0].legend()
-
+    
         # Второй график: Половина истории
         mid_index = len(epochs) // 2
-        axs[1].plot(epochs[mid_index:], self.history["rmse"][mid_index:], marker='o', linestyle='-', color='b', markersize=5, label='RMSE')
+        axs[1].plot(epochs[mid_index:], rmse[mid_index:], marker='o', linestyle='-', color='b', markersize=5, label='RMSE')
+        axs[1].plot(epochs[mid_index + window_size - 1:], moving_avg[mid_index:], color='r', label=f'Moving Average (window size={window_size})')
         axs[1].set_xlabel('Epoch')
         axs[1].set_ylabel('Average RMSE')
         axs[1].set_title('Loss Function (Second Half of Training)')
@@ -346,39 +454,103 @@ class MemoryPolynomialNNTrainer:
         plt.legend()
         plt.grid(True)
         plt.show()
-        
 
-if __name__ == '__main__':
-    try:
-        df = pd.read_csv('Amp_C_train.txt')
-    except:
-        for dirname, _, filenames in os.walk('/kaggle/input'):
-            for filename in filenames:
-                print(os.path.join(dirname, filename))
-                
-        df = pd.read_csv(os.path.join(dirname, filename))
-        
-        
-    M = 2  # Глубина памяти
-    K = 1  # Степень полинома
-    batch_size=1024*1
-    learning_rate=1e-4
-    epochs=2
-    hidden_layers=[2**6, 2**7, 2**7, 2**6]
+    def print_model_summary(self, filename_prefix="model_parameters", save_dir='history'):
+        """
+        Выводит информацию о модели и сохраняет её параметры и их размерности в CSV файл.
 
-    # Создание экземпляра класса с настройкой гиперпараметров
-    model_nn = MemoryPolynomialNNTrainer(
-        df, 
-        M, K, 
-        batch_size,
-        learning_rate, 
-        epochs, 
-        hidden_layers, 
-        device=None
-    )
+        Args:
+            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'model_parameters'.
+            save_dir (str, optional): Директория для сохранения файла. По умолчанию 'history'.
+        """
+        # Создаем папку, если ее нет
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Генерируем имя файла с текущей датой и временем
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.csv"
+
+        # Полный путь к файлу
+        filepath = os.path.join(save_dir, filename)
+        
+        df_params = pd.DataFrame(columns=['Parameter name', 'Parameter shape', 'Parameter count'])
+        
+        print(f"Model architecture: {self.model}")
+        print("-" * 50)
+
+        total_params = 0
+        for name, param in self.model.named_parameters():
+            print(f"Parameter name: {name}")
+            print(f"Parameter shape: {param.shape}")
+            param_count = torch.numel(param)
+            print(f"Parameter count: {param_count}")
+            print("-" * 30)
+
+            # Добавляем информацию о параметре в DataFrame
+            df_params.loc[len(df_params)] = [name, param.shape, param_count] 
+            
+            total_params += param_count
+
+        print(f"Total trainable parameters: {total_params}")
+        print("=" * 50)
+        
+        # Сохраняем DataFrame в CSV файл
+        # df_params.to_csv(filepath, index=False)
+        
+        # print(f"Print model saved in {filepath}")
+
+    def log_predictions_to_tensorboard(self):
+        """
+        Логирование всех предсказанных и фактических значений в TensorBoard.
+        """
+        self.model.eval()
+        pred_real, pred_imag = self.pred[:, 0], self.pred[:, 1]
+        true_real, true_imag = self.true[:, 0], self.true[:, 1]
+
+        # Логирование в TensorBoard для реальных значений
+        for i in range(len(self.pred)):
+            self.writer.add_scalars(
+                'Predictions/Real', 
+                {
+                    'Predicted': pred_real[i],
+                    'True': true_real[i],
+                },
+                global_step=i
+            )
     
-    model_nn.train()
+        # Логирование в TensorBoard для мнимых значений
+        for i in range(len(self.pred)):
+            self.writer.add_scalars(
+                'Predictions/Imag', 
+                {
+                    'Predicted ': pred_imag[i],
+                    'True': true_imag[i]
+                },
+                global_step=i
+            )
+
+        print(f"All predictions logged to TensorBoard.")
+
+    def log_hparams_and_metrics(self, rmse_real, rmse_imag):
+        hparams = {
+            'batch_size': self.batch_size,
+            'learning_rate': self.learning_rate,
+            'M': self.M,
+            'K': self.K,
+            'dropout_rate': self.dropout_rate,
+            'l1_lambda': self.l1_lambda,
+            'l2_lambda': self.l2_lambda,
+            'num_epochs': self.epochs
+        }
+            
+        # Получение текущего времени в читаемом формате
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        run_name = f"{timestamp}"  # Читаемое имя
     
-    model_nn.evaluate()
-    
-    
+        # Логирование гиперпараметров и метрик
+        self.writer.add_hparams(hparams, { 
+            'rmse_real': rmse_real,
+            'rmse_imag': rmse_imag 
+        }, run_name=run_name)
+        
+        self.writer.close()
