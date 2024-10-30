@@ -20,7 +20,15 @@ from torch.utils.data import DataLoader, TensorDataset
 from torch.utils.tensorboard import SummaryWriter
 
 class MemoryPolynomialNNTrainer:
-    def __init__(self, df, M, K, batch_size=64, learning_rate=0.001, epochs=10, hidden_layers=[64, 128], dropout_rate=0.5, l1_lambda=0.0, l2_lambda=0.0, patience=2, factor=0.9, edit_model=None, device=None, experiment_name=None):
+    def __init__(
+        self, 
+        df, 
+        M, K, 
+        batch_size=64, learning_rate=0.001, epochs=10, hidden_layers=[64, 128], 
+        dropout_rate=0.5, patience=2, factor=0.9, 
+        edit_model=None, device=None, experiment_name=None,
+        model_type='memory_polynomial'
+        ):
         """
         Инициализация класса для тренировки модели Memory Polynomial с использованием нейронных сетей.
 
@@ -34,6 +42,7 @@ class MemoryPolynomialNNTrainer:
             hidden_layers (list, optional): Конфигурация скрытых слоев. По умолчанию [64, 128].
             device (str, optional): Устройство для выполнения вычислений ('cpu' или 'cuda'). По умолчанию None.
             experiment_name(str, optional): Название эксперимента. По умолчанию None.
+            model_type (str): Тип полиномиальной модели ('memory_polynomial', 'sparse_delay_memory_polynomial', 'non_uniform_memory_polynomial').
         """
         # Подготовка данных
         self.df = self.prepare_data(df)
@@ -45,15 +54,28 @@ class MemoryPolynomialNNTrainer:
         self.K = K
         self.hidden_layers = hidden_layers
         self.dropout_rate = dropout_rate
-        self.l1_lambda = l1_lambda
-        self.l2_lambda = l2_lambda
         self.history = {"epoch": [], "rmse": []} # История обучения
         self.model_id = str(uuid.uuid4()) # Генерация уникального ID
+        self.last_rmse_real = None
+        self.last_rmse_imag = None
+        
         self.experiment_name = 'memory_polynomial' if not experiment_name else experiment_name
         self.writer = self.initialize_log_dir(self.experiment_name)
 
-        # Подготовка данных
-        self.X, self.y, self.times = self.create_dataset(self.df, M, K)
+        # Создание данных в зависимости от выбранного типа модели
+        if model_type == 'memory_polynomial':
+            self.X, self.y, self.times = self.create_dataset_memory_polynominal(self.df, M, K)
+        elif model_type == 'sparse_delay_memory_polynomial':
+            delays = range(self.M + 1)
+            self.X, self.y, self.times = self.create_dataset_sparse_delay_memory_polynominal(self.df, M, K, delays)
+        elif model_type == 'non_uniform_memory_polynomial':
+            K_list = [self.K] * (self.M + 1)
+            self.X, self.y, self.times = self.create_dataset_non_uniform_memory_polynominal(self.df, M, K_list)
+        elif model_type == 'envelope_memory_polynomial':
+            self.X, self.y, self.times = self.create_dataset_envelope_memory_polynomial(self.df, M, K)
+        else:
+            raise ValueError("Недопустимый тип модели. Выберите из 'memory_polynomial', 'sparse_delay_memory_polynomial', 'non_uniform_memory_polynomial'.")
+        
         self.dataset = TensorDataset(
             torch.tensor(self.X, dtype=torch.float32),
             torch.tensor(self.times, dtype=torch.float32),
@@ -161,22 +183,42 @@ class MemoryPolynomialNNTrainer:
         return torch.device('cpu')
 
     @staticmethod
-    def create_dataset(df, M, K):
-        """
-        Создание обучающих данных на основе полиномиальной модели с памятью и добавлением времени.
+    def prepare_data_for_create_dataset(df, M):
+        """Подготовка данных для преобразования.
 
         Args:
             df (pd.DataFrame): Обработанные данные.
+            M (int): Параметр памяти.
 
         Returns:
-            tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
+            tuple: Содержит следующие компоненты:
+                - x_real (np.ndarray): Вектор реальных частей входных данных.
+                - x_imag (np.ndarray): Вектор мнимых частей входных данных.
+                - y_real (np.ndarray): Вектор реальных частей выходных данных, начиная с M-го элемента.
+                - y_imag (np.ndarray): Вектор мнимых частей выходных данных, начиная с M-го элемента.
+                - times (np.ndarray): Вектор временных меток начиная с M-го элемента.
         """
         x_real = df['input_real'].values
         x_imag = df['input_imag'].values
         y_real = df['output_real'].values[M:]
         y_imag = df['output_imag'].values[M:]
         times = df.index.values[M:]
+        return x_real, x_imag, y_real, y_imag, times
 
+    def create_dataset_memory_polynominal(self, df, M, K):
+        """
+        Создание обучающих данных на основе полиномиальной модели с памятью и добавлением времени.
+
+        Args:
+            df (pd.DataFrame): Обработанные данные.
+            M (int): Параметр памяти.
+            K (int): Максимальная степень полинома.
+
+        Returns:
+            tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
+        """
+        x_real, x_imag, y_real, y_imag, times = self.prepare_data_for_create_dataset(df, M)
+        
         # Объединение реальных и мнимых частей в один целевой вектор
         y = np.stack([y_real, y_imag], axis=1)
 
@@ -190,30 +232,100 @@ class MemoryPolynomialNNTrainer:
                     X[n, index + 1] = np.abs(x_imag[n - m])**(k-1) * x_imag[n - m]
                     index += 2
         return X[M:], y, times
-        
-    def initialize_log_dir(self, experiment_name):
+    
+    def create_dataset_sparse_delay_memory_polynominal(self, df, M, K, delays):
         """
-        Проверяет существование директории для логов и создаёт новую, если она существует.
+        Создание обучающих данных на основе Sparse-Delay Memory Polynomial (SDMP) модели.
 
         Args:
-            experiment_name (str): Имя эксперимента для создания директории.
+            df (pd.DataFrame): Обработанные данные.
+            M (int): Параметр памяти (не используется для SDMP, но включен для совместимости).
+            K (int): Максимальная степень полинома.
 
         Returns:
-            SummaryWriter: Экземпляр SummaryWriter для TensorBoard.
+            tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
         """
-        self.log_dir = f'logs/{experiment_name}'  # Базовый путь для логов
-        # Проверка существования директории и генерация нового имени, если необходимо
-        i = 0
-        while os.path.exists(self.log_dir):
-            self.log_dir = f'logs/{experiment_name}_{i}'
-            i += 1
-        os.makedirs(self.log_dir)  # Создание директории
-        return SummaryWriter(log_dir=self.log_dir)  # Инициализация SummaryWriter
+        x_real, x_imag, y_real, y_imag, times = self.prepare_data_for_create_dataset(df, M)
 
-    def l1_l2_regularization(self):
-        l1_norm = sum(p.abs().sum() for p in self.model.parameters())
-        l2_norm = sum((p ** 2).sum() for p in self.model.parameters())
-        return self.l1_lambda * l1_norm + self.l2_lambda * l2_norm
+        # Объединение реальных и мнимых частей в один целевой вектор
+        y = np.stack([y_real[M:], y_imag[M:]], axis=1)
+
+        N = len(x_real)
+        X = np.zeros((N - M, len(delays) * K * 2), dtype=np.float64)
+        for n in range(M, N):
+            index = 0
+            for m in delays:
+                if n - m >= 0:
+                    for k in range(1, K + 1):
+                        X[n - M, index] = np.abs(x_real[n - m])**(k - 1) * x_real[n - m]
+                        X[n - M, index + 1] = np.abs(x_imag[n - m])**(k - 1) * x_imag[n - m]
+                    index += 2
+
+        # Обрезка до необходимых размеров
+        X = X[:len(y)]  # Срез в зависимости от наименьшего размера
+        times = times[M:M + len(y)]  # Приводим ко всем одинаковым размерам
+
+        return X, y, times
+    
+    def create_dataset_non_uniform_memory_polynominal(self, df, M, K_list):
+        """
+        Создание обучающих данных на основе Non-Uniform Memory Polynomial (NUMP) модели.
+
+        Args:
+            df (pd.DataFrame): Обработанные данные.
+            M (int): Параметр памяти (на этот раз может использоваться для NUMP).
+            K_list (list of int): Перечень степеней полиномов для каждой задержки.
+
+        Returns:
+            tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
+        """
+        x_real, x_imag, y_real, y_imag, times = self.prepare_data_for_create_dataset(df, M)
+
+        # Объединение реальных и мнимых частей в один целевой вектор
+        y = np.stack([y_real, y_imag], axis=1)
+
+        N = len(x_real)
+        X = np.zeros((N, sum(K_list) * 2), dtype=np.float64)
+        index = 0
+        for m in range(self.M + 1):
+            for k in range(1, K_list[m] + 1):
+                for n in range(self.M, N):
+                    X[n, index] = np.abs(x_real[n - m])**(k-1) * x_real[n - m]
+                    X[n, index + 1] = np.abs(x_imag[n - m])**(k-1) * x_imag[n - m]
+                index += 2
+        return X[M:], y, times
+    
+    def create_dataset_envelope_memory_polynomial(self, df, M, K):
+        """
+        Создание обучающих данных на основе Envelope Memory Polynomial (EMP) модели.
+
+        Args:
+            df (pd.DataFrame): Обработанные данные.
+            M (int): Параметр памяти.
+            K (int): Максимальная степень полинома.
+
+        Returns:
+            tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
+        """
+        x_real, x_imag, y_real, y_imag, times = self.prepare_data_for_create_dataset(df, M)
+
+        # Объединение реальных и мнимых частей в один целевой вектор
+        y = np.stack([y_real, y_imag], axis=1)
+
+        N = len(x_real)
+        amplitude = np.sqrt(x_real**2 + x_imag**2)  # Амплитуда сигнала
+
+        X = np.zeros((N - M, (M + 1) * K), dtype=np.float64)
+        for n in range(M, N):
+            index = 0
+            for m in range(M + 1):
+                for k in range(1, K + 1):
+                    X[n - M, index] = amplitude[n] * amplitude[n - m]**(k-1)
+                    index += 1
+
+        # Обрезка X до соответствующего размера
+        X = X[:len(y[M:])]
+        return X, y[M:], times[M:]
     
     def train(self, max_early_stopping_counter=5):
         """
@@ -320,6 +432,10 @@ class MemoryPolynomialNNTrainer:
         # Логируем RMSE в TensorBoard
         self.writer.add_scalar('Evaluation/REAL', rmse_real, len(self.history["epoch"]) - 1)
         self.writer.add_scalar('Evaluation/IMAG', rmse_imag, len(self.history["epoch"]) - 1)
+        
+        # Сохранение последних значений RMSE
+        self.last_rmse_real = rmse_real
+        self.last_rmse_imag = rmse_imag
 
         return rmse_real, rmse_imag
         
@@ -531,7 +647,7 @@ class MemoryPolynomialNNTrainer:
 
         print(f"All predictions logged to TensorBoard.")
 
-    def log_hparams_and_metrics(self, rmse_real, rmse_imag):
+    def log_hparams_and_metrics(self, rmse_real=None, rmse_imag=None):
         hparams = {
             'batch_size': self.batch_size,
             'learning_rate': self.learning_rate,
@@ -554,3 +670,22 @@ class MemoryPolynomialNNTrainer:
         }, run_name=run_name)
         
         self.writer.close()
+        
+    def initialize_log_dir(self, experiment_name):
+        """
+        Проверяет существование директории для логов и создаёт новую, если она существует.
+
+        Args:
+            experiment_name (str): Имя эксперимента для создания директории.
+
+        Returns:
+            SummaryWriter: Экземпляр SummaryWriter для TensorBoard.
+        """
+        self.log_dir = f'logs/{experiment_name}'  # Базовый путь для логов
+        # Проверка существования директории и генерация нового имени, если необходимо
+        i = 0
+        while os.path.exists(self.log_dir):
+            self.log_dir = f'logs/{experiment_name}_{i}'
+            i += 1
+        os.makedirs(self.log_dir)  # Создание директории
+        return SummaryWriter(log_dir=self.log_dir)  # Инициализация SummaryWriter
