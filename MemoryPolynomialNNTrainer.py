@@ -2,6 +2,7 @@ import os
 import sys
 import uuid
 import time
+import signal
 import numpy as np
 import pandas as pd
 import seaborn as sb
@@ -21,13 +22,9 @@ from torch.utils.tensorboard import SummaryWriter
 
 class MemoryPolynomialNNTrainer:
     def __init__(
-        self, 
-        df, 
-        M, K, 
+        self, df, M, K, model_type,
         batch_size=64, learning_rate=0.001, epochs=10, hidden_layers=[64, 128], 
-        dropout_rate=0.5, patience=2, factor=0.9, 
-        edit_model=None, device=None, experiment_name=None,
-        model_type='memory_polynomial'
+        dropout_rate=0.5, patience=2, factor=0.9, edit_model=None, device=None
         ):
         """
         Инициализация класса для тренировки модели Memory Polynomial с использованием нейронных сетей.
@@ -54,12 +51,12 @@ class MemoryPolynomialNNTrainer:
         self.K = K
         self.hidden_layers = hidden_layers
         self.dropout_rate = dropout_rate
-        self.history = {"epoch": [], "rmse": []} # История обучения
+        self.history = {"epoch": [], "total_rmse": [], "rmse_real": [], "rmse_imag": []} # История обучения
         self.model_id = str(uuid.uuid4()) # Генерация уникального ID
         self.last_rmse_real = None
         self.last_rmse_imag = None
         
-        self.experiment_name = 'memory_polynomial' if not experiment_name else experiment_name
+        self.experiment_name = model_type
         self.writer = self.initialize_log_dir(self.experiment_name)
 
         # Создание данных в зависимости от выбранного типа модели
@@ -95,6 +92,9 @@ class MemoryPolynomialNNTrainer:
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, 'min', patience=patience, factor=factor)
+        
+        # Установка обработчика сигналов
+        signal.signal(signal.SIGINT, self.signal_handler)
 
     class DefaultSimpleMLP(nn.Module):
         def __init__(self, input_size, hidden_layers, output_size=2, dropout_rate=0.5):
@@ -128,11 +128,11 @@ class MemoryPolynomialNNTrainer:
             self.model = nn.Sequential(*self.layers)
     
         def add_activation_logging(self, layer):
-            def hook(module, input, output):
-                self.activations.append(output.detach().cpu())
+            self.hooks.append(layer.register_forward_hook(self.hook))
     
-            self.hooks.append(layer.register_forward_hook(hook))
-    
+        def hook(self, _, __, output):
+            self.activations.append(output.detach().cpu())
+            
         def clear_activations(self):
             """Очистка сохранённых активаций."""
             self.activations = []
@@ -337,6 +337,8 @@ class MemoryPolynomialNNTrainer:
 
         for epoch in range(self.epochs):
             total_rmse = 0
+            total_rmse_real = 0
+            total_rmse_imag = 0
             progress_bar = tqdm(self.train_loader, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
 
             for batch_idx, (X_batch, times_batch, y_batch) in enumerate(progress_bar):
@@ -349,24 +351,37 @@ class MemoryPolynomialNNTrainer:
                 pred = self.model(X_with_times)
                 loss = self.criterion(pred, y_batch)
                 rmse = torch.sqrt(loss)  # RMSE
+                rmse_real = torch.sqrt(self.criterion(pred[:, 0], y_batch[:, 0]))
+                rmse_imag = torch.sqrt(self.criterion(pred[:, 1], y_batch[:, 1]))
+                
                 rmse.backward()
                 self.optimizer.step()
 
                 total_rmse += rmse.item()
+                total_rmse_real += rmse_real.item()
+                total_rmse_imag += rmse_imag.item()
 
                 # Логирование в TensorBoard
                 self.writer.add_scalar('Training/RMSE', rmse.item(), epoch * len(self.train_loader) + batch_idx)
+                self.writer.add_scalar('Training/RMSE_Real', rmse_real.item(), epoch * len(self.train_loader) + batch_idx)
+                self.writer.add_scalar('Training/RMSE_Imag', rmse_imag.item(), epoch * len(self.train_loader) + batch_idx)
 
                 # Получение текущего значения learning rate
                 current_learning_rate = self.optimizer.param_groups[0]['lr']
                 progress_bar.set_postfix(rmse=f"{rmse:.10f}", lr=f"{current_learning_rate:.6f}")
 
             avg_rmse = total_rmse / len(self.train_loader)
+            avg_rmse_real = total_rmse_real / len(self.train_loader)
+            avg_rmse_imag = total_rmse_imag / len(self.train_loader)
             self.history["epoch"].append(epoch + 1)
-            self.history["rmse"].append(avg_rmse)
+            self.history["total_rmse"].append(avg_rmse)
+            self.history["rmse_real"].append(avg_rmse_real)
+            self.history["rmse_imag"].append(avg_rmse_imag)
 
             # Логирование средней RMSE в TensorBoard
             self.writer.add_scalar('Training/Average_RMSE', avg_rmse, epoch)
+            self.writer.add_scalar('Training/Average_RMSE_Real', avg_rmse_real, epoch)
+            self.writer.add_scalar('Training/Average_RMSE_Imag', avg_rmse_imag, epoch)
             self.writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch)
 
             # Логирование распределения весов для каждого слоя
@@ -389,8 +404,11 @@ class MemoryPolynomialNNTrainer:
                 print("Early stopping activated.")
                 break
 
-            print(f"Epoch {epoch+1}/{self.epochs}, RMSE: {avg_rmse:.6f}")
-            
+            print(f"Epoch {epoch+1}/{self.epochs}, Real RMSE: {avg_rmse_real:.6f}, Imag RMSE: {avg_rmse_imag:.6f}")
+                
+            # Освобождение памяти GPU в конце каждой эпохи
+            if self.device.type == 'cuda':
+                torch.cuda.empty_cache()
             
     def evaluate(self):
         """
@@ -432,30 +450,35 @@ class MemoryPolynomialNNTrainer:
         # Логируем RMSE в TensorBoard
         self.writer.add_scalar('Evaluation/REAL', rmse_real, len(self.history["epoch"]) - 1)
         self.writer.add_scalar('Evaluation/IMAG', rmse_imag, len(self.history["epoch"]) - 1)
-        
+            
+        # Освобождение памяти GPU (при использовании CUDA)
+        if self.device.type == 'cuda':
+            torch.cuda.empty_cache()
+            
         # Сохранение последних значений RMSE
         self.last_rmse_real = rmse_real
         self.last_rmse_imag = rmse_imag
 
         return rmse_real, rmse_imag
         
-    def save_model_pt(self, filename_prefix='node', save_dir='models'):
+    def save_model_pt(self, save_dir='models'):
         """
-        Сохраняет всю модель PyTorch в формате .pt.
+        Сохраняет всю модель PyTorch в формате .pt, используя имя эксперимента и индекс.
 
         Args:
-            filename_prefix (str, optional): Префикс имени файла. По умолчанию 'node'.
             save_dir (str, optional): Директория для сохранения модели. По умолчанию 'models'.
         """
-        # Создаем папку, если ее нет
-        os.makedirs(save_dir, exist_ok=True)
+        # Извлекаем конечную часть пути, чтобы получить имя эксперимента с индексом
+        experiment_name_with_index = os.path.basename(self.log_dir)
 
         # Генерируем имя файла с текущей датой и временем
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{filename_prefix}_{timestamp}_{self.model_id}.pt"
+        filename = f"{experiment_name_with_index}.pt"
 
-        # Полный путь к файлу
+        # Полный путь к файлу, без создания дополнительных подпапок
         filepath = os.path.join(save_dir, filename)
+
+        # Убедитесь, что основная директория для сохранения моделей существует
+        os.makedirs(save_dir, exist_ok=True)
 
         # Сохраняем ВСЮ модель
         torch.save(self.model, filepath)
@@ -471,7 +494,7 @@ class MemoryPolynomialNNTrainer:
         epochs = self.history["epoch"]
     
         # Вычисляем скользящее среднее
-        rmse = np.array(self.history["rmse"])
+        rmse = np.array(self.history["total_rmse"])
         moving_avg = np.convolve(rmse, np.ones(window_size)/window_size, mode='valid')
     
         # Первый график: Полная история
@@ -654,8 +677,6 @@ class MemoryPolynomialNNTrainer:
             'M': self.M,
             'K': self.K,
             'dropout_rate': self.dropout_rate,
-            'l1_lambda': self.l1_lambda,
-            'l2_lambda': self.l2_lambda,
             'num_epochs': self.epochs
         }
             
@@ -670,6 +691,7 @@ class MemoryPolynomialNNTrainer:
         }, run_name=run_name)
         
         self.writer.close()
+        print(f"Hyperparameters have been successfully saved with the name: {os.path.basename(self.log_dir)}_{run_name}")
         
     def initialize_log_dir(self, experiment_name):
         """
@@ -688,4 +710,21 @@ class MemoryPolynomialNNTrainer:
             self.log_dir = f'logs/{experiment_name}_{i}'
             i += 1
         os.makedirs(self.log_dir)  # Создание директории
+        print(f'The experiment with the name has been saved: {self.log_dir}')
         return SummaryWriter(log_dir=self.log_dir)  # Инициализация SummaryWriter
+    
+    def signal_handler(self, signum, frame):
+        print("Program interruption! Saving hyperparameters...")
+            
+        # Освобождение памяти GPU
+        if self.device.type == 'cuda':
+            torch.cuda.empty_cache()
+            print("CUDA memory cleared.")
+            
+        rmse_real, rmse_imag = self.evaluate()
+        print(f"Evaluation RMSE (Real): {rmse_real:.6f}")
+        print(f"Evaluation RMSE (Imag): {rmse_imag:.6f}")
+        self.log_hparams_and_metrics(rmse_real, rmse_imag)
+        print("Hyperparameters are saved. Completion of the program.")
+        
+        exit(0)
