@@ -55,30 +55,17 @@ class MemoryPolynomialNNTrainer:
         self.model_id = str(uuid.uuid4()) # Генерация уникального ID
         self.last_rmse_real = None
         self.last_rmse_imag = None
+        self.model_type = model_type
         
-        self.experiment_name = model_type
-        self.writer = self.initialize_log_dir(self.experiment_name)
-
         # Создание данных в зависимости от выбранного типа модели
-        if model_type == 'memory_polynomial':
-            self.X, self.y, self.times = self.create_dataset_memory_polynominal(self.df, M, K)
-        elif model_type == 'sparse_delay_memory_polynomial':
-            delays = range(self.M + 1)
-            self.X, self.y, self.times = self.create_dataset_sparse_delay_memory_polynominal(self.df, M, K, delays)
-        elif model_type == 'non_uniform_memory_polynomial':
-            K_list = [self.K] * (self.M + 1)
-            self.X, self.y, self.times = self.create_dataset_non_uniform_memory_polynominal(self.df, M, K_list)
-        elif model_type == 'envelope_memory_polynomial':
-            self.X, self.y, self.times = self.create_dataset_envelope_memory_polynomial(self.df, M, K)
-        else:
-            raise ValueError("Недопустимый тип модели. Выберите из 'memory_polynomial', 'sparse_delay_memory_polynomial', 'non_uniform_memory_polynomial'.")
+        self.prepare_dataset(model_type, M, K)
         
         self.dataset = TensorDataset(
             torch.tensor(self.X, dtype=torch.float32),
             torch.tensor(self.times, dtype=torch.float32),
             torch.tensor(self.y, dtype=torch.float32)
         )
-        self.train_loader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True)
+        self.dataloader = DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True)
 
         # Инициализация модели
         if edit_model:
@@ -86,16 +73,13 @@ class MemoryPolynomialNNTrainer:
         else:
             self.model = self.DefaultSimpleMLP(input_size=self.X.shape[1] + 1, hidden_layers=hidden_layers, output_size=2, dropout_rate=dropout_rate).to(self.device)
         
-        # Логирование структуры модели
-        self.writer.add_graph(self.model, torch.randn(1, self.X.shape[1] + 1).to(self.device))
-
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, 'min', patience=patience, factor=factor)
         
         # Установка обработчика сигналов
         signal.signal(signal.SIGINT, self.signal_handler)
-
+    
     class DefaultSimpleMLP(nn.Module):
         def __init__(self, input_size, hidden_layers, output_size=2, dropout_rate=0.5):
             super().__init__()
@@ -144,7 +128,22 @@ class MemoryPolynomialNNTrainer:
             """Закрытие hook'ов после окончания обучения."""
             for hook in self.hooks:
                 hook.remove()
-                
+
+    def prepare_dataset(self, model_type, M, K):
+        """Подготавливает данные на основе типа модели для оценки."""
+        if model_type == 'memory_polynomial':
+            self.X, self.y, self.times = self.create_dataset_memory_polynominal(self.df, M, K)
+        elif model_type == 'sparse_delay_memory_polynomial':
+            delays = range(self.M + 1)
+            self.X, self.y, self.times = self.create_dataset_sparse_delay_memory_polynominal(self.df, M, K, delays)
+        elif model_type == 'non_uniform_memory_polynomial':
+            K_list = [self.K] * (self.M + 1)
+            self.X, self.y, self.times = self.create_dataset_non_uniform_memory_polynominal(self.df, M, K_list)
+        elif model_type == 'envelope_memory_polynomial':
+            self.X, self.y, self.times = self.create_dataset_envelope_memory_polynomial(self.df, M, K)
+        else:
+            raise ValueError(f"Unknown model type")
+  
     @staticmethod
     def prepare_data(df):
         """
@@ -170,7 +169,7 @@ class MemoryPolynomialNNTrainer:
     @staticmethod
     def get_device(select=None):
         """
-        Определение устройства для вычислений (CPU или GPU).
+        Определяет устройство для вычислений (CPU или GPU) и выводит информацию об использовании.
 
         Args:
             select (str, optional): Выбор устройства ('cpu', 'cuda'). По умолчанию None.
@@ -178,9 +177,15 @@ class MemoryPolynomialNNTrainer:
         Returns:
             torch.device: Устройство для вычислений.
         """
-        if select is None or select == 'cuda':
-            return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        return torch.device('cpu')
+        device = torch.device('cuda' if torch.cuda.is_available() and (select is None or select == 'cuda') else 'cpu')
+        
+        if device.type == 'cuda':
+            print("CUDA is available. Using GPU.")
+        else:
+            print("CUDA not available or not selected. Using CPU.")
+        
+        return device
+
 
     @staticmethod
     def prepare_data_for_create_dataset(df, M):
@@ -204,7 +209,7 @@ class MemoryPolynomialNNTrainer:
         y_imag = df['output_imag'].values[M:]
         times = df.index.values[M:]
         return x_real, x_imag, y_real, y_imag, times
-
+    
     def create_dataset_memory_polynominal(self, df, M, K):
         """
         Создание обучающих данных на основе полиномиальной модели с памятью и добавлением времени.
@@ -339,7 +344,7 @@ class MemoryPolynomialNNTrainer:
             total_rmse = 0
             total_rmse_real = 0
             total_rmse_imag = 0
-            progress_bar = tqdm(self.train_loader, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
+            progress_bar = tqdm(self.dataloader, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
 
             for batch_idx, (X_batch, times_batch, y_batch) in enumerate(progress_bar):
                 X_batch, times_batch, y_batch = X_batch.to(self.device), times_batch.to(self.device), y_batch.to(self.device)
@@ -362,17 +367,17 @@ class MemoryPolynomialNNTrainer:
                 total_rmse_imag += rmse_imag.item()
 
                 # Логирование в TensorBoard
-                self.writer.add_scalar('Training/RMSE', rmse.item(), epoch * len(self.train_loader) + batch_idx)
-                self.writer.add_scalar('Training/RMSE_Real', rmse_real.item(), epoch * len(self.train_loader) + batch_idx)
-                self.writer.add_scalar('Training/RMSE_Imag', rmse_imag.item(), epoch * len(self.train_loader) + batch_idx)
+                self.writer.add_scalar('Training/RMSE', rmse.item(), epoch * len(self.dataloader) + batch_idx)
+                self.writer.add_scalar('Training/RMSE_Real', rmse_real.item(), epoch * len(self.dataloader) + batch_idx)
+                self.writer.add_scalar('Training/RMSE_Imag', rmse_imag.item(), epoch * len(self.dataloader) + batch_idx)
 
                 # Получение текущего значения learning rate
                 current_learning_rate = self.optimizer.param_groups[0]['lr']
                 progress_bar.set_postfix(rmse=f"{rmse:.10f}", lr=f"{current_learning_rate:.6f}")
 
-            avg_rmse = total_rmse / len(self.train_loader)
-            avg_rmse_real = total_rmse_real / len(self.train_loader)
-            avg_rmse_imag = total_rmse_imag / len(self.train_loader)
+            avg_rmse = total_rmse / len(self.dataloader)
+            avg_rmse_real = total_rmse_real / len(self.dataloader)
+            avg_rmse_imag = total_rmse_imag / len(self.dataloader)
             self.history["epoch"].append(epoch + 1)
             self.history["total_rmse"].append(avg_rmse)
             self.history["rmse_real"].append(avg_rmse_real)
@@ -404,7 +409,7 @@ class MemoryPolynomialNNTrainer:
                 print("Early stopping activated.")
                 break
 
-            print(f"Epoch {epoch+1}/{self.epochs}, Real RMSE: {avg_rmse_real:.6f}, Imag RMSE: {avg_rmse_imag:.6f}")
+            print(f"Epoch {epoch+1}/{self.epochs};\t AVG RMSE: {avg_rmse:.10f};\t Real RMSE: {avg_rmse_real:.3f};\t Imag RMSE: {avg_rmse_imag:.3f}")
                 
             # Освобождение памяти GPU в конце каждой эпохи
             if self.device.type == 'cuda':
@@ -422,7 +427,7 @@ class MemoryPolynomialNNTrainer:
         all_true = []
 
         with torch.no_grad():
-            for X_batch, times_batch, y_batch in self.train_loader:
+            for X_batch, times_batch, y_batch in self.dataloader:
                 X_batch, times_batch, y_batch = X_batch.to(self.device), times_batch.to(self.device), y_batch.to(self.device)
                 
                 # Объединение временных меток с входными признаками
@@ -480,8 +485,21 @@ class MemoryPolynomialNNTrainer:
         # Убедитесь, что основная директория для сохранения моделей существует
         os.makedirs(save_dir, exist_ok=True)
 
-        # Сохраняем ВСЮ модель
-        torch.save(self.model, filepath)
+        # Создаем словарь, включающий модель и тип модели
+        checkpoint = {
+            'model_state_dict': self.model.state_dict(),
+            'model_type': self.model_type,
+            'M': self.M,
+            'K': self.K,
+            'batch_size': self.batch_size,
+            'learning_rate': self.learning_rate,
+            'epochs': self.epochs,
+            'hidden_layers': self.hidden_layers,
+            'dropout_rate': self.dropout_rate
+        }
+
+        # Сохраняем модель и метаданные
+        torch.save(checkpoint, filepath)
         print(f"Model saved in {filepath}")
 
     def plot_training_history(self, window_size=5):
@@ -637,7 +655,33 @@ class MemoryPolynomialNNTrainer:
         # df_params.to_csv(filepath, index=False)
         
         # print(f"Print model saved in {filepath}")
+       
+    def save_log_for_tensorboard(self):
+        # Сохранение эксперимента для Tensorboard
+        self.writer = self.initialize_log_dir(self.model_type)
+        # Логирование структуры модели
+        self.writer.add_graph(self.model, torch.randn(1, self.X.shape[1] + 1).to(self.device))
+        
+    def initialize_log_dir(self, experiment_name):
+        """
+        Проверяет существование директории для логов и создаёт новую, если она существует.
 
+        Args:
+            experiment_name (str): Имя эксперимента для создания директории.
+
+        Returns:
+            SummaryWriter: Экземпляр SummaryWriter для TensorBoard.
+        """
+        self.log_dir = f'logs/{experiment_name}'  # Базовый путь для логов
+        # Проверка существования директории и генерация нового имени, если необходимо
+        i = 0
+        while os.path.exists(self.log_dir):
+            self.log_dir = f'logs/{experiment_name}_{i}'
+            i += 1
+        os.makedirs(self.log_dir)  # Создание директории
+        print(f'The experiment with the name has been saved: {self.log_dir}')
+        return SummaryWriter(log_dir=self.log_dir)  # Инициализация SummaryWriter
+    
     def log_predictions_to_tensorboard(self):
         """
         Логирование всех предсказанных и фактических значений в TensorBoard.
@@ -691,28 +735,8 @@ class MemoryPolynomialNNTrainer:
         }, run_name=run_name)
         
         self.writer.close()
-        print(f"Hyperparameters have been successfully saved with the name: {os.path.basename(self.log_dir)}_{run_name}")
+        print(f"Hyperparameters have been successfully saved with the name: {os.path.basename(self.log_dir)}/{run_name}")
         
-    def initialize_log_dir(self, experiment_name):
-        """
-        Проверяет существование директории для логов и создаёт новую, если она существует.
-
-        Args:
-            experiment_name (str): Имя эксперимента для создания директории.
-
-        Returns:
-            SummaryWriter: Экземпляр SummaryWriter для TensorBoard.
-        """
-        self.log_dir = f'logs/{experiment_name}'  # Базовый путь для логов
-        # Проверка существования директории и генерация нового имени, если необходимо
-        i = 0
-        while os.path.exists(self.log_dir):
-            self.log_dir = f'logs/{experiment_name}_{i}'
-            i += 1
-        os.makedirs(self.log_dir)  # Создание директории
-        print(f'The experiment with the name has been saved: {self.log_dir}')
-        return SummaryWriter(log_dir=self.log_dir)  # Инициализация SummaryWriter
-    
     def signal_handler(self, signum, frame):
         print("Program interruption! Saving hyperparameters...")
             
