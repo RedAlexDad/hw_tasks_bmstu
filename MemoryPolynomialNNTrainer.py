@@ -44,6 +44,7 @@ class MemoryPolynomialNNTrainer:
         # Подготовка данных
         self.df = self.prepare_data(df)
         self.device = self.get_device(device)
+        print(f'Using drive: {self.device}')
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.epochs = epochs
@@ -177,15 +178,7 @@ class MemoryPolynomialNNTrainer:
         Returns:
             torch.device: Устройство для вычислений.
         """
-        device = torch.device('cuda' if torch.cuda.is_available() and (select is None or select == 'cuda') else 'cpu')
-        
-        if device.type == 'cuda':
-            print("CUDA is available. Using GPU.")
-        else:
-            print("CUDA not available or not selected. Using CPU.")
-        
-        return device
-
+        return torch.device('cuda' if (select in [None, 'cuda'] and torch.cuda.is_available()) else 'cpu')
 
     @staticmethod
     def prepare_data_for_create_dataset(df, M):
@@ -222,7 +215,7 @@ class MemoryPolynomialNNTrainer:
         Returns:
             tuple: Матрица признаков X, объединенные целевые значения y и временные метки times.
         """
-        x_real, x_imag, y_real, y_imag, times = self.prepare_data_for_create_dataset(df, M)
+        x_real, x_imag, y_real, y_imag = self.prepare_data_for_create_dataset(df, M)
         
         # Объединение реальных и мнимых частей в один целевой вектор
         y = np.stack([y_real, y_imag], axis=1)
