@@ -3,7 +3,6 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-# 2. Класс для полиномиальных моделей
 class PolynomialDataset:
     def __init__(self, df, M, K, model_type, batch_size=2**10):
         self.df = self.prepare_data(df)
@@ -48,9 +47,9 @@ class PolynomialDataset:
             return self._create_sparse_delay_polynomial(x_real, x_imag, y_real, y_imag, times, M, K, delays)
         elif model_type == 'non_uniform_memory_polynomial':
             K_list = [self.K] * (self.M + 1)
-            return self._create_dataset_non_uniform_memory_polynominal(x_real, x_imag, y_real, y_imag, times, M, K_list)
+            return self._create_non_uniform_memory_polynominal(x_real, x_imag, y_real, y_imag, times, M, K_list)
         elif model_type == 'envelope_memory_polynomial':
-            return self._create_dataset_envelope_memory_polynomial(x_real, x_imag, y_real, y_imag, times, M, K)
+            return self._create_envelope_memory_polynomial(x_real, x_imag, y_real, y_imag, times, M, K)
         else:
             raise ValueError(f"Unknown model type")
     
@@ -78,7 +77,7 @@ class PolynomialDataset:
         return X[M:], y, times
     
     @staticmethod
-    def create_dataset_sparse_delay_memory_polynominal(x_real, x_imag, y_real, y_imag, times, M, K, delays):
+    def _create_sparse_delay_polynomial(x_real, x_imag, y_real, y_imag, times, M, K, delays):
         N = len(x_real)
         X = np.zeros((N - M, len(delays) * K * 2), dtype=np.float64)
         y = np.stack([y_real[M:], y_imag[M:]], axis=1)
@@ -95,7 +94,7 @@ class PolynomialDataset:
         return X, y, times
     
     @staticmethod
-    def create_dataset_non_uniform_memory_polynominal(x_real, x_imag, y_real, y_imag, times, M, K_list):
+    def _create_non_uniform_memory_polynominal(x_real, x_imag, y_real, y_imag, times, M, K_list):
         N = len(x_real)
         X = np.zeros((N, sum(K_list) * 2), dtype=np.float64)
         y = np.stack([y_real, y_imag], axis=1)
@@ -109,7 +108,7 @@ class PolynomialDataset:
         return X[M:], y, times
     
     @staticmethod
-    def create_dataset_envelope_memory_polynomial(x_real, x_imag, y_real, y_imag, times, M, K):
+    def _create_envelope_memory_polynomial(x_real, x_imag, y_real, y_imag, times, M, K):
         amplitude = np.sqrt(x_real**2 + x_imag**2)  # Амплитуда сигнала
         N = len(x_real)
         X = np.zeros((N - M, (M + 1) * K), dtype=np.float64)

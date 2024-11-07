@@ -39,36 +39,60 @@ def main(args):
     except FileNotFoundError:
         print(f"File '{args.input_file}' not found.")
         exit(1)
+        
+    try:
+        # Создание экземпляра класса с настройкой гиперпараметров
+        model = ModelTrainer(
+            df=df,
+            M=args.memory_depth,
+            K=args.polynomial_degree,
+            model_type=args.model_type,
+            batch_size=args.batch_size,
+            hidden_layers=args.hidden_layers,
+            learning_rate=args.learning_rate,
+            epochs=args.epochs,
+            patience=args.early_stopping,
+            factor=0.9,
+            dropout_rate=args.dropout_rate,
+            device=args.device
+        )
+             
+        if args.print_model_summary: model.print_model_summary() # Печать информации о модели, если указано
+        model.train(max_early_stopping_counter=args.early_stopping)
+        
+        # Оценка модели
+        rmse_real, rmse_imag = model.evaluate()
+        print(f'Final RMSE (Real): {rmse_real:.6f}')
+        print(f'Final RMSE (Imag): {rmse_imag:.6f}')
+
+        model.logs_tensorboard.log_hparams_and_metrics(rmse_real, rmse_imag)
+    except (RuntimeError, MemoryError) as e:
+        if "can't allocate memory" in str(e) or "out of memory" in str(e):
+            print("Mistake: Not enough memory.")
+            if device.type == 'cuda':
+                torch.cuda.empty_cache()
             
-    # try:    
-    model = ModelTrainer(
-        df=df,
-        M=args.memory_depth,
-        K=args.polynomial_degree,
-        model_type=args.model_type,
-        batch_size=args.batch_size,
-        hidden_layers=args.hidden_layers,
-        learning_rate=args.learning_rate,
-        epochs=args.epochs,
-        patience=args.early_stopping,
-        factor=0.9,
-        dropout_rate=args.dropout_rate,
-        device=args.device
-    )
-    
-    if args.print_model_summary: # Печать информации о модели, если указано
-        model.print_model_summary()
-    
-    model.train()
-    
-    # Оценка модели
-    rmse_real, rmse_imag = model.evaluate()
-    print(f'Final RMSE (Real): {rmse_real:.6f}')
-    print(f'Final RMSE (Imag): {rmse_imag:.6f}')
+        # Получаем последние значения RMSE из истории, если возможно
+        last_rmse_real = float('nan')
+        last_rmse_imag = float('nan')
+        if model.history["rmse_real"] and model.history["rmse_imag"]:
+            last_rmse_real = model.history["rmse_real"][-1]
+            last_rmse_imag = model.history["rmse_imag"][-1]
 
-    # Сохранение модели
-    model.save_model_pt()
-
+        # Логирование гиперпараметров с последними доступными значениями RMSE
+        model.logs_tensorboard.log_hparams_and_metrics(last_rmse_real, last_rmse_imag)
+    finally:
+        try:
+            model.save_model_pt()
+            print('Model saved successfully.')
+        except Exception as ex:
+            print(f'The model could not be saved due to: {ex}')
+            
+        # Освобождение памяти
+        del df, model
+        gc.collect()
+        exit(1)
+        
 if __name__ == '__main__':
     # Установка максимального лимита по памяти (в байтах)
     max_memory = 30 * 2**10 * 2**10 * 2**10  # 30 ГБ
