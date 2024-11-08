@@ -1,11 +1,9 @@
 import gc   
-import torch
 import argparse
 import resource
 import pandas as pd
-import os
 
-from MemoryPolynomialNNTrainer import MemoryPolynomialNNTrainer
+from MemoryPolynomial.ModelTrainer import ModelTrainer
 
 def eval_hidden_layers(layer_string):
     """Оценить и вернуть список из строкового выражения слоев."""
@@ -32,41 +30,42 @@ def argparse_setup():
     parser.add_argument('--device', type=str, choices=['cpu', 'cuda'], default='cuda', help='Device to use for computation')
 
     return parser.parse_args()
-
-
+                
+# Основной код для инициализации
 def main(args):
-    print(f'The device used: {args.device}')
-    
     # Проверка существования файла перед чтением
     try:
         df = pd.read_csv(args.input_file)
     except FileNotFoundError:
         print(f"File '{args.input_file}' not found.")
         exit(1)
-
+        
     try:
         # Создание экземпляра класса с настройкой гиперпараметров
-        model_nn = MemoryPolynomialNNTrainer(
-            df=df, 
-            M=args.memory_depth, 
-            K=args.polynomial_degree, 
+        model = ModelTrainer(
+            df=df,
+            M=args.memory_depth,
+            K=args.polynomial_degree,
             model_type=args.model_type,
             batch_size=args.batch_size,
-            learning_rate=args.learning_rate, 
-            epochs=args.epochs, 
             hidden_layers=args.hidden_layers,
+            learning_rate=args.learning_rate,
+            epochs=args.epochs,
+            patience=args.early_stopping,
+            factor=0.9,
             dropout_rate=args.dropout_rate,
             device=args.device
         )
-        if args.print_model_summary: model_nn.print_model_summary()
-        model_nn.save_log_for_tensorboard()
+             
+        if args.print_model_summary: model.print_model_summary() # Печать информации о модели, если указано
+        model.train(max_early_stopping_counter=args.early_stopping)
         
-        model_nn.train(max_early_stopping_counter=args.early_stopping)
-        rmse_real, rmse_imag = model_nn.evaluate()
+        # Оценка модели
+        rmse_real, rmse_imag = model.evaluate()
+        print(f'Final RMSE (Real): {rmse_real:.6f}')
+        print(f'Final RMSE (Imag): {rmse_imag:.6f}')
 
-        print(f'Evaluation RMSE (Real): {rmse_real:.6f}')
-        print(f'Evaluation RMSE (Imag): {rmse_imag:.6f}')
-        model_nn.log_hparams_and_metrics(rmse_real, rmse_imag)
+        model.logs_tensorboard.log_hparams_and_metrics(rmse_real, rmse_imag)
     except (RuntimeError, MemoryError) as e:
         if "can't allocate memory" in str(e) or "out of memory" in str(e):
             print("Mistake: Not enough memory.")
@@ -76,27 +75,28 @@ def main(args):
         # Получаем последние значения RMSE из истории, если возможно
         last_rmse_real = float('nan')
         last_rmse_imag = float('nan')
-        if model_nn.history["rmse_real"] and model_nn.history["rmse_imag"]:
-            last_rmse_real = model_nn.history["rmse_real"][-1]
-            last_rmse_imag = model_nn.history["rmse_imag"][-1]
+        if model.history["rmse_real"] and model.history["rmse_imag"]:
+            last_rmse_real = model.history["rmse_real"][-1]
+            last_rmse_imag = model.history["rmse_imag"][-1]
 
         # Логирование гиперпараметров с последними доступными значениями RMSE
-        model_nn.log_hparams_and_metrics(last_rmse_real, last_rmse_imag)
+        model.logs_tensorboard.log_hparams_and_metrics(last_rmse_real, last_rmse_imag)
     finally:
         try:
-            model_nn.save_model_pt()
+            model.save_model_pt()
             print('Model saved successfully.')
         except Exception as ex:
             print(f'The model could not be saved due to: {ex}')
             
         # Освобождение памяти
-        del df, model_nn
+        del df, model
         gc.collect()
         exit(1)
-    
+        
 if __name__ == '__main__':
     # Установка максимального лимита по памяти (в байтах)
     max_memory = 30 * 2**10 * 2**10 * 2**10  # 30 ГБ
+    
     try:
         resource.setrlimit(resource.RLIMIT_AS, (max_memory, max_memory))
     except Exception as e:

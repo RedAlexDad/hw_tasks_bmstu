@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 
 import torch
 
-from CreateModel import CreateModel
-from LogsTensorboard import LogsTensorboard
+from MemoryPolynomial.CreateModel import CreateModel
+from MemoryPolynomial.LogsTensorboard import LogsTensorboard
 
 # 3. Класс для обучения модели
 class ModelTrainer(CreateModel):

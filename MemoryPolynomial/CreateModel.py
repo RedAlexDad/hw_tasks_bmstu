@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from PolynomialDataset import PolynomialDataset
-from DefaultSimpleMLP import DefaultSimpleMLP
+from MemoryPolynomial.PolynomialDataset import PolynomialDataset
+from MemoryPolynomial.DefaultSimpleMLP import DefaultSimpleMLP
 
 
 class CreateModel():

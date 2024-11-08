@@ -1,7 +1,7 @@
 import torch
 import pandas as pd
 
-from CreateModel import CreateModel
+from MemoryPolynomial.CreateModel import CreateModel
 
 class ModelEvalutor(CreateModel):
     def __init__(self, input_file, model_path, device=None):
