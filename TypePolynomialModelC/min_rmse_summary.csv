@@ -1,0 +1,9 @@
+Model Name,Min RMSE Real,Min RMSE Imag,Execution Time (s),Hyperparameters
+GeneralizedMemoryPolynomialModel,0.0655,0.065056,111.92433333333334,"{'K_a': 18.0, 'M_a': 18.0, 'K_b': 5.0, 'M_b': 4.0, 'P': 5.0, 'K_c': 5.0, 'M_c': 6.0, 'Q': 7.0}"
+HybridMemoryPolynomialModel,0.072467,0.072067,38.096333333333334,"{'K': 15.0, 'M': 15.0, 'K_e': 10.0, 'M_e': 10.0}"
+EnvelopeMemoryPolynomialModel,0.082659,0.082452,89.54666666666667,"{'K': 15.0, 'M': 15.0}"
+PolynomialMemoryModel,0.092296,0.092222,18.994,"{'K': 15.0, 'M': 15.0}"
+SparseDelayMemoryPolynomialModel,0.0924121479,0.0923365082,18.722,"{'K': 13.0, 'M': 13.0, 'M_SD': 10.0}"
+OrthogonalMemoryPolynomialModel,0.093029,0.092957,77.215,"{'K': 10.0, 'M': 10.0}"
+NonUniformMemoryPolynomialModel,0.094015,0.093976,1.5826666666666667,"{'M': 10.0, 'K_list': [8.0, 7.0, 5.0, 4.0, 3.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0]}"
+ExponentiallyShapedMemoryDelayProfileModel,0.206468,0.207344,4932.520333333334,"{'K': 3.0, 'M': 2.0, 'delta_0': 2.0, 'alpha': 0.5}"

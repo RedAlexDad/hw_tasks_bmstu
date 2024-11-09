@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 # Название проекта
-project(PolynomialMemoryModel)
+project(TypePolynomialModel)
 
 # Устанавливаем стандарт C++
 set(CMAKE_CXX_STANDARD 23)

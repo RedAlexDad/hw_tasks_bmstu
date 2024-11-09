@@ -310,6 +310,12 @@ RMSE (Real part): 0.749005, RMSE (Imaginary part): 0.749148
 real	20m23,616s
 user	20m23,088s
 sys	0m0,285s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./ExponentiallyShapedMemoryDelayProfileModel Amp_C_train.txt 3 2 2 0.5 
+RMSE (Real part): 0.206468, RMSE (Imaginary part): 0.207344
+
+real	123m19,655s
+user	123m16,474s
+sys	0m1,432s
 (base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 1 1
 RMSE (Real part): 0.749825, RMSE (Imaginary part): 0.749833
 

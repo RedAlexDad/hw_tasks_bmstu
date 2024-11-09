@@ -53,3 +53,4 @@ RMSE (Real part): 0.20640498930028994, RMSE (Imaginary part): 0.2072706818069239
 real    0m6,348s
 user    0m7,326s
 sys     0m0,483s
+
