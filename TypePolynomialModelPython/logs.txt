@@ -1,0 +1,55 @@
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 PolynomialMemoryModel.py 
+RMSE (Real part): 0.20640498930028994, RMSE (Imaginary part): 0.20727068180692398
+
+real    0m5,332s
+user    0m6,284s
+sys     0m0,490s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 EnvelopeMemoryPolynomialModel.py 
+RMSE (Real part): 0.20250066419331747, RMSE (Imaginary part): 0.20321841210023367
+
+real    0m5,221s
+user    0m6,203s
+sys     0m0,464s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 ExponentiallyShapedMemoryDelayProfileModel.py 
+RMSE (Real part): 0.20646767339106983, RMSE (Imaginary part): 0.20734355289695636
+
+real    10m24,803s
+user    10m25,290s
+sys     0m0,805s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 GeneralizedMemoryPolynomialModel.py 
+RMSE (Real part): 0.1984463720514633, RMSE (Imaginary part): 0.19918218463564288
+
+real    0m12,458s
+user    0m13,496s
+sys     0m0,555s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 HybridMemoryPolynomialModel.py 
+RMSE (Real part): 0.19789505686221764, RMSE (Imaginary part): 0.19899146844774185
+
+real    0m11,791s
+user    0m12,794s
+sys     0m0,562s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 NonUniformMemoryPolynomialModel.py 
+RMSE (Real part): 0.20753973335916878, RMSE (Imaginary part): 0.20828493615948013
+
+real    0m4,533s
+user    0m5,463s
+sys     0m0,436s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 OrthogonalMemoryPolynomialModel.py 
+RMSE (Real part): 0.20640498930028994, RMSE (Imaginary part): 0.207270681806924
+
+real    0m10,632s
+user    0m11,693s
+sys     0m0,457s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelPython$ time python3 SparseDelayMemoryPolynomialModel.py 
+RMSE (Real part): 0.20640498930028994, RMSE (Imaginary part): 0.20727068180692398
+
+real    0m6,348s
+user    0m7,326s
+sys     0m0,483s

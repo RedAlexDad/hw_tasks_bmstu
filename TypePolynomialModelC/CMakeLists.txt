@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.12)
+
+# Название проекта
+project(PolynomialMemoryModel)
+
+# Устанавливаем стандарт C++
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Найдем библиотеку Armadillo
+find_package(Armadillo REQUIRED)
+
+# Добавляем исполняемый файл PolynomialMemoryModel
+add_executable(PolynomialMemoryModel PolynomialMemoryModel.cpp)
+target_link_libraries(PolynomialMemoryModel armadillo)
+
+# Добавление исполняемого файла для SparseDelayMemoryPolynomialModel
+add_executable(SparseDelayMemoryPolynomialModel SparseDelayMemoryPolynomialModel.cpp)
+target_link_libraries(SparseDelayMemoryPolynomialModel armadillo)
+
+# Добавление исполняемого файла для OrthogonalMemoryPolynomialModel
+add_executable(OrthogonalMemoryPolynomialModel OrthogonalMemoryPolynomialModel.cpp)
+target_link_libraries(OrthogonalMemoryPolynomialModel armadillo)
+
+# Добавление исполняемого файла для NonUniformMemoryPolynomialModel
+add_executable(NonUniformMemoryPolynomialModel NonUniformMemoryPolynomialModel.cpp)
+target_link_libraries(NonUniformMemoryPolynomialModel armadillo)
+
+# Добавление исполняемого файла для HybridMemoryPolynomialModel
+add_executable(HybridMemoryPolynomialModel HybridMemoryPolynomialModel.cpp)
+target_link_libraries(HybridMemoryPolynomialModel armadillo)
+
+# Добавление исполняемого файла для GeneralizedMemoryPolynomialModel
+add_executable(GeneralizedMemoryPolynomialModel GeneralizedMemoryPolynomialModel.cpp)
+target_link_libraries(GeneralizedMemoryPolynomialModel armadillo)
+
+# Добавление исполняемого файла для ExponentiallyShapedMemoryDelayProfileModel
+add_executable(ExponentiallyShapedMemoryDelayProfileModel ExponentiallyShapedMemoryDelayProfileModel.cpp)
+target_link_libraries(ExponentiallyShapedMemoryDelayProfileModel armadillo)
+
+# Добавление исполняемого файла для EnvelopeMemoryPolynomialModel
+add_executable(EnvelopeMemoryPolynomialModel EnvelopeMemoryPolynomialModel.cpp)
+target_link_libraries(EnvelopeMemoryPolynomialModel armadillo)
+
+# Добавление исполняемого файла для DDRVolterraModel
+add_executable(DDRVolterraModel DDRVolterraModel.cpp)
+target_link_libraries(DDRVolterraModel armadillo)

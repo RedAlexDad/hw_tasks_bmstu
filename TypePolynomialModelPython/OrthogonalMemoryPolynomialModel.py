@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from math import factorial
 from sklearn.metrics import mean_squared_error
 
 class OrthogonalMemoryPolynomialModel:
@@ -30,8 +31,8 @@ class OrthogonalMemoryPolynomialModel:
         # Вычисление ортогональной базисной функции
         result = 0
         for l in range(1, k + 1):
-            term = ((-1) ** (l + k)) * (np.math.factorial(k + l) /
-                   (np.math.factorial(l - 1) * np.math.factorial(l + 1) * np.math.factorial(k - l))) * \
+            term = ((-1) ** (l + k)) * (factorial(k + l) /
+                   (factorial(l - 1) * factorial(l + 1) * factorial(k - l))) * \
                    (np.abs(x) ** (l - 1)) * x
             result += term
         return result

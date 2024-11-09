@@ -1,0 +1,398 @@
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./PolynomialMemoryModel Amp_C_train.txt 3 2
+RMSE (Real part): 0.206405, RMSE (Imaginary part): 0.207271
+
+real	0m1,084s
+user	0m1,039s
+sys	0m0,045s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./PolynomialMemoryModel Amp_C_train.txt 5 5
+RMSE (Real part): 0.108151, RMSE (Imaginary part): 0.108143
+
+real	0m1,971s
+user	0m1,868s
+sys	0m0,103s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./PolynomialMemoryModel Amp_C_train.txt 10 10
+RMSE (Real part): 0.093029, RMSE (Imaginary part): 0.092957
+
+real	0m8,211s
+user	0m7,856s
+sys	0m0,351s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./PolynomialMemoryModel Amp_C_train.txt 15 15
+RMSE (Real part): 0.092296, RMSE (Imaginary part): 0.092222
+real	0m28,492s
+user	0m27,785s
+sys	0m0,705s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./PolynomialMemoryModel Amp_C_train.txt 20 20
+RMSE (Real part): 0.0926386421, RMSE (Imaginary part): 0.0925886505
+
+real	3m59,462s
+user	3m56,675s
+sys	0m2,720s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 3 2 1
+RMSE (Real part): 0.2206018972, RMSE (Imaginary part): 0.2212081226
+
+real	0m0,894s
+user	0m0,862s
+sys	0m0,032s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 3 2 3
+RMSE (Real part): 0.2206018972, RMSE (Imaginary part): 0.2212081226
+
+real	0m1,191s
+user	0m1,117s
+sys	0m0,074s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 5 5 5
+RMSE (Real part): 0.1081530856, RMSE (Imaginary part): 0.1081496717
+
+real	0m2,458s
+user	0m2,291s
+sys	0m0,167s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 7 7 7
+RMSE (Real part): 0.0988149221, RMSE (Imaginary part): 0.0989199237
+
+real	0m5,865s
+user	0m5,546s
+sys	0m0,317s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 10 10 7
+RMSE (Real part): 0.0930458979, RMSE (Imaginary part): 0.0929700850
+
+real	0m9,702s
+user	0m9,279s
+sys	0m0,416s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 10 10 10
+RMSE (Real part): 0.0930335586, RMSE (Imaginary part): 0.0929606501
+
+real	0m17,339s
+user	0m16,728s
+sys	0m0,605s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 5 5 10
+RMSE (Real part): 0.1334297727, RMSE (Imaginary part): 0.1334702468
+
+real	0m5,283s
+user	0m4,973s
+sys	0m0,309s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 13 13 5
+RMSE (Real part): 0.1129967445, RMSE (Imaginary part): 0.1129790746
+
+real	0m8,688s
+user	0m8,295s
+sys	0m0,393s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 13 13 10
+RMSE (Real part): 0.0924121479, RMSE (Imaginary part): 0.0923365082
+
+real	0m28,089s
+user	0m27,257s
+sys	0m0,820s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 15 15 13
+RMSE (Real part): 0.0925738310, RMSE (Imaginary part): 0.0925081835
+
+real	0m58,922s
+user	0m57,712s
+sys	0m1,194s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./SparseDelayMemoryPolynomialModel Amp_C_train.txt 20 20 15
+RMSE (Real part): 0.0926690370, RMSE (Imaginary part): 0.0926059856
+
+real	2m11,740s
+user	2m9,818s
+sys	0m1,893s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./OrthogonalMemoryPolynomialModel Amp_C_train.txt 1 1
+RMSE (Real part): 0.749005, RMSE (Imaginary part): 0.749148
+
+real	0m0,946s
+user	0m0,913s
+sys	0m0,033s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./OrthogonalMemoryPolynomialModel Amp_C_train.txt 3 2
+RMSE (Real part): 0.206405, RMSE (Imaginary part): 0.207271
+
+real	0m2,469s
+user	0m2,392s
+sys	0m0,075s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./OrthogonalMemoryPolynomialModel Amp_C_train.txt 5 5
+RMSE (Real part): 0.108151, RMSE (Imaginary part): 0.108143
+
+real	0m11,549s
+user	0m11,350s
+sys	0m0,193s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./OrthogonalMemoryPolynomialModel Amp_C_train.txt 7 7
+RMSE (Real part): 0.098812, RMSE (Imaginary part): 0.098916
+
+real	0m34,783s
+user	0m34,408s
+sys	0m0,368s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./OrthogonalMemoryPolynomialModel Amp_C_train.txt 10 10
+RMSE (Real part): 0.093029, RMSE (Imaginary part): 0.092957
+
+real	1m55,831s
+user	1m55,134s
+sys	0m0,680s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./NonUniformMemoryPolynomialModel Amp_C_train.txt 1 1 3 2 2 1 1 1
+RMSE (Real part): 0.688112, RMSE (Imaginary part): 0.687575
+
+real	0m0,914s
+user	0m0,885s
+sys	0m0,030s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./NonUniformMemoryPolynomialModel Amp_C_train.txt 5 4 3 2 2 1 1 1
+RMSE (Real part): 0.131611, RMSE (Imaginary part): 0.131862
+
+real	0m1,210s
+user	0m1,148s
+sys	0m0,062s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./NonUniformMemoryPolynomialModel Amp_C_train.txt 10 5 4 3 2 2 2 2 1 1 1 1
+RMSE (Real part): 0.108520, RMSE (Imaginary part): 0.108518
+
+real	0m1,628s
+user	0m1,531s
+sys	0m0,097s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./NonUniformMemoryPolynomialModel Amp_C_train.txt 9 5 4 3 2 2 2 2 1 1 1 1
+RMSE (Real part): 0.108520, RMSE (Imaginary part): 0.108517
+
+real	0m1,599s
+user	0m1,507s
+sys	0m0,092s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./NonUniformMemoryPolynomialModel Amp_C_train.txt 10 8 7 5 4 3 3 3 2 2 1 1
+RMSE (Real part): 0.094015, RMSE (Imaginary part): 0.093976
+
+real	0m2,374s
+user	0m2,234s
+sys	0m0,140s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 3 2 3 3
+RMSE (Real part): 0.197895, RMSE (Imaginary part): 0.198991
+
+real	0m1,708s
+user	0m1,644s
+sys	0m0,064s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 5 3 3 3
+RMSE (Real part): 0.093287, RMSE (Imaginary part): 0.092994
+
+real	0m2,413s
+user	0m2,313s
+sys	0m0,097s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 5 3 5 5
+RMSE (Real part): 0.092169, RMSE (Imaginary part): 0.091779
+
+real	0m3,511s
+user	0m3,372s
+sys	0m0,139s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 5 5 5 5
+RMSE (Real part): 0.092113, RMSE (Imaginary part): 0.091731
+
+real	0m4,174s
+user	0m4,004s
+sys	0m0,170s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 7 5 5 5
+RMSE (Real part): 0.080967, RMSE (Imaginary part): 0.080828
+
+real	0m5,107s
+user	0m4,901s
+sys	0m0,206s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 7 7 5 5
+RMSE (Real part): 0.080944, RMSE (Imaginary part): 0.080811
+
+real	0m6,815s
+user	0m6,559s
+sys	0m0,256s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 10 7 5 5
+RMSE (Real part): 0.073741, RMSE (Imaginary part): 0.073410
+
+real	0m8,960s
+user	0m8,644s
+sys	0m0,315s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 10 10 5 5
+RMSE (Real part): 0.073732, RMSE (Imaginary part): 0.073405
+
+real	0m13,145s
+user	0m12,704s
+sys	0m0,426s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 10 10 7 7
+RMSE (Real part): 0.073453, RMSE (Imaginary part): 0.073112
+
+real	0m16,629s
+user	0m16,133s
+sys	0m0,495s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 15 15 7 7
+RMSE (Real part): 0.072570, RMSE (Imaginary part): 0.072203
+
+real	0m46,412s
+user	0m45,522s
+sys	0m0,883s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./HybridMemoryPolynomialModel Amp_C_train.txt 15 15 10 10
+RMSE (Real part): 0.072467, RMSE (Imaginary part): 0.072067
+
+real	0m57,146s
+user	0m56,131s
+sys	0m1,012s
+
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 3 2 2 2 1 2 2 1
+RMSE (Real part): 0.198446, RMSE (Imaginary part): 0.199182
+
+real	0m1,749s
+user	0m1,689s
+sys	0m0,060s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 5 5 2 2 1 2 2 1
+RMSE (Real part): 0.093149, RMSE (Imaginary part): 0.093107
+
+real	0m3,360s
+user	0m3,236s
+sys	0m0,124s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 2 1 2 2 1
+RMSE (Real part): 0.082256, RMSE (Imaginary part): 0.082318
+
+real	0m5,309s
+user	0m5,088s
+sys	0m0,213s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 3 4 5 4 3
+RMSE (Real part): -nan, RMSE (Imaginary part): -nan
+
+real	0m14,882s
+user	0m14,476s
+sys	0m0,402s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 1 2 3 4 3 2
+RMSE (Real part): 0.084154, RMSE (Imaginary part): 0.084331
+
+real	0m7,597s
+user	0m7,349s
+sys	0m0,248s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 2 3 4 3 2
+RMSE (Real part): 0.077267, RMSE (Imaginary part): 0.077236
+
+real	0m8,589s
+user	0m8,301s
+sys	0m0,288s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 3 3 4 3 2
+RMSE (Real part): 0.077221, RMSE (Imaginary part): 0.077197
+
+real	0m8,409s
+user	0m8,122s
+sys	0m0,287s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 3 3 4 3 3
+RMSE (Real part): 0.076935, RMSE (Imaginary part): 0.076883
+
+real	0m9,671s
+user	0m9,357s
+sys	0m0,311s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 3 3 4 3 4
+RMSE (Real part): 0.076777, RMSE (Imaginary part): 0.076724
+
+real	0m11,060s
+user	0m10,668s
+sys	0m0,381s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 7 7 2 3 3 4 3 5
+RMSE (Real part): 0.076634, RMSE (Imaginary part): 0.076595
+
+real	0m12,617s
+user	0m12,206s
+sys	0m0,400s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 13 13 2 3 3 4 4 5
+RMSE (Real part): 0.067501, RMSE (Imaginary part): 0.067266
+
+real	0m40,112s
+user	0m39,287s
+sys	0m0,781s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 13 13 5 4 5 5 6 7
+RMSE (Real part): 0.065810, RMSE (Imaginary part): 0.065375
+
+real	1m50,639s
+user	1m49,166s
+sys	0m1,405s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 15 15 5 4 5 5 6 7
+RMSE (Real part): 0.065691, RMSE (Imaginary part): 0.065256
+
+real	2m2,109s
+user	2m0,474s
+sys	0m1,565s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./GeneralizedMemoryPolynomialModel Amp_C_train.txt 18 18 5 4 5 5 6 7
+RMSE (Real part): 0.065500, RMSE (Imaginary part): 0.065056
+
+real	2m47,896s
+user	2m46,141s
+sys	0m1,736s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./ExponentiallyShapedMemoryDelayProfileModel Amp_C_train.txt 1 1 1 1 
+RMSE (Real part): 0.749005, RMSE (Imaginary part): 0.749148
+
+real	20m23,616s
+user	20m23,088s
+sys	0m0,285s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 1 1
+RMSE (Real part): 0.749825, RMSE (Imaginary part): 0.749833
+
+real	0m0,967s
+user	0m0,935s
+sys	0m0,032s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 3 2
+RMSE (Real part): 0.202501, RMSE (Imaginary part): 0.203218
+
+real	0m1,821s
+user	0m1,738s
+sys	0m0,082s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 5 3
+RMSE (Real part): 0.101083, RMSE (Imaginary part): 0.100996
+
+real	0m3,681s
+user	0m3,529s
+sys	0m0,150s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 5 5
+RMSE (Real part): 0.100420, RMSE (Imaginary part): 0.100288
+
+real	0m5,555s
+user	0m5,358s
+sys	0m0,188s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 7 5
+RMSE (Real part): 0.090108, RMSE (Imaginary part): 0.090169
+
+real	0m8,289s
+user	0m8,007s
+sys	0m0,273s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 10 7
+RMSE (Real part): 0.083506, RMSE (Imaginary part): 0.083382
+
+real	0m20,672s
+user	0m20,171s
+sys	0m0,495s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 10 10
+RMSE (Real part): 0.083426, RMSE (Imaginary part): 0.083301
+
+real	0m33,874s
+user	0m33,189s
+sys	0m0,679s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./EnvelopeMemoryPolynomialModel Amp_C_train.txt 15 15
+RMSE (Real part): 0.082659, RMSE (Imaginary part): 0.082452
+
+real	2m14,337s
+user	2m12,706s
+sys	0m1,597s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./DDRVolterraModel Amp_C_train.txt 1 1
+RMSE (Real part): 4.220281, RMSE (Imaginary part): 3.390611
+
+real	0m0,809s
+user	0m0,774s
+sys	0m0,035s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./DDRVolterraModel Amp_C_train.txt 2 2
+RMSE (Real part): 4.644639, RMSE (Imaginary part): 3.743563
+
+real	0m0,928s
+user	0m0,890s
+sys	0m0,038s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./DDRVolterraModel Amp_C_train.txt 3 2
+RMSE (Real part): 4.644705, RMSE (Imaginary part): 3.743951
+
+real	0m1,053s
+user	0m1,007s
+sys	0m0,046s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./DDRVolterraModel Amp_C_train.txt 2 3
+RMSE (Real part): 4.791260, RMSE (Imaginary part): 3.863412
+
+real	0m1,037s
+user	0m0,981s
+sys	0m0,056s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./DDRVolterraModel Amp_C_train.txt 5 5
+RMSE (Real part): 4.863776, RMSE (Imaginary part): 3.922679
+
+real	0m3,855s
+user	0m3,681s
+sys	0m0,174s
+(base) redalexdad@redalexdad-Nitro-AN515-44:~/GitHub/HwTasksBmstu/TypePolynomialModelC/build$ time ./DDRVolterraModel Amp_C_train.txt 10 10
+RMSE (Real part): 4.876112, RMSE (Imaginary part): 3.936626
+
+real	1m27,182s
+user	1m25,925s
+sys	0m1,227s
+
+

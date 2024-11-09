@@ -66,7 +66,7 @@ class NonUniformMemoryPolynomialModel:
 df = pd.read_csv('Amp_C_train.txt')
 
 # Параметры модели
-M = 5  # Глубина памяти
+M = 2  # Глубина памяти
 K_list = [3, 2, 2, 1, 1, 1]  # Порядки нелинейности для каждой ветви
 
 # Создание и обучение модели
