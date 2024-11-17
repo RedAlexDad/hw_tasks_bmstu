@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/PolynomialMemoryModel.dir/src/PolynomialMemoryModel.cpp.o -o PolynomialMemoryModel  -larmadillo 

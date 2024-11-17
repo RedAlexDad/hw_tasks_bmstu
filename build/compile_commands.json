@@ -1,0 +1,56 @@
+[
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/PolynomialMemoryModel.dir/src/PolynomialMemoryModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/PolynomialMemoryModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/PolynomialMemoryModel.cpp",
+  "output": "CMakeFiles/PolynomialMemoryModel.dir/src/PolynomialMemoryModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/SparseDelayMemoryPolynomialModel.dir/src/SparseDelayMemoryPolynomialModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/SparseDelayMemoryPolynomialModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/SparseDelayMemoryPolynomialModel.cpp",
+  "output": "CMakeFiles/SparseDelayMemoryPolynomialModel.dir/src/SparseDelayMemoryPolynomialModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/OrthogonalMemoryPolynomialModel.dir/src/OrthogonalMemoryPolynomialModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/OrthogonalMemoryPolynomialModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/OrthogonalMemoryPolynomialModel.cpp",
+  "output": "CMakeFiles/OrthogonalMemoryPolynomialModel.dir/src/OrthogonalMemoryPolynomialModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/NonUniformMemoryPolynomialModel.dir/src/NonUniformMemoryPolynomialModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/NonUniformMemoryPolynomialModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/NonUniformMemoryPolynomialModel.cpp",
+  "output": "CMakeFiles/NonUniformMemoryPolynomialModel.dir/src/NonUniformMemoryPolynomialModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/HybridMemoryPolynomialModel.dir/src/HybridMemoryPolynomialModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/HybridMemoryPolynomialModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/HybridMemoryPolynomialModel.cpp",
+  "output": "CMakeFiles/HybridMemoryPolynomialModel.dir/src/HybridMemoryPolynomialModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/GeneralizedMemoryPolynomialModel.dir/src/GeneralizedMemoryPolynomialModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/GeneralizedMemoryPolynomialModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/GeneralizedMemoryPolynomialModel.cpp",
+  "output": "CMakeFiles/GeneralizedMemoryPolynomialModel.dir/src/GeneralizedMemoryPolynomialModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/ExponentiallyShapedMemoryDelayProfileModel.dir/src/ExponentiallyShapedMemoryDelayProfileModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/ExponentiallyShapedMemoryDelayProfileModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/ExponentiallyShapedMemoryDelayProfileModel.cpp",
+  "output": "CMakeFiles/ExponentiallyShapedMemoryDelayProfileModel.dir/src/ExponentiallyShapedMemoryDelayProfileModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/EnvelopeMemoryPolynomialModel.dir/src/EnvelopeMemoryPolynomialModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/EnvelopeMemoryPolynomialModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/EnvelopeMemoryPolynomialModel.cpp",
+  "output": "CMakeFiles/EnvelopeMemoryPolynomialModel.dir/src/EnvelopeMemoryPolynomialModel.cpp.o"
+},
+{
+  "directory": "/home/redalexdad/GitHub/HwTasksBmstu/build",
+  "command": "/usr/bin/c++  -I/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src -g -std=gnu++23 -o CMakeFiles/DDRVolterraModel.dir/src/DDRVolterraModel.cpp.o -c /home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/DDRVolterraModel.cpp",
+  "file": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC/src/DDRVolterraModel.cpp",
+  "output": "CMakeFiles/DDRVolterraModel.dir/src/DDRVolterraModel.cpp.o"
+}
+]

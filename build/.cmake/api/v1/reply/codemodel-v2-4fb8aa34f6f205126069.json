@@ -1,0 +1,132 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "TypePolynomialModel",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "DDRVolterraModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-DDRVolterraModel-Debug-d58d09b696cc0215195d.json",
+					"name" : "DDRVolterraModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "EnvelopeMemoryPolynomialModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-EnvelopeMemoryPolynomialModel-Debug-a8f9f0dca4475aa88184.json",
+					"name" : "EnvelopeMemoryPolynomialModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ExponentiallyShapedMemoryDelayProfileModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ExponentiallyShapedMemoryDelayProfileModel-Debug-2e8d140536f11b91e7e2.json",
+					"name" : "ExponentiallyShapedMemoryDelayProfileModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "GeneralizedMemoryPolynomialModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-GeneralizedMemoryPolynomialModel-Debug-ff9782b0af6e649b1dbe.json",
+					"name" : "GeneralizedMemoryPolynomialModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "HybridMemoryPolynomialModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-HybridMemoryPolynomialModel-Debug-ae835919855ef6b9b440.json",
+					"name" : "HybridMemoryPolynomialModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "NonUniformMemoryPolynomialModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-NonUniformMemoryPolynomialModel-Debug-f2b0512daaee27cff736.json",
+					"name" : "NonUniformMemoryPolynomialModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OrthogonalMemoryPolynomialModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OrthogonalMemoryPolynomialModel-Debug-b01f5bc541fcb65ad536.json",
+					"name" : "OrthogonalMemoryPolynomialModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "PolynomialMemoryModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-PolynomialMemoryModel-Debug-c5d48292da1133aafea7.json",
+					"name" : "PolynomialMemoryModel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SparseDelayMemoryPolynomialModel::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SparseDelayMemoryPolynomialModel-Debug-5d4fa261b4c80e264e51.json",
+					"name" : "SparseDelayMemoryPolynomialModel",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/redalexdad/GitHub/HwTasksBmstu/build",
+		"source" : "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

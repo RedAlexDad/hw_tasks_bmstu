@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/GeneralizedMemoryPolynomialModel.dir/GeneralizedMemoryPolynomialModel.cpp.o -o GeneralizedMemoryPolynomialModel  -larmadillo 

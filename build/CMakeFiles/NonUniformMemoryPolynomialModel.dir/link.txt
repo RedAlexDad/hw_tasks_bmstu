@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/NonUniformMemoryPolynomialModel.dir/src/NonUniformMemoryPolynomialModel.cpp.o -o NonUniformMemoryPolynomialModel  -larmadillo 

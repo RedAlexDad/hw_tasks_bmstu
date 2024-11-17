@@ -65,6 +65,30 @@
         "variant": "cpp",
         "format": "cpp",
         "__nullptr": "cpp",
-        "filesystem": "cpp"
-    }
+        "filesystem": "cpp",
+        "armadillo": "cpp",
+        "map": "cpp",
+        "shared_mutex": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "csignal": "cpp",
+        "any": "cpp",
+        "strstream": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "source_location": "cpp",
+        "future": "cpp",
+        "typeindex": "cpp",
+        "valarray": "cpp",
+        "stdfloat": "cpp",
+        "*.ipp": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "__threading_support": "cpp"
+    },
+    "cmake.sourceDirectory": "/home/redalexdad/GitHub/HwTasksBmstu/TypePolynomialModelC"
 }

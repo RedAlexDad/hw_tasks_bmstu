@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/SparseDelayMemoryPolynomialModel.dir/src/SparseDelayMemoryPolynomialModel.cpp.o -o SparseDelayMemoryPolynomialModel  -larmadillo 

@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/EnvelopeMemoryPolynomialModel.dir/EnvelopeMemoryPolynomialModel.cpp.o -o EnvelopeMemoryPolynomialModel  -larmadillo 

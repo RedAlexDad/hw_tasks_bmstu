@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/HybridMemoryPolynomialModel.dir/HybridMemoryPolynomialModel.cpp.o -o HybridMemoryPolynomialModel  -larmadillo 

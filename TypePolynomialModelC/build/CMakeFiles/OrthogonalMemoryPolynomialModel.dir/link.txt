@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/OrthogonalMemoryPolynomialModel.dir/OrthogonalMemoryPolynomialModel.cpp.o -o OrthogonalMemoryPolynomialModel  -larmadillo 
