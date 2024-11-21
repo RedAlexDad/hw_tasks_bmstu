@@ -1,0 +1,84 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "IntelLLVM",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/opt/intel/oneapi/compiler/2025.0/opt/compiler/include",
+						"/usr/include/c++/13",
+						"/usr/include/x86_64-linux-gnu/c++/13",
+						"/usr/include/c++/13/backward",
+						"/opt/intel/oneapi/compiler/2025.0/lib/clang/19/include",
+						"/usr/local/include",
+						"/usr/include/x86_64-linux-gnu",
+						"/usr/include"
+					],
+					"linkDirectories" : 
+					[
+						"/opt/intel/oneapi/compiler/2025.0/lib",
+						"/opt/intel/oneapi/compiler/2025.0/lib/clang/19/lib/x86_64-unknown-linux-gnu",
+						"/usr/lib/gcc/x86_64-linux-gnu/13",
+						"/usr/lib64",
+						"/lib/x86_64-linux-gnu",
+						"/lib64",
+						"/usr/lib/x86_64-linux-gnu",
+						"/usr/lib",
+						"/opt/intel/oneapi/compiler/2025.0/opt/compiler/lib",
+						"/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"svml",
+						"irng",
+						"stdc++",
+						"imf",
+						"m",
+						"gcc_s",
+						"gcc",
+						"irc",
+						"dl",
+						"gcc_s",
+						"gcc",
+						"c",
+						"gcc_s",
+						"gcc",
+						"irc_s"
+					]
+				},
+				"path" : "icpx",
+				"version" : "2025.0.0"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"m",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm",
+				"ccm",
+				"cxxm",
+				"c++m"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}
